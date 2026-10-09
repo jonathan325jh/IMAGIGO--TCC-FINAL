@@ -1,0 +1,264 @@
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    outline: none;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes backInLeft {
+    0%   { opacity: 0; transform: translateX(-200px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+    0%   { opacity: 0; transform: translateX(40px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInUp {
+    0%   { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* 🎈 Parallax suave do fundo */
+@keyframes bgFloat {
+    0%, 100% { background-position: 100% top, 79% 70%, 100% bottom, left bottom; }
+    50%      { background-position: 100% top, 79% 68.5%, 100% bottom, left bottom; }
+}
+
+/* 🌌 CONSTELAÇÃO — pontos suaves (8 pontos, movimento lento) */
+@keyframes constellation {
+    0%, 100% {
+        background-position:
+            12% 18%, 30% 40%, 55% 25%, 75% 55%,
+            20% 75%, 45% 85%, 70% 88%, 88% 30%;
+        opacity: 0.45;
+    }
+    50% {
+        background-position:
+            14% 20%, 28% 38%, 57% 27%, 73% 53%,
+            22% 73%, 43% 83%, 72% 86%, 86% 32%;
+        opacity: 0.7;
+    }
+}
+
+/* 📝 TEXTO REVELANDO — suave, sem steps */
+@keyframes revealText {
+    from {
+        clip-path: inset(0 100% 0 0);
+        opacity: 0.7;
+    }
+    to {
+        clip-path: inset(0 0% 0 0);
+        opacity: 1;
+    }
+}
+
+/* 🌊 ONDA SUAVE — só 1.5px, movimento leve */
+@keyframes wave {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-1.5px); }
+}
+
+/* ✨ BRILHO MUITO SUAVE (quase imperceptível) */
+@keyframes gentleGlow {
+    0%, 100% { text-shadow: 0 0 0 rgba(255, 197, 89, 0); }
+    50%      { text-shadow: 0 0 8px rgba(255, 197, 89, 0.2); }
+}
+
+/* ===== 🚫 VÍDEO PARADO ===== */
+video {
+    animation: none !important;
+    transform: none !important;
+}
+
+/* ===== HEADER ===== */
+header {
+    width: auto;
+    padding-bottom: 6rem;
+}
+
+.volta-dois {
+    margin-left: 5rem;
+    margin-top: 2rem;
+    animation: backInLeft 1.2s ease-out both;
+}
+
+#voltar {
+    width: 8%;
+    cursor: pointer;
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+#voltar:hover {
+    transform: scale(1.1);
+    filter: brightness(1.15);
+}
+
+/* ===== BODY COM AS 4 IMAGENS + CONSTELAÇÃO ===== */
+body.sobre-fundo {
+    background-image:
+        url(sobre-nos.png),
+        url(fundo2-sobre.png),
+        url('fundo-para.png'),
+        url('fundo-sobre-dois.png');
+
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+
+    background-size: 70%, 99%, 30%, 20%;
+
+    background-position:
+        100% top,
+        79% 70%,
+        100% bottom,
+        left bottom;
+
+    animation:
+        fadeIn 2s ease-in both,
+        bgFloat 20s ease-in-out infinite;
+
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* 🌌 CONSTELAÇÃO no fundo (8 pontos suaves) */
+body.sobre-fundo::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+
+    background-image:
+        radial-gradient(2px 2px at 12% 18%, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(2.5px 2.5px at 30% 40%, rgba(255, 197, 89, 0.9), transparent),
+        radial-gradient(2px 2px at 55% 25%, rgba(255, 255, 255, 0.7), transparent),
+        radial-gradient(2.5px 2.5px at 75% 55%, rgba(255, 197, 89, 0.8), transparent),
+        radial-gradient(2px 2px at 20% 75%, rgba(255, 255, 255, 0.7), transparent),
+        radial-gradient(2.5px 2.5px at 45% 85%, rgba(255, 197, 89, 0.8), transparent),
+        radial-gradient(2px 2px at 70% 88%, rgba(255, 255, 255, 0.7), transparent),
+        radial-gradient(2.5px 2.5px at 88% 30%, rgba(255, 197, 89, 0.8), transparent);
+
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+
+    animation: constellation 20s ease-in-out infinite;
+}
+
+/* ===== VÍDEO (mesmo tamanho e posição) ===== */
+video {
+    max-width: 20%;
+    height: auto;
+    margin-left: 10rem;
+    border: none;
+    outline: none;
+    border-radius: 12px;
+}
+
+
+/* ===== CONTAINER ===== */
+.container {
+    display: flex;
+    text-align: center;
+    gap: 1rem;
+    margin-top: 5rem;
+    border: none;
+}
+
+/* ===== TEXTO AO LADO DO VÍDEO ===== */
+.texto {
+    font-size: 27px;
+    margin-top: 3rem;
+    line-height: 2rem;
+    animation: fadeInRight 1.2s ease-out 0.4s both;
+}
+
+/* ===== PARÁGRAFO SOBRE ===== */
+.paragrafoSobre {
+    font-size: 27px;
+    text-align: center;
+    margin-top: 3rem;
+    line-height: 2rem;
+    letter-spacing: 2%;
+
+    animation:
+        fadeInUp 0.8s ease-out 0.6s both,
+        revealText 3.5s cubic-bezier(0.25, 0.1, 0.25, 1) 1.4s both,
+        wave 10s ease-in-out 4.9s infinite,
+        gentleGlow 8s ease-in-out 4.9s infinite;
+}
+
+/* ===== SEGUNDO PARÁGRAFO ===== */
+.segundo-para {
+    font-size: 27px;
+    text-align: center;
+    margin-top: 20rem;
+    line-height: 2rem;
+    letter-spacing: 2%;
+
+    animation:
+        fadeInUp 0.8s ease-out 0.8s both,
+        revealText 3.5s cubic-bezier(0.25, 0.1, 0.25, 1) 1.6s both,
+        wave 10s ease-in-out 5.1s infinite,
+        gentleGlow 8s ease-in-out 5.1s infinite;
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .texto {
+        font-size: 20px;
+        line-height: 1.6rem;
+        padding: 0 1rem;
+    }
+
+    .paragrafoSobre,
+    .segundo-para {
+        font-size: 20px;
+        line-height: 1.6rem;
+        padding: 0 1rem;
+    }
+
+    .segundo-para {
+        margin-top: 10rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .volta-dois {
+        margin-left: 2rem;
+        margin-top: 1rem;
+    }
+
+    #voltar {
+        width: 15%;
+    }
+
+    .texto,
+    .paragrafoSobre,
+    .segundo-para {
+        font-size: 16px;
+        line-height: 1.4rem;
+    }
+
+    .segundo-para {
+        margin-top: 6rem;
+    }
+
+    /* Desativa constelação no mobile pra performance */
+    body.sobre-fundo::before {
+        animation: none;
+    }
+}
