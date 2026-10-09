@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - Sistemas</title>
+    <link rel="stylesheet" href="config.css">
+    <style>
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            color: #fff;
+            font-size: 18px;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .toggle-switch input { display: none; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: .3s; border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+            background-color: white; transition: .3s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #4a7bc7; }
+        input:checked + .slider:before { transform: translateX(20px); }
+    </style>
+</head>
+<body>
+
+<header class="header-flutuante">
+    <a href="javascript:history.back()" class="btn-topo">
+        <img src="btn-voltar-config.png" alt="Voltar">
+    </a>
+    <button type="button" class="btn-topo" id="btnOpcoes" aria-label="Abrir menu" aria-expanded="false">
+        <img src="tres-pontos-azul-btn.png" alt="Opções">
+    </button>
+
+    <nav class="menu-opcoes" id="menuOpcoes" aria-hidden="true">
+        <div class="menu-cabecalho">
+            <img src="logo-suporte.png" alt="Logo" class="menu-logo">
+            <span class="menu-titulo">MENU</span>
+        </div>
+        <a href="pagina-entrada.html" class="menu-item"><span class="menu-texto">Início</span></a>
+        <a href="tutoriais.html" class="menu-item"><span class="menu-texto">Tutoriais</span></a>
+        <a href="forum.html" class="menu-item"><span class="menu-texto">Fórum</span></a>
+        <a href="gestao.html" class="menu-item"><span class="menu-texto">Gestão</span></a>
+        <a href="Jogos.html" class="menu-item"><span class="menu-texto">Jogos</span></a>
+        <a href="perfil.html" class="menu-item"><span class="menu-texto">Perfil</span></a>
+        <a href="config-conta.html" class="menu-item"><span class="menu-texto">Configurações</span></a>
+        <a href="sobre-nos.html" class="menu-item"><span class="menu-texto">Sobre Nós</span></a>
+        <a href="suporte.html" class="menu-item"><span class="menu-texto">Suporte</span></a>
+        <div class="menu-divisor"></div>
+        <a href="login.html" class="menu-item menu-sair" id="menuSair"><span class="menu-texto">Sair da conta</span></a>
+    </nav>
+</header>
+
+<div class="app-container">
+    <div class="sidebar">
+        <div class="boneco-area">
+            <div id="bloco-criar-sidebar" class="bloco-criar-container">
+                <p id="titulo-bar" style="color: #fff; font-weight: bold; margin-bottom: 12px; line-height: 1.3; font-size: 18px;">
+                    CRIE SEU PERSONAGEM
+                </p>
+                <a href="criar.html" style="display: inline-block;">
+                    <img src="perso-btn.png" alt="Criar Personagem" class="btn-criar-img">
+                </a>
+            </div>
+
+            <svg id="boneco-principal" class="boneco-flutuante" width="300" height="420" viewBox="0 0 200 280">
+                <defs>
+                    <clipPath id="recorte-corpo-sidebar">
+                        <path d="M 100,60 C 75,60 62,72 44,100 C 35,114 47,128 55,115 C 65,99 71,90 76,94 C 73,115 67,155 62,215 C 60,228 76,228 78,215 C 84,175 92,142 100,142 C 108,142 116,175 122,215 C 124,228 140,228 138,215 C 133,155 127,115 124,94 C 129,90 135,99 145,115 C 153,128 165,114 156,100 C 138,72 125,60 100,60 Z" />
+                    </clipPath>
+                </defs>
+                <g id="elementos-fundo-svg"></g>
+                <circle id="cabeca-boneco" cx="100" cy="40" r="18" fill="#4a7bc7" />
+                <path id="corpo-boneco" d="M 100,60 C 75,60 62,72 44,100 C 35,114 47,128 55,115 C 65,99 71,90 76,94 C 73,115 67,155 62,215 C 60,228 76,228 78,215 C 84,175 92,142 100,142 C 108,142 116,175 122,215 C 124,228 140,228 138,215 C 133,155 127,115 124,94 C 129,90 135,99 145,115 C 153,128 165,114 156,100 C 138,72 125,60 100,60 Z" fill="#4a7bc7" />
+                <g clip-path="url(#recorte-corpo-sidebar)" id="grupo-estampas"></g>
+                <image id="img-cachecol" x="55" y="60" width="90" height="55" href="" />
+                <image id="img-roupa" x="33" y="35" width="140" height="170" href="" />
+                <image id="img-chapeu" x="70" y="2" width="60" height="46" href="" />
+            </svg>
+
+            <div class="sombra-boneco" id="sombra-sidebar"></div>
+        </div>
+    </div>
+
+    <div class="content-panel">
+        <div class="panel-title" id="lblNotificacoes">NOTIFICAÇÕES</div>
+        <div class="toggle-group">
+            <span>Notificações por E-mail</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="chkNotifEmail" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="toggle-group">
+            <span>Notificações pelo Imagigo (site)</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="chkNotifPush" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="panel-title" style="margin-top: 15px;">ÁUDIO</div>
+        <div class="toggle-group">
+            <span>Som de Fundo</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="chkSomFundo" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="action-buttons" style="margin-top: 15px;">
+            <button class="btn btn-delete" type="button" id="btnExcluir">Excluir</button>
+            <button class="btn btn-save" type="button" id="btnSalvar">Salvar</button>
+            <button class="btn btn-default" type="button" id="btnPadrao">Padrão</button>
+        </div>
+    </div>
+</div>
+
+<nav class="nav-bar">
+    <a href="config-conta.html" class="nav-item nav-conta">Conta</a>
+    <a href="config-sistemas.html" class="nav-item nav-sistemas active">Sistemas</a>
+    <a href="config-personalizacao.html" class="nav-item nav-personalizacao">Personalização</a>
+    <a href="config-privacidade.html" class="nav-item nav-privacidade">Privacidade</a>
+</nav>
+
+<div class="overlay-modal" id="modalNotificacao" style="display: none;">
+    <div class="modal-box modal-success">
+        <span class="modal-close" id="fecharModalNotificacao">&times;</span>
+        <div class="modal-title" id="tituloModalNotificacao">CONFIGURAÇÕES DE SISTEMA SALVAS</div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="menu.js"></script>
+<script>
+    const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const caminhoRoupas = {
+        'nenhuma': '',
+        'beca': 'camisa.png',
+        'roupa-1': 'roupa-1.png'
+    };
+    const caminhoChapeus = {
+        'nenhum': '',
+        'roupa-touca': 'roupa-touca.png',
+        'roupa-touca-2': 'roupa-touca-2.png',
+        'chapeu-formando': 'chapeu.png'
+    };
+
+    const AJUSTE_ROUPAS = {
+        'beca':    { x: 33, y: 35, w: 140, h: 170 },
+        'roupa-1': { x: 20, y: 20, w: 160, h: 210 }
+    };
+    const AJUSTE_CHAPEUS = {
+        'roupa-touca':     { x: 68, y: -14, w: 64, h: 50 },
+        'chapeu-formando': { x: 70, y: 2,   w: 60, h: 46 }
+    };
+    const AJUSTE_CACHECOL = { x: 55, y: 60, w: 90, h: 55 };
+    const AJUSTE_PADRAO_ROUPA  = { x: 33, y: 35, w: 140, h: 170 };
+    const AJUSTE_PADRAO_CHAPEU = { x: 70, y: 2,  w: 60,  h: 46  };
+
+    function renderizarBoneco(u) {
+        if (!u) return;
+
+        const foiCriado = u.personagem_criado == 1 || u.personagem_criado === true;
+        const elBonecoSvg = document.getElementById('boneco-principal');
+        const elSombra = document.getElementById('sombra-sidebar');
+        const elBlocoCriar = document.getElementById('bloco-criar-sidebar');
+
+        if (!foiCriado) {
+            if (elBonecoSvg) elBonecoSvg.style.setProperty('display', 'none', 'important');
+            if (elSombra) elSombra.style.setProperty('display', 'none', 'important');
+            if (elBlocoCriar) elBlocoCriar.style.setProperty('display', 'flex', 'important');
+            return;
+        }
+
+        if (elBonecoSvg) elBonecoSvg.style.setProperty('display', 'block', 'important');
+        if (elSombra) elSombra.style.setProperty('display', 'block', 'important');
+        if (elBlocoCriar) elBlocoCriar.style.setProperty('display', 'none', 'important');
+
+        const cor1 = u.cor_1 || u.cor1 || '#4a7bc7';
+        const cor2 = u.cor_2 || u.cor2 || '#ff0000';
+        const estampa = u.estampa || 'nenhuma';
+        const roupa = u.roupa || 'nenhuma';
+        const chapeu = u.chapeu || 'nenhum';
+
+        document.getElementById('cabeca-boneco').setAttribute('fill', cor1);
+        document.getElementById('corpo-boneco').setAttribute('fill', cor1);
+
+        const grupoEstampas = document.getElementById('grupo-estampas');
+        grupoEstampas.innerHTML = '';
+
+        if (estampa === 'bolinhas') {
+            const pos = [
+                {cx: 72,  cy: 80,  r: 6}, {cx: 92,  cy: 88,  r: 7},
+                {cx: 112, cy: 80,  r: 6}, {cx: 128, cy: 92,  r: 5},
+                {cx: 80,  cy: 105, r: 7}, {cx: 105, cy: 112, r: 8},
+                {cx: 125, cy: 118, r: 6}, {cx: 70,  cy: 130, r: 6},
+                {cx: 90,  cy: 138, r: 7}, {cx: 112, cy: 145, r: 6},
+                {cx: 128, cy: 152, r: 5}, {cx: 78,  cy: 160, r: 7},
+                {cx: 98,  cy: 168, r: 6}, {cx: 118, cy: 178, r: 7},
+                {cx: 85,  cy: 190, r: 6}, {cx: 108, cy: 198, r: 6},
+                {cx: 72,  cy: 205, r: 5}, {cx: 95,  cy: 212, r: 6}
+            ];
+            pos.forEach(p => {
+                const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                c.setAttribute('cx', p.cx);
+                c.setAttribute('cy', p.cy);
+                c.setAttribute('r', p.r);
+                c.setAttribute('fill', cor2);
+                grupoEstampas.appendChild(c);
+            });
+        } else if (estampa === 'linhas') {
+            for (let offset = -250; offset < 400; offset += 16) {
+                const linha = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                linha.setAttribute('x1', offset + 250);
+                linha.setAttribute('y1', 0);
+                linha.setAttribute('x2', offset);
+                linha.setAttribute('y2', 280);
+                linha.setAttribute('stroke', cor2);
+                linha.setAttribute('stroke-width', 5);
+                grupoEstampas.appendChild(linha);
+            }
+        }
+
+        const elCachecol = document.getElementById('img-cachecol');
+        if (elCachecol) {
+            if (chapeu === 'roupa-touca-2') {
+                elCachecol.setAttribute('href', caminhoChapeus['roupa-touca-2']);
+                const a = AJUSTE_CACHECOL;
+                elCachecol.setAttribute('x', a.x);
+                elCachecol.setAttribute('y', a.y);
+                elCachecol.setAttribute('width', a.w);
+                elCachecol.setAttribute('height', a.h);
+            } else {
+                elCachecol.setAttribute('href', '');
+            }
+        }
+
+        const elRoupa = document.getElementById('img-roupa');
+        elRoupa.setAttribute('href', caminhoRoupas[roupa] || '');
+        const ajR = AJUSTE_ROUPAS[roupa] || AJUSTE_PADRAO_ROUPA;
+        elRoupa.setAttribute('x', ajR.x);
+        elRoupa.setAttribute('y', ajR.y);
+        elRoupa.setAttribute('width', ajR.w);
+        elRoupa.setAttribute('height', ajR.h);
+
+        const elChapeu = document.getElementById('img-chapeu');
+        if (chapeu && chapeu !== 'nenhum' && chapeu !== 'roupa-touca-2') {
+            elChapeu.setAttribute('href', caminhoChapeus[chapeu] || '');
+            const aC = AJUSTE_CHAPEUS[chapeu] || AJUSTE_PADRAO_CHAPEU;
+            elChapeu.setAttribute('x', aC.x);
+            elChapeu.setAttribute('y', aC.y);
+            elChapeu.setAttribute('width', aC.w);
+            elChapeu.setAttribute('height', aC.h);
+        } else {
+            elChapeu.setAttribute('href', '');
+        }
+    }
+
+    const email = (
+        sessionStorage.getItem('usuario_email') ||
+        localStorage.getItem('usuario_email') ||
+        ""
+    ).trim().toLowerCase();
+
+    let dadosOriginais = null;
+
+    function exibirNotificacao(texto) {
+        document.getElementById('tituloModalNotificacao').innerText = texto;
+        document.getElementById('modalNotificacao').style.display = 'flex';
+    }
+
+    document.getElementById('fecharModalNotificacao').addEventListener('click', () => {
+        document.getElementById('modalNotificacao').style.display = 'none';
+    });
+
+    async function carregar() {
+        if (!email) return;
+        try {
+            const { data } = await supabaseClient.from('usuarios').select('*').eq('email', email);
+            if (data && data.length > 0) {
+                dadosOriginais = data[0];
+                aplicarDados(dadosOriginais);
+            }
+        } catch (err) { console.error(err); }
+    }
+
+    function aplicarDados(u) {
+        document.getElementById('chkNotifEmail').checked = u.notif_email !== false;
+        document.getElementById('chkNotifPush').checked = u.notif_push !== false;
+        document.getElementById('chkSomFundo').checked = u.som_fundo !== false;
+        renderizarBoneco(u);
+    }
+
+    document.getElementById('btnSalvar').addEventListener('click', async () => {
+        const notifEmail = document.getElementById('chkNotifEmail').checked;
+        const notifPush = document.getElementById('chkNotifPush').checked;
+        const somFundo = document.getElementById('chkSomFundo').checked;
+
+        try {
+            await supabaseClient.from('usuarios').update({
+                notif_email: notifEmail,
+                notif_push: notifPush,
+                som_fundo: somFundo
+            }).eq('email', email);
+
+            if (dadosOriginais) {
+                dadosOriginais.notif_email = notifEmail;
+                dadosOriginais.notif_push = notifPush;
+                dadosOriginais.som_fundo = somFundo;
+            }
+
+            exibirNotificacao("CONFIGURAÇÕES DE SISTEMA SALVAS");
+        } catch (err) {
+            console.error(err);
+            exibirNotificacao("ERRO AO SALVAR CONFIGURAÇÕES DE SISTEMA");
+        }
+    });
+
+    document.getElementById('btnExcluir').addEventListener('click', () => {
+        document.getElementById('chkNotifEmail').checked = false;
+        document.getElementById('chkNotifPush').checked = false;
+        document.getElementById('chkSomFundo').checked = false;
+        exibirNotificacao("TODAS AS OPÇÕES FORAM DESATIVADAS");
+    });
+
+    document.getElementById('btnPadrao').addEventListener('click', () => {
+        if (dadosOriginais) {
+            aplicarDados(dadosOriginais);
+            exibirNotificacao("CONFIGURAÇÕES DE SISTEMA RESTAURADAS");
+        }
+    });
+
+    carregar();
+</script>
+</body>
+</html>

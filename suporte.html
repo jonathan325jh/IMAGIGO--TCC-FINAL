@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="suporte.css">
+    <title>Suporte</title>
+    <style>
+        header {
+           position: absolute;
+           top: 0.5rem;
+           left: 50px;
+           z-index: 1000;
+           display: flex;
+           flex-direction: column;
+           gap: 12px;
+        }
+
+   .btn-topo {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      align-items: center;
+     justify-content: center;
+}
+
+.btn-topo:hover {
+    transform: scale(1.1);
+}
+
+.btn-topo img {
+    width: 105px;
+    height: auto;
+    display: block;
+}
+    </style>
+</head>
+<body>
+
+    
+
+     <header class="header-flutuante">
+    <a href="javascript:history.back()" class="btn-topo">
+        <img src="voltar-azul-btn.png" alt="Voltar">
+    </a>
+    <button type="button" class="btn-topo" id="btnOpcoes" aria-label="Abrir menu" aria-expanded="false">
+        <img src="tres-pontos-azul-btn.png" alt="Opções">
+    </button>
+
+    <nav class="menu-opcoes" id="menuOpcoes" aria-hidden="true">
+        <div class="menu-cabecalho">
+            <img src="logo-suporte.png" alt="Logo" class="menu-logo">
+            <span class="menu-titulo">MENU</span>
+        </div>
+
+        <a href="pagina-entrada.html" class="menu-item">
+            <span class="menu-texto">Início</span>
+        </a>
+
+        <a href="tutoriais.html" class="menu-item">
+            <span class="menu-texto">Tutoriais</span>
+        </a>
+
+        <a href="forum.html" class="menu-item">
+            <span class="menu-texto">Fórum</span>
+        </a>
+
+        <a href="gestao.html" class="menu-item">
+            <span class="menu-texto">Gestão</span>
+        </a>
+
+        <a href="Jogos.html" class="menu-item">
+            <span class="menu-texto">Jogos</span>
+        </a>
+
+        <a href="perfil.html" class="menu-item">
+            <span class="menu-texto">Perfil</span>
+        </a>
+
+        <a href="config-conta.html" class="menu-item">
+            <span class="menu-texto">Configurações</span>
+        </a>
+
+        <a href="sobre-nos.html" class="menu-item">
+            <span class="menu-texto">Sobre Nós</span>
+        </a>
+
+        <a href="suporte.html" class="menu-item">
+            <span class="menu-texto">Suporte</span>
+        </a>
+
+        <div class="menu-divisor"></div>
+
+        <a href="login.html" class="menu-item menu-sair" id="menuSair">
+           <span class="menu-texto">Sair da conta</span>
+        </a>
+    </nav>
+</header>
+
+
+    <div class="conteudo">
+        <div class="container-principal">
+            <img src="logo-suporte.png" id="logo" alt="Logo">
+            <h1>SUPORTE</h1>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="img-su">
+            <img src="suporte-img.png" id="suporte-img" alt="Suporte">
+        </div>
+        
+        <form class="container-caixa" id="formSuporte">
+            <textarea id="dois" name="text" placeholder="Fala que eu te escuto..." required></textarea>
+            <button id="botao" type="submit">Enviar</button>
+        </form>
+    </div>
+ 
+    <script src="menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Biblioteca Oficial do EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script type="text/javascript">
+        // 1. Configuração do Supabase
+        const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // 2. Configuração do EmailJS
+        emailjs.init("63uV71CQvOzLY4tM9");
+
+        document.getElementById('formSuporte').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const btn = document.getElementById('botao');
+            const mensagemTexto = document.getElementById('dois').value.trim();
+            const emailUsuario = localStorage.getItem('usuario_email') || sessionStorage.getItem('usuario_email') || 'Não informado (outro PC)';
+
+            if (!mensagemTexto) {
+                alert('Por favor, digite uma mensagem antes de enviar.');
+                return;
+            }
+
+            btn.innerText = 'Enviando...';
+            btn.disabled = true;
+
+            try {
+                const { error: supabaseError } = await supabaseClient
+                    .from('feedbacks')
+                    .insert([
+                        { 
+                            usuario_email: emailUsuario, 
+                            mensagem: mensagemTexto 
+                        }
+                    ]);
+
+                if (supabaseError) {
+                    console.warn("Aviso ao salvar no Supabase:", supabaseError.message);
+                }
+
+                const templateParams = {
+                    usuario_email: emailUsuario,
+                    email: emailUsuario,
+                    from_name: emailUsuario,
+                    message: mensagemTexto,
+                    mensagem: mensagemTexto
+                };
+
+                await emailjs.send('service_fmvpcip', 'template_kllil48', templateParams);
+
+                alert('Mensagem enviada com sucesso!');
+                document.getElementById('dois').value = '';
+
+            } catch (error) {
+                console.error('Erro na gravação ou envio:', error);
+                alert('Sua mensagem foi gravada no banco de dados, mas houve uma oscilação no envio do e-mail.');
+            } finally {
+                btn.innerText = 'Enviar';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minha Casa Interativa</title>
+<link rel="stylesheet" href="casa.css">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="topo">
+    <div class="botoes-topo">
+        <a href="jogos.html" class="btn-topo" onclick="event.preventDefault(); tentarSair();">
+            <img src="voltar-azul-btn.png" alt="Voltar">
+        </a>
+        <button type="button" class="btn-topo" id="btnOpcoes" aria-label="Abrir menu" aria-expanded="false">
+            <img src="tres-pontos-azul-btn.png" alt="Opções">
+        </button>
+
+        <nav class="menu-opcoes" id="menuOpcoes" aria-hidden="true">
+            <div class="menu-cabecalho">
+                <img src="logo-suporte.png" alt="Logo" class="menu-logo">
+                <span class="menu-titulo">MENU</span>
+            </div>
+
+            <a href="pagina-entrada.html" class="menu-item"><span class="menu-texto">Início</span></a>
+            <a href="tutoriais.html" class="menu-item"><span class="menu-texto">Tutoriais</span></a>
+            <a href="forum.html" class="menu-item"><span class="menu-texto">Fórum</span></a>
+            <a href="gestao.html" class="menu-item"><span class="menu-texto">Gestão</span></a>
+            <a href="Jogos.html" class="menu-item"><span class="menu-texto">Jogos</span></a>
+            <a href="perfil.html" class="menu-item"><span class="menu-texto">Perfil</span></a>
+            <a href="config-conta.html" class="menu-item"><span class="menu-texto">Configurações</span></a>
+            <a href="sobre-nos.html" class="menu-item"><span class="menu-texto">Sobre Nós</span></a>
+            <a href="suporte.html" class="menu-item"><span class="menu-texto">Suporte</span></a>
+
+            <div class="menu-divisor"></div>
+
+            <a href="login.html" class="menu-item menu-sair" id="menuSair">
+                <span class="menu-texto">Sair da conta</span>
+            </a>
+        </nav>
+    </div>
+
+    <h1 class="titulo">CASA DOS SONHOS</h1>
+</div>
+
+<div class="barra-jogo">
+    <div class="nav-comodos" id="navComodos"></div>
+
+    <div class="painel-jogo">
+        <div class="status">
+            <div class="status-item">
+                <img src="banner-xp.png" alt="XP" class="status-icon">
+                <span>XP:</span> <span id="valXp">0</span>
+            </div>
+            <div class="status-item">
+                <img src="banner-dinheiro.png" alt="$" class="status-icon">
+                <span>$:</span> <span id="valDinheiro">0</span>
+            </div>
+        </div>
+        <div class="acoes">
+            <button class="btn-carrinho" onclick="abrirLoja()">
+                Loja (<span id="valInventario">0</span>)
+            </button>
+            <button class="btn-salvar" onclick="salvarCenario()">
+                <img src="banner-salvar.png" alt="Salvar" class="btn-salvar-icon">
+                Salvar
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="cenario-casa" id="cenario" onclick="deselecionarComCliqueFora(event)">
+
+    <div class="chao-casa" id="chao"></div>
+
+    <div class="papel-parede arrastavel" id="papelParede" data-tipo="papel" style="display:none;"></div>
+
+    <div class="piso-chao arrastavel" id="pisoChao" data-tipo="piso" style="display:none;"></div>
+
+    <div class="porta-casa arrastavel" id="porta">
+        <div class="macaneta"></div>
+    </div>
+
+    <div id="container-moveis"></div>
+
+    <div class="boneco-area arrastavel" id="boneco">
+        <svg viewBox="0 0 200 280">
+            <circle id="bonecoCabeca" cx="100" cy="40" r="22" />
+            <path id="bonecoCorpo" d="M 100,60 C 75,60 62,72 44,100 C 35,114 47,128 55,115 C 65,99 71,90 76,94 C 73,115 67,155 62,215 C 60,228 76,228 78,215 C 84,175 92,142 100,142 C 108,142 116,175 122,215 C 124,228 140,228 138,215 C 133,155 127,115 124,94 C 129,90 135,99 145,115 C 153,128 165,114 156,100 C 138,72 125,60 100,60 Z" />
+        </svg>
+    </div>
+
+    <div id="avisoPortaRemovida" class="aviso-porta-removida" style="display:none;">
+        Porta removida — <button onclick="restaurarPorta();event.stopPropagation();">Restaurar</button>
+    </div>
+</div>
+
+<div class="painel-customizacao">
+    <div class="grupo-controles">
+        <div class="controle-item">Cor Parede: <input type="color" id="corParede" onchange="alterarCor('parede',this.value)"></div>
+        <div class="controle-item">Cor Chão: <input type="color" id="corChao" onchange="alterarCor('chao',this.value)"></div>
+        <div class="controle-item">Boneco: <input type="color" id="corBoneco" onchange="alterarCor('boneco',this.value)"></div>
+        <div class="controle-item">Porta: <input type="color" id="corPorta" onchange="alterarCor('porta',this.value)"></div>
+    </div>
+</div>
+
+<div class="dica-teclas">Clique nos objetos para editar</div>
+
+<button id="btnResgatar" class="btn-resgatar" style="display:none;" onclick="resgatarXp()">
+    RESGATAR
+</button>
+
+<div class="modal-loja" id="modalLoja">
+    <div class="loja-conteudo">
+        <div class="loja-header">
+            <h3>Loja &amp; Inventário</h3>
+            <div>
+                <button id="btnAbaLoja" onclick="mudarAbaLoja('catalogo')">Loja</button>
+                <button id="btnAbaInventario" onclick="mudarAbaLoja('inventario')">Inventário (<span id="valInventarioLoja">0</span>)</button>
+            </div>
+        </div>
+        <div class="filtros-loja" id="filtrosLoja"></div>
+        <div class="grid-loja" id="gridLoja"></div>
+        <button class="btn-carrinho btn-fechar-loja" onclick="fecharLoja()">Fechar</button>
+    </div>
+</div>
+
+<div class="painel-flutuante" id="painelFlutuante"></div>
+
+<div class="notificacao" id="notificacao">
+    <div class="notificacao-icone" id="notificacaoIcone"></div>
+    <div class="notificacao-texto" id="notificacaoTexto"></div>
+</div>
+
+<div class="modal-sair" id="modalSair">
+    <div class="modal-sair-conteudo">
+        <div class="modal-sair-icone">
+            <img src="banner-salvar.png" alt="Salvar" style="width:100%;height:100%;object-fit:contain;">
+        </div>
+        <h2 class="modal-sair-titulo">Deseja salvar antes de sair?</h2>
+        <p class="modal-sair-texto">Se você sair sem salvar, as mudanças no cenário serão perdidas.</p>
+        <div class="modal-sair-botoes">
+            <button class="btn-salvar-sair" onclick="salvarESair()">
+                <img src="banner-salvar.png" alt="" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;"> Salvar e Sair
+            </button>
+            <button class="btn-sair-sem-salvar" onclick="sairSemSalvar()">Sair sem salvar</button>
+            <button class="btn-cancelar-sair" onclick="fecharModalSair()">
+                <img src="banner-excluir.png" alt="" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;"> Cancelar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="jogos.js"></script>
+<script src="menu.js" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,520 @@
+* {
+    margin: 0;
+    outline: none;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.fundo-termos {
+    background-image:
+        url('logo-tutorial.png'),
+        url('tutoriais-fundo-img.png');
+    background-repeat: no-repeat, no-repeat;
+    background-size: 80% auto, cover;
+    background-position: left 20rem top, center center;
+    background-attachment: scroll, fixed;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+@keyframes fadeInUp {
+    0%   { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+    0%   { opacity: 0; transform: translateX(-30px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes glowTitle {
+    0%, 100% {
+        text-shadow: 2px 2px 3px #e77700e2,
+                     0 0 20px rgba(255, 170, 6, 0.3);
+    }
+    50% {
+        text-shadow: 2px 2px 3px #e77700e2,
+                     0 0 40px rgba(255, 170, 6, 0.6);
+    }
+}
+
+@keyframes linhaShine {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+.container-receitas {
+    background-color: transparent;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 350px auto 60px auto;
+    max-width: 1300px;
+    padding: 40px 60px 70px 60px;
+    animation: fadeInUp 0.9s ease-out both;
+}
+
+.container-receitas h1 {
+    font-size: 6rem;
+    letter-spacing: 2px;
+    color: transparent;
+    -webkit-text-stroke: 1.5px #ffaa06;
+    display: inline-block;
+    border-radius: 4px;
+    padding-top: 20px;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.p-titulo {
+    margin-top: 30px;
+    font-size: 55px;
+    color: #dd0000;
+    letter-spacing: 2px;
+    font-family: Arial, sans-serif;
+    animation:
+        fadeInUp 0.8s ease-out 0.35s both,
+        glowTitle 4s ease-in-out 1.5s infinite;
+}
+
+.p-info {
+    font-size: 18px;
+    color: #555;
+    font-style: italic;
+    margin-top: 20px;
+    animation: fadeInUp 0.8s ease-out 0.5s both;
+}
+
+.btn-1 {
+    background-color: #52c506a0;
+    width: 250px;
+    height: 5vh;
+    min-height: 45px;
+    color: white;
+    border-radius: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    border: 4px solid #52c506a0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+    animation: fadeInUp 0.7s ease-out 0.65s both;
+}
+
+.btn-1:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(82, 197, 6, 0.5);
+    filter: brightness(1.1);
+}
+
+.btn-2 {
+    background-color: #ef1c1cb7;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 20px;
+    color: white;
+    width: 200px;
+    height: 5vh;
+    min-height: 45px;
+    border: 4px solid #ef1c1c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+    animation: fadeInUp 0.7s ease-out 0.8s both;
+}
+
+.btn-2:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(239, 28, 28, 0.5);
+    filter: brightness(1.1);
+}
+
+.btn-paragrafo {
+    margin-top: 23px;
+}
+
+.segunda-parte {
+    margin: 60px auto 0 auto;
+    max-width: 1000px;
+    text-align: left;
+    padding: 0 20px;
+    animation: fadeInUp 0.9s ease-out both;
+}
+
+.segunda-parte:nth-of-type(2) {
+    animation-delay: 0.4s;
+}
+
+.segunda-parte:nth-of-type(3) {
+    animation-delay: 0.7s;
+}
+
+.segunda-parte h2 {
+    text-align: center;
+    font-size: 4rem;
+    letter-spacing: 2px;
+    color: transparent;
+    -webkit-text-stroke: 1.5px #ffaa06;
+    position: relative;
+    margin: 3rem auto 30px auto;
+    padding-bottom: 20px;
+    display: block;
+}
+
+.segunda-parte h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 3px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        #ffaa06 50%,
+        transparent 100%);
+    background-size: 200% auto;
+    animation: linhaShine 4s linear infinite;
+    border-radius: 3px;
+}
+
+.segunda-parte ul {
+    padding: 0;
+    margin-bottom: 20px;
+    width: 100%;
+    margin-top: 30px;
+    list-style: none;
+}
+
+.segunda-parte li {
+    font-size: 22px;
+    margin-bottom: 10px;
+    text-align: justify;
+    line-height: 1.7;
+    color: #1e293b;
+    padding-left: 18px;
+    position: relative;
+    transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.segunda-parte li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: #ffaa06;
+    font-weight: bold;
+    transition: transform 0.25s ease;
+}
+
+.segunda-parte li:hover {
+    transform: translateX(6px);
+    color: #dd0000;
+}
+
+.segunda-parte li:hover::before {
+    transform: scale(1.3);
+}
+
+.segunda-parte p {
+    margin-top: 50px;
+    font-size: 25px;
+    line-height: 1.6;
+    text-align: left;
+}
+
+h3 {
+    color: #dd0000;
+    font-size: 2.2rem;
+    margin: 40px 0 18px 0;
+    padding-left: 24px;
+    position: relative;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    transition: color 0.25s ease, transform 0.25s ease;
+    animation: fadeInLeft 0.6s ease-out both;
+}
+
+h3::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 80%;
+    background: linear-gradient(180deg, #ffaa06, #dd0000);
+    border-radius: 4px;
+}
+
+h3:hover {
+    color: #ffaa06;
+    transform: translateX(6px);
+}
+
+#segundo-h3 {
+    margin-left: 0;
+}
+
+.segunda-parte a {
+    color: #1e40af;
+    font-weight: 700;
+    border-bottom: 2px dashed rgba(74, 123, 199, 0.5);
+    padding: 0 2px;
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.segunda-parte a:hover {
+    color: #4a7bc7;
+    border-bottom-color: #4a7bc7;
+    background: rgba(126, 168, 255, 0.15);
+}
+
+.segunda-parte b {
+    color: #b45309;
+    font-weight: 800;
+}
+
+.header-flutuante {
+    position: absolute;
+    top: 3rem;
+    left: 40px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: fadeInLeft 0.8s ease-out both;
+}
+
+.btn-topo {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-topo:hover {
+    transform: scale(1.12);
+    filter: brightness(1.15) drop-shadow(0 0 10px rgba(255, 170, 6, 0.7));
+}
+
+.btn-topo img {
+    width: 90px;
+    height: auto;
+    display: block;
+}
+
+.menu-opcoes {
+    position: absolute;
+    top: 180px;
+    left: 0;
+    width: 260px;
+    padding: 14px 12px;
+    background: linear-gradient(160deg, rgba(245, 248, 255, 0.98), rgba(226, 236, 252, 0.98));
+    backdrop-filter: blur(12px);
+    border: 2px solid #7ea8ff;
+    border-radius: 16px;
+    box-shadow:
+        0 20px 45px rgba(30, 60, 130, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 1100;
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+    pointer-events: none;
+    transform-origin: top left;
+    transition:
+        opacity 0.28s ease,
+        transform 0.32s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.menu-opcoes.aberto {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.menu-cabecalho {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 6px 12px 12px;
+    border-bottom: 2px solid rgba(126, 168, 255, 0.4);
+    margin-bottom: 8px;
+}
+
+.menu-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 3px 8px rgba(74, 123, 199, 0.4));
+    transition: transform 0.3s ease;
+}
+
+.menu-logo:hover {
+    transform: scale(1.08) rotate(-3deg);
+}
+
+.menu-titulo {
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #1e40af;
+    text-shadow: 0 1px 2px rgba(126, 168, 255, 0.4);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 11px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #1e293b;
+    font-size: 15px;
+    font-weight: 700;
+    transition:
+        background 0.22s ease,
+        transform 0.22s ease,
+        color 0.22s ease,
+        box-shadow 0.22s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #4a7bc7, #7ea8ff);
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+    border-radius: 0 4px 4px 0;
+}
+
+.menu-item:hover {
+    background: rgba(74, 123, 199, 0.15);
+    color: #1e40af;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(74, 123, 199, 0.2);
+}
+
+.menu-item:hover::before {
+    transform: scaleY(1);
+}
+
+.menu-item:active {
+    transform: translateX(5px) scale(0.98);
+}
+
+.menu-texto {
+    flex: 1;
+}
+
+.menu-divisor {
+    height: 2px;
+    background: rgba(126, 168, 255, 0.35);
+    margin: 8px 10px;
+    border-radius: 2px;
+}
+
+.menu-sair {
+    color: #b91c1c;
+}
+
+.menu-sair:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.menu-sair::before {
+    background: linear-gradient(180deg, #ef4444, #f87171);
+}
+
+#btnOpcoes.ativo img {
+    transform: rotate(90deg);
+    filter: brightness(1.2) drop-shadow(0 0 8px rgba(74, 123, 199, 0.8));
+}
+
+#btnOpcoes img {
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+@media (max-width: 900px) {
+    .container-receitas {
+        margin-top: 250px;
+        padding: 30px 25px 50px 25px;
+    }
+
+    .container-receitas h1 {
+        font-size: 3rem;
+        padding-top: 10px;
+    }
+
+    .p-titulo {
+        font-size: 28px;
+        letter-spacing: 1px;
+    }
+
+    .p-info {
+        font-size: 14px;
+    }
+
+    .segunda-parte h2 {
+        font-size: 2.2rem;
+        margin: 2rem auto 20px auto;
+    }
+
+    h3 {
+        font-size: 1.4rem;
+        padding-left: 18px;
+        margin: 25px 0 12px 0;
+    }
+
+    .segunda-parte li,
+    .segunda-parte p {
+        font-size: 16px;
+        text-align: left;
+    }
+
+    .header-flutuante {
+        top: 1.5rem;
+        left: 15px;
+    }
+
+    .btn-topo img {
+        width: 60px;
+    }
+
+    .btn-1,
+    .btn-2 {
+        width: 180px;
+        font-size: 15px;
+        height: auto;
+        padding: 8px 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}

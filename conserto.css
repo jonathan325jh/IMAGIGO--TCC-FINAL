@@ -1,0 +1,369 @@
+* {
+    margin: 0;
+    outline: none;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.fundo-receita {
+    background-image: 
+        url('logo-tutorial.png'),
+        url('tutoriais-fundo-img.png');
+
+    background-repeat:
+        no-repeat,
+        no-repeat;
+
+    background-size: 
+        80% auto,
+        cover;
+
+    background-position: 
+        left 20rem top,
+        center center;
+
+   background-attachment: scroll, fixed;
+    min-height: 100vh;
+}
+
+#tres-pontos {
+    position: absolute;
+    top: 5rem;
+    left: 4rem;
+    right: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+}
+
+#voltar {
+    margin-left: 5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 6rem;
+}
+
+.volta-dois img {
+    margin-top: 3rem;
+    height: auto;
+}
+
+#tres-pontos {
+    width: 7rem;
+}
+
+.container-receitas{
+    background-color: rgba(255, 255, 255, 0.689);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 350px;
+}
+
+.container-receitas h1 {
+    font-size: 6rem;
+    letter-spacing: 2px;
+    color: transparent; 
+    -webkit-text-stroke: 1.5px #21b31f;
+    display: inline-block;
+    border-radius: 4px;
+}
+
+.container-receitas img{
+    width: 50%;
+    height: auto;
+    margin-top: 40px;
+    border-radius: 20px;
+    border: 2px solid #dd0000;
+}
+
+.p-titulo{
+    margin-top: 40px;
+    font-size: 55px;
+    color: #21b31f;
+    letter-spacing: 5px;
+    font-family: Arial, sans-serif;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 3px #077e0de2;
+}
+
+.btn-1 {
+    background-color: #52c506a0;
+    width: 200px;
+    height: 5vh;
+    color: white;
+    border-radius: 20px;
+    font-size: 20px;
+    border: 4px solid #52c506a0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-2 {
+    background-color: #ef1c1cb7;
+    font-size: 20px;
+    border-radius: 20px;
+    color: white;
+    width: 200px;
+    height: 5vh;
+    border: 4px solid #ef1c1c;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    margin-left: auto; 
+    margin-right: auto;
+}
+
+.btn-paragrafo{
+    margin-top: 23px;
+}
+
+
+.segunda-parte h2 {
+   text-align: center;
+   font-size: 5rem;
+   letter-spacing: 2px;
+   color: transparent; 
+   -webkit-text-stroke: 1.5px #21b31f;
+   position: relative;
+   right: 550px;
+   margin-top: 3rem;
+}
+
+
+.segunda-parte ul {
+    padding: 0;
+    margin-bottom: 20px;
+    width: 100%;
+    margin-top: 50px;
+}
+
+.segunda-parte li {
+    font-size: 25px;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.segunda-parte p {
+    margin-top: 50px;
+   font-size: 25px;
+   line-height: 1.6;
+   text-align: left;
+}
+
+.segunda-parte{
+    margin-left: 250px;
+}
+
+#segundo-titulo{
+    transform: translate(18rem, 0);
+}
+
+h3{
+   color: red;
+   border: none;
+   font-size: 3rem;
+   position: relative;
+   right: 30rem;
+   margin-top: 3rem;
+}
+
+#segundo-modo{
+    transform: translate(5rem, 0);
+}
+
+#btn-conserto{
+    background-color: #79e862;
+    border: 4px solid #54ca3c;
+}
+
+#btn-financas{
+    background-color: #bcc4f9;
+    border: 4px solid #96a3fc;
+}
+
+.toast-icone {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #28a745; /* Fundo verde para XP */
+}
+
+.toast-level .toast-icone {
+    background: #fb8500; /* Fundo laranja para Level Up */
+}
+
+.toast-icone img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.menu-opcoes {
+    position: absolute;
+    top: 3.5rem;
+    left: 0;
+    width: 260px;
+    padding: 14px 12px;
+    background: linear-gradient(160deg, rgba(245, 248, 255, 0.98), rgba(226, 236, 252, 0.98));
+    backdrop-filter: blur(12px);
+    border: 2px solid #7ea8ff;
+    border-radius: 16px;
+    box-shadow:
+        0 20px 45px rgba(30, 60, 130, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 1100;
+
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+    pointer-events: none;
+    transform-origin: top left;
+    transition:
+        opacity 0.28s ease,
+        transform 0.32s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.menu-opcoes.aberto {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* Cabeçalho com logo + título */
+.menu-cabecalho {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 6px 12px 12px;
+    border-bottom: 2px solid rgba(126, 168, 255, 0.4);
+    margin-bottom: 8px;
+}
+
+.menu-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 3px 8px rgba(74, 123, 199, 0.4));
+    transition: transform 0.3s ease;
+}
+
+.menu-logo:hover {
+    transform: scale(1.08) rotate(-3deg);
+}
+
+.menu-titulo {
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #1e40af;
+    text-shadow: 0 1px 2px rgba(126, 168, 255, 0.4);
+}
+
+/* Item do menu */
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 11px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #1e293b;
+    font-size: 15px;
+    font-weight: 700;
+    transition:
+        background 0.22s ease,
+        transform 0.22s ease,
+        color 0.22s ease,
+        box-shadow 0.22s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #4a7bc7, #7ea8ff);
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+    border-radius: 0 4px 4px 0;
+}
+
+.menu-item:hover {
+    background: rgba(74, 123, 199, 0.15);
+    color: #1e40af;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(74, 123, 199, 0.2);
+}
+
+.menu-item:hover::before {
+    transform: scaleY(1);
+}
+
+.menu-item:active {
+    transform: translateX(5px) scale(0.98);
+}
+
+.menu-texto {
+    flex: 1;
+}
+
+.menu-divisor {
+    height: 2px;
+    background: rgba(126, 168, 255, 0.35);
+    margin: 8px 10px;
+    border-radius: 2px;
+}
+
+/* Item "Sair" com destaque vermelho */
+.menu-sair {
+    color: #b91c1c;
+}
+
+.menu-sair:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.menu-sair::before {
+    background: linear-gradient(180deg, #ef4444, #f87171);
+}
+
+/* Botão dos três pontos — gira quando aberto */
+#btnOpcoes.ativo img {
+    transform: rotate(90deg);
+    filter: brightness(1.2) drop-shadow(0 0 8px rgba(74, 123, 199, 0.8));
+}
+
+#btnOpcoes img {
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .menu-opcoes,
+    .menu-item,
+    .menu-item::before,
+    .menu-logo,
+    #btnOpcoes img {
+        transition: none !important;
+    }
+}

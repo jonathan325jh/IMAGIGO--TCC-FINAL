@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Tem Certeza?</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <div class="overlay-modal">
+    <div class="modal-box modal-danger">
+      <a href="conta.html" class="modal-close">✕</a>
+      <div class="modal-title" style="color: #ffffff; margin-bottom: 30px;">TEM CERTEZA?</div>
+      <div style="display: flex; gap: 20px; width: 80%;">
+        <button class="btn" style="flex: 2; background-color: #5c6bc0; font-size: 20px;" onclick="cancelar()">Não</button>
+        <button class="btn" style="flex: 1; background-color: #7986cb; font-size: 16px;" onclick="confirmarExclusao()">Sim</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <script>
+    const SUPABASE_URL = 'https://yxsfpmqwhpvajzyrapyi.supabase.co';
+    const SUPABASE_KEY = 'SUA_CHAVE_PUBLICA_ANON';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    function cancelar() {
+      window.location.href = 'conta.html';
+    }
+
+    async function confirmarExclusao() {
+      const { data: { user } } = await _supabase.auth.getUser();
+
+      if (user) {
+        await _supabase.from('usuarios').delete().eq('id_usuarios', user.id);
+        await _supabase.auth.signOut();
+      }
+      
+      window.location.href = 'conta-excluida.html';
+    }
+  </script>
+</body>
+</html>

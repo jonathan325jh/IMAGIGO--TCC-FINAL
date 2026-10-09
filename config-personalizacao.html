@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - Personalização</title>
+    <link rel="stylesheet" href="config.css">
+    <style>
+        .content-panel { padding-top: 15px; padding-bottom: 15px; }
+        .panel-title { margin-top: 8px !important; margin-bottom: 4px !important; font-size: 14px; }
+
+        .clothes-grid { display: flex; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
+
+        .btn-clothes {
+            flex: 1;
+            min-width: 70px;
+            padding: 6px 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+            height: 44px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+        .btn-clothes:hover { background-color: rgba(255, 255, 255, 0.4); }
+        .btn-clothes.active { border-color: #fff; background-color: rgba(255, 255, 255, 0.5); }
+
+        .btn-clothes.bloqueado {
+            background-color: rgba(239, 68, 68, 0.22);
+            border-color: rgba(239, 68, 68, 0.6);
+            color: #fecaca;
+            cursor: not-allowed;
+        }
+        .btn-clothes.bloqueado:hover {
+            background-color: rgba(239, 68, 68, 0.28);
+        }
+        .btn-clothes .nivel-bloqueio {
+            font-size: 9px;
+            color: #fca5a5;
+            font-weight: bold;
+        }
+
+        .color-row { display: flex; gap: 10px; margin-bottom: 4px; }
+
+        .color-picker-group {
+            flex: 1; display: flex; align-items: center; justify-content: space-between;
+            color: #fff; font-size: 11px; background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px; border-radius: 8px; height: 42px;
+        }
+
+        .color-input {
+            -webkit-appearance: none; appearance: none;
+            width: 24px; height: 24px; background-color: transparent;
+            border: none; cursor: pointer;
+        }
+        .color-input::-webkit-color-swatch-wrapper { padding: 0; }
+        .color-input::-webkit-color-swatch {
+            border: 1.5px solid rgba(255, 255, 255, 0.8); border-radius: 50%;
+        }
+
+        .input-field { padding: 8px 12px; font-size: 13px; width: 100%; box-sizing: border-box; }
+
+        .modal-confirm-content { padding: 20px; text-align: center; }
+        .modal-confirm-text { color: #ffffff; font-size: 16px; margin-top: 15px; margin-bottom: 20px; line-height: 1.4; }
+        .modal-confirm-buttons { display: flex; justify-content: center; gap: 15px; }
+
+        .btn-modal-cancel {
+            background-color: #757575; border: 2px solid #b0bec5;
+            padding: 8px 20px; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer;
+        }
+        .btn-modal-confirm {
+            background-color: #b71c1c; border: 2px solid #ff1744;
+            padding: 8px 20px; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-flutuante">
+    <a href="javascript:history.back()" class="btn-topo">
+        <img src="btn-voltar-config.png" alt="Voltar">
+    </a>
+    <button type="button" class="btn-topo" id="btnOpcoes" aria-label="Abrir menu" aria-expanded="false">
+        <img src="tres-pontos-azul-btn.png" alt="Opções">
+    </button>
+
+    <nav class="menu-opcoes" id="menuOpcoes" aria-hidden="true">
+        <div class="menu-cabecalho">
+            <img src="logo-suporte.png" alt="Logo" class="menu-logo">
+            <span class="menu-titulo">MENU</span>
+        </div>
+        <a href="pagina-entrada.html" class="menu-item"><span class="menu-texto">Início</span></a>
+        <a href="tutoriais.html" class="menu-item"><span class="menu-texto">Tutoriais</span></a>
+        <a href="forum.html" class="menu-item"><span class="menu-texto">Fórum</span></a>
+        <a href="gestao.html" class="menu-item"><span class="menu-texto">Gestão</span></a>
+        <a href="Jogos.html" class="menu-item"><span class="menu-texto">Jogos</span></a>
+        <a href="perfil.html" class="menu-item"><span class="menu-texto">Perfil</span></a>
+        <a href="config-conta.html" class="menu-item"><span class="menu-texto">Configurações</span></a>
+        <a href="sobre-nos.html" class="menu-item"><span class="menu-texto">Sobre Nós</span></a>
+        <a href="suporte.html" class="menu-item"><span class="menu-texto">Suporte</span></a>
+        <div class="menu-divisor"></div>
+        <a href="login.html" class="menu-item menu-sair" id="menuSair"><span class="menu-texto">Sair da conta</span></a>
+    </nav>
+</header>
+
+<div class="app-container">
+    <div class="sidebar">
+        <div class="boneco-area">
+            <div id="bloco-criar-sidebar" class="bloco-criar-container">
+                <p id="titulo-bar" style="color: #fff; font-weight: bold; margin-bottom: 12px; line-height: 1.3; font-size: 18px;">
+                    CRIE SEU PERSONAGEM
+                </p>
+                <a href="criar.html" style="display: inline-block;">
+                    <img src="perso-btn.png" alt="Criar Personagem" class="btn-criar-img">
+                </a>
+            </div>
+
+            <svg id="boneco-principal" class="boneco-flutuante" width="300" height="420" viewBox="0 0 200 280">
+                <defs>
+                    <clipPath id="recorte-corpo-sidebar">
+                        <path d="M 100,60 C 75,60 62,72 44,100 C 35,114 47,128 55,115 C 65,99 71,90 76,94 C 73,115 67,155 62,215 C 60,228 76,228 78,215 C 84,175 92,142 100,142 C 108,142 116,175 122,215 C 124,228 140,228 138,215 C 133,155 127,115 124,94 C 129,90 135,99 145,115 C 153,128 165,114 156,100 C 138,72 125,60 100,60 Z" />
+                    </clipPath>
+                </defs>
+                <g id="elementos-fundo-svg"></g>
+                <circle id="cabeca-boneco" cx="100" cy="40" r="18" fill="#4a7bc7" />
+                <path id="corpo-boneco" d="M 100,60 C 75,60 62,72 44,100 C 35,114 47,128 55,115 C 65,99 71,90 76,94 C 73,115 67,155 62,215 C 60,228 76,228 78,215 C 84,175 92,142 100,142 C 108,142 116,175 122,215 C 124,228 140,228 138,215 C 133,155 127,115 124,94 C 129,90 135,99 145,115 C 153,128 165,114 156,100 C 138,72 125,60 100,60 Z" fill="#4a7bc7" />
+                <g clip-path="url(#recorte-corpo-sidebar)" id="grupo-estampas"></g>
+                <image id="img-cachecol" x="55" y="60" width="90" height="55" href="" />
+                <image id="img-roupa" x="33" y="35" width="140" height="170" href="" />
+                <image id="img-chapeu" x="70" y="2" width="60" height="46" href="" />
+            </svg>
+
+            <div class="sombra-boneco" id="sombra-sidebar"></div>
+        </div>
+    </div>
+
+    <div class="content-panel">
+        <div class="panel-title" style="margin-top:0 !important;">PERSONAGEM</div>
+        <div class="input-group">
+            <input type="text" id="nomePersonagem" class="input-field" placeholder="Nome do Personagem">
+        </div>
+
+        <div class="panel-title">CORES</div>
+        <div class="color-row">
+            <div class="color-picker-group">
+                <span>Cor Corpo</span>
+                <input type="color" id="corPrincipal" class="color-input" value="#4a7bc7">
+            </div>
+            <div class="color-picker-group">
+                <span>Cor Detalhe</span>
+                <input type="color" id="corEstampa" class="color-input" value="#ff0000">
+            </div>
+        </div>
+
+        <div class="panel-title">ESTAMPA</div>
+        <div class="clothes-grid">
+            <button type="button" class="btn-clothes btn-estampa" data-valor="nenhuma">Nenhuma</button>
+            <button type="button" class="btn-clothes btn-estampa" data-valor="bolinhas">Bolinhas</button>
+            <button type="button" class="btn-clothes btn-estampa" data-valor="linhas">Linhas</button>
+        </div>
+
+        <div class="panel-title">ROUPA</div>
+        <div class="clothes-grid">
+            <button type="button" class="btn-clothes btn-roupa" data-valor="nenhuma" data-nivel="0">Nenhuma</button>
+            <button type="button" class="btn-clothes btn-roupa" data-valor="beca" data-nivel="20">Beca</button>
+            <button type="button" class="btn-clothes btn-roupa" data-valor="roupa-1" data-nivel="50">Capa</button>
+        </div>
+
+        <div class="panel-title">CHAPÉU</div>
+        <div class="clothes-grid">
+            <button type="button" class="btn-clothes btn-chapeu" data-valor="nenhum" data-nivel="0">Nenhum</button>
+            <button type="button" class="btn-clothes btn-chapeu" data-valor="roupa-touca" data-nivel="10">Touca</button>
+            <button type="button" class="btn-clothes btn-chapeu" data-valor="roupa-touca-2" data-nivel="15">Cachecol</button>
+            <button type="button" class="btn-clothes btn-chapeu" data-valor="chapeu-formando" data-nivel="50">Formando</button>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-delete" type="button" id="btnExcluir">Excluir</button>
+            <button class="btn btn-save" type="button" id="btnSalvar">Salvar</button>
+            <button class="btn btn-default" type="button" id="btnPadrao">Padrão</button>
+        </div>
+    </div>
+</div>
+
+<nav class="nav-bar">
+    <a href="config-conta.html" class="nav-item nav-conta">Conta</a>
+    <a href="config-sistemas.html" class="nav-item nav-sistemas">Sistemas</a>
+    <a href="config-personalizacao.html" class="nav-item nav-personalizacao active">Personalização</a>
+    <a href="config-privacidade.html" class="nav-item nav-privacidade">Privacidade</a>
+</nav>
+
+<div class="overlay-modal" id="modalNotificacao" style="display: none;">
+    <div class="modal-box modal-success">
+        <span class="modal-close" id="fecharModalNotificacao">&times;</span>
+        <div class="modal-title" id="tituloModalNotificacao">PERSONAGEM SALVO</div>
+    </div>
+</div>
+
+<div class="overlay-modal" id="modalConfirmacao" style="display: none;">
+    <div class="modal-box modal-danger">
+        <span class="modal-close" id="fecharModalConfirmacao">&times;</span>
+        <div class="modal-confirm-content">
+            <div class="modal-title">EXCLUIR PERSONAGEM</div>
+            <p class="modal-confirm-text">
+                Tem certeza que deseja excluir seu personagem?<br>
+                <strong>Atenção:</strong> Seu Level e XP voltarão para 0.
+            </p>
+            <div class="modal-confirm-buttons">
+                <button type="button" class="btn-modal-cancel" id="btnCancelarExclusao">Cancelar</button>
+                <button type="button" class="btn-modal-confirm" id="btnConfirmarExclusao">Excluir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="menu.js"></script>
+<script>
+    const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const caminhoRoupas = {
+        'nenhuma': '',
+        'beca': 'camisa.png',
+        'roupa-1': 'roupa-1.png'
+    };
+    const caminhoChapeus = {
+        'nenhum': '',
+        'roupa-touca': 'roupa-touca.png',
+        'roupa-touca-2': 'roupa-touca-2.png',
+        'chapeu-formando': 'chapeu.png'
+    };
+
+    const AJUSTE_ROUPAS = {
+        'beca':    { x: 33, y: 35, w: 140, h: 170 },
+        'roupa-1': { x: 20, y: 20, w: 160, h: 210 }
+    };
+    const AJUSTE_CHAPEUS = {
+        'roupa-touca':     { x: 68, y: -14, w: 64, h: 50 },
+        'chapeu-formando': { x: 70, y: 2,   w: 60, h: 46 }
+    };
+    const AJUSTE_CACHECOL = { x: 55, y: 60, w: 90, h: 55 };
+    const AJUSTE_PADRAO_ROUPA  = { x: 33, y: 35, w: 140, h: 170 };
+    const AJUSTE_PADRAO_CHAPEU = { x: 70, y: 2,  w: 60,  h: 46  };
+
+    const LEVEL_MIN_ROUPA = {
+        'nenhuma': 0,
+        'beca': 20,
+        'roupa-1': 50
+    };
+
+    const LEVEL_MIN_CHAPEU = {
+        'nenhum': 0,
+        'roupa-touca': 10,
+        'roupa-touca-2': 15,
+        'chapeu-formando': 50
+    };
+
+    const email = (
+        sessionStorage.getItem('usuario_email') ||
+        localStorage.getItem('usuario_email') ||
+        ""
+    ).trim().toLowerCase();
+
+    let dadosOriginais = null;
+    let estampaSelecionada = "nenhuma";
+    let roupaSelecionada = "nenhuma";
+    let chapeuSelecionado = "nenhum";
+    let levelAtual = 1;
+
+    function exibirNotificacao(texto) {
+        document.getElementById('tituloModalNotificacao').innerText = texto;
+        document.getElementById('modalNotificacao').style.display = 'flex';
+    }
+
+    document.getElementById('fecharModalNotificacao').addEventListener('click', () => {
+        document.getElementById('modalNotificacao').style.display = 'none';
+    });
+    document.getElementById('fecharModalConfirmacao').addEventListener('click', () => {
+        document.getElementById('modalConfirmacao').style.display = 'none';
+    });
+    document.getElementById('btnCancelarExclusao').addEventListener('click', () => {
+        document.getElementById('modalConfirmacao').style.display = 'none';
+    });
+
+    /* ===== BLOQUEIO VISUAL DOS BOTÕES POR LEVEL ===== */
+    function aplicarBloqueioBotoes() {
+        document.querySelectorAll('.btn-clothes[data-nivel]').forEach(btn => {
+            const nivelReq = parseInt(btn.dataset.nivel) || 0;
+            const bloqueado = nivelReq > 0 && levelAtual < nivelReq;
+
+            btn.classList.toggle('bloqueado', bloqueado);
+            btn.disabled = bloqueado;
+
+            const spanNivel = btn.querySelector('.nivel-bloqueio');
+            if (bloqueado && !spanNivel) {
+                const span = document.createElement('span');
+                span.className = 'nivel-bloqueio';
+                span.textContent = 'LV ' + nivelReq;
+                btn.appendChild(span);
+            } else if (!bloqueado && spanNivel) {
+                spanNivel.remove();
+            }
+        });
+    }
+
+    async function carregarLevel() {
+        if (!email) return;
+        try {
+            const { data, error } = await supabaseClient
+                .from('usuarios')
+                .select('level, xp')
+                .eq('email', email)
+                .maybeSingle();
+
+            if (error) throw error;
+            if (data) {
+                const xp = Number(data.xp) || 0;
+                levelAtual = Number(data.level) || Math.floor(xp / 100) || 1;
+            }
+        } catch (err) {
+            console.warn('Não foi possível carregar level:', err);
+        }
+        aplicarBloqueioBotoes();
+    }
+
+    async function carregar() {
+        if (!email) return;
+        try {
+            const { data } = await supabaseClient.from('usuarios').select('*').eq('email', email);
+            if (data && data.length > 0) {
+                dadosOriginais = data[0];
+                aplicarDados(dadosOriginais);
+            }
+        } catch (err) { console.error(err); }
+    }
+
+    function aplicarDados(u) {
+        if (!u) return;
+
+        const foiCriado = u.personagem_criado == 1 || u.personagem_criado === true;
+        const elBonecoSvg = document.getElementById('boneco-principal');
+        const elSombra = document.getElementById('sombra-sidebar');
+        const elBlocoCriar = document.getElementById('bloco-criar-sidebar');
+
+        if (!foiCriado) {
+            if (elBonecoSvg) elBonecoSvg.style.setProperty('display', 'none', 'important');
+            if (elSombra) elSombra.style.setProperty('display', 'none', 'important');
+            if (elBlocoCriar) elBlocoCriar.style.setProperty('display', 'flex', 'important');
+            return;
+        }
+
+        if (elBonecoSvg) elBonecoSvg.style.setProperty('display', 'block', 'important');
+        if (elSombra) elSombra.style.setProperty('display', 'block', 'important');
+        if (elBlocoCriar) elBlocoCriar.style.setProperty('display', 'none', 'important');
+
+        document.getElementById('nomePersonagem').value = u.nome_personagem || '';
+        document.getElementById('corPrincipal').value = u.cor_1 || '#4a7bc7';
+        document.getElementById('corEstampa').value = u.cor_2 || '#ff0000';
+
+        estampaSelecionada = u.estampa || 'nenhuma';
+        roupaSelecionada = u.roupa || 'nenhuma';
+        chapeuSelecionado = u.chapeu || 'nenhum';
+
+        sincronizarBotoes();
+        atualizarBoneco();
+    }
+
+    function sincronizarBotoes() {
+        document.querySelectorAll('.btn-estampa').forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-valor') === estampaSelecionada);
+        });
+        document.querySelectorAll('.btn-roupa').forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-valor') === roupaSelecionada);
+        });
+        document.querySelectorAll('.btn-chapeu').forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-valor') === chapeuSelecionado);
+        });
+    }
+
+    function atualizarBoneco() {
+        const c1 = document.getElementById('corPrincipal').value;
+        const c2 = document.getElementById('corEstampa').value;
+
+        document.getElementById('cabeca-boneco').setAttribute('fill', c1);
+        document.getElementById('corpo-boneco').setAttribute('fill', c1);
+
+        const grupoEstampas = document.getElementById('grupo-estampas');
+        grupoEstampas.innerHTML = '';
+
+        if (estampaSelecionada === 'bolinhas') {
+            const pos = [
+                {cx: 72,  cy: 80,  r: 6}, {cx: 92,  cy: 88,  r: 7},
+                {cx: 112, cy: 80,  r: 6}, {cx: 128, cy: 92,  r: 5},
+                {cx: 80,  cy: 105, r: 7}, {cx: 105, cy: 112, r: 8},
+                {cx: 125, cy: 118, r: 6}, {cx: 70,  cy: 130, r: 6},
+                {cx: 90,  cy: 138, r: 7}, {cx: 112, cy: 145, r: 6},
+                {cx: 128, cy: 152, r: 5}, {cx: 78,  cy: 160, r: 7},
+                {cx: 98,  cy: 168, r: 6}, {cx: 118, cy: 178, r: 7},
+                {cx: 85,  cy: 190, r: 6}, {cx: 108, cy: 198, r: 6},
+                {cx: 72,  cy: 205, r: 5}, {cx: 95,  cy: 212, r: 6}
+            ];
+            pos.forEach(p => {
+                const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                c.setAttribute('cx', p.cx);
+                c.setAttribute('cy', p.cy);
+                c.setAttribute('r', p.r);
+                c.setAttribute('fill', c2);
+                grupoEstampas.appendChild(c);
+            });
+        } else if (estampaSelecionada === 'linhas') {
+            for (let offset = -250; offset < 400; offset += 16) {
+                const linha = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                linha.setAttribute('x1', offset + 250);
+                linha.setAttribute('y1', 0);
+                linha.setAttribute('x2', offset);
+                linha.setAttribute('y2', 280);
+                linha.setAttribute('stroke', c2);
+                linha.setAttribute('stroke-width', 5);
+                grupoEstampas.appendChild(linha);
+            }
+        }
+
+        const elCachecol = document.getElementById('img-cachecol');
+        if (elCachecol) {
+            if (chapeuSelecionado === 'roupa-touca-2') {
+                elCachecol.setAttribute('href', caminhoChapeus['roupa-touca-2']);
+                const a = AJUSTE_CACHECOL;
+                elCachecol.setAttribute('x', a.x);
+                elCachecol.setAttribute('y', a.y);
+                elCachecol.setAttribute('width', a.w);
+                elCachecol.setAttribute('height', a.h);
+            } else {
+                elCachecol.setAttribute('href', '');
+            }
+        }
+
+        const elRoupa = document.getElementById('img-roupa');
+        elRoupa.setAttribute('href', caminhoRoupas[roupaSelecionada] || '');
+        const ajR = AJUSTE_ROUPAS[roupaSelecionada] || AJUSTE_PADRAO_ROUPA;
+        elRoupa.setAttribute('x', ajR.x);
+        elRoupa.setAttribute('y', ajR.y);
+        elRoupa.setAttribute('width', ajR.w);
+        elRoupa.setAttribute('height', ajR.h);
+
+        const elChapeu = document.getElementById('img-chapeu');
+        if (chapeuSelecionado && chapeuSelecionado !== 'nenhum' && chapeuSelecionado !== 'roupa-touca-2') {
+            elChapeu.setAttribute('href', caminhoChapeus[chapeuSelecionado] || '');
+            const aC = AJUSTE_CHAPEUS[chapeuSelecionado] || AJUSTE_PADRAO_CHAPEU;
+            elChapeu.setAttribute('x', aC.x);
+            elChapeu.setAttribute('y', aC.y);
+            elChapeu.setAttribute('width', aC.w);
+            elChapeu.setAttribute('height', aC.h);
+        } else {
+            elChapeu.setAttribute('href', '');
+        }
+    }
+
+    document.querySelectorAll('.btn-estampa').forEach(btn => {
+        btn.addEventListener('click', () => {
+            estampaSelecionada = btn.getAttribute('data-valor');
+            sincronizarBotoes();
+            atualizarBoneco();
+        });
+    });
+
+    document.querySelectorAll('.btn-roupa').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const nivelReq = parseInt(btn.dataset.nivel) || 0;
+            if (nivelReq > 0 && levelAtual < nivelReq) {
+                exibirNotificacao(`BLOQUEADO — PRECISA LV${nivelReq}`);
+                return;
+            }
+            roupaSelecionada = btn.getAttribute('data-valor');
+            sincronizarBotoes();
+            atualizarBoneco();
+        });
+    });
+
+    document.querySelectorAll('.btn-chapeu').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const nivelReq = parseInt(btn.dataset.nivel) || 0;
+            if (nivelReq > 0 && levelAtual < nivelReq) {
+                exibirNotificacao(`BLOQUEADO — PRECISA LV${nivelReq}`);
+                return;
+            }
+            chapeuSelecionado = btn.getAttribute('data-valor');
+            sincronizarBotoes();
+            atualizarBoneco();
+        });
+    });
+
+    document.getElementById('corPrincipal').addEventListener('input', atualizarBoneco);
+    document.getElementById('corEstampa').addEventListener('input', atualizarBoneco);
+
+    document.getElementById('btnSalvar').addEventListener('click', async () => {
+        try {
+            const novosDados = {
+                nome_personagem: document.getElementById('nomePersonagem').value,
+                cor_1: document.getElementById('corPrincipal').value,
+                cor_2: document.getElementById('corEstampa').value,
+                estampa: estampaSelecionada,
+                roupa: roupaSelecionada,
+                chapeu: chapeuSelecionado
+            };
+
+            await supabaseClient.from('usuarios').update(novosDados).eq('email', email);
+            dadosOriginais = { ...dadosOriginais, ...novosDados };
+            exibirNotificacao('CUSTOMIZAÇÃO DO PERSONAGEM SALVA');
+        } catch (err) {
+            console.error(err);
+            exibirNotificacao('ERRO AO SALVAR PERSONALIZAÇÃO');
+        }
+    });
+
+    document.getElementById('btnPadrao').addEventListener('click', () => {
+        if (dadosOriginais) {
+            aplicarDados(dadosOriginais);
+            exibirNotificacao('PERSONAGEM RESTAURADO AO ÚLTIMO SALVAMENTO');
+        }
+    });
+
+    document.getElementById('btnExcluir').addEventListener('click', () => {
+        document.getElementById('modalConfirmacao').style.display = 'flex';
+    });
+
+    document.getElementById('btnConfirmarExclusao').addEventListener('click', async () => {
+        document.getElementById('modalConfirmacao').style.display = 'none';
+        try {
+            const { error } = await supabaseClient.from('usuarios').update({
+                nome_personagem: '',
+                cor_1: '#4a7bc7',
+                cor_2: '#ff0000',
+                estampa: 'nenhuma',
+                roupa: 'nenhuma',
+                chapeu: 'nenhum',
+                level: 0,
+                xp: 0,
+                personagem_criado: 0
+            }).eq('email', email);
+
+            if (error) throw error;
+            exibirNotificacao('PERSONAGEM EXCLUÍDO E LEVEL ZERADO');
+            setTimeout(() => { window.location.href = 'pagina-entrada.html'; }, 1200);
+        } catch (err) {
+            console.error(err);
+            exibirNotificacao('ERRO AO EXCLUIR PERSONAGEM');
+        }
+    });
+
+    (async () => {
+        await carregarLevel();
+        await carregar();
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    outline: none;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== BODY ===== */
+body.fundo {
+    background-image: url('Login.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8em;
+
+    min-height: 100vh;
+    margin: 0;
+    padding: 2em 4em;
+    overflow: hidden;
+
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes appearInPlace {
+    0%   { opacity: 0; transform: scale(0.92); }
+    60%  { opacity: 1; transform: scale(1.02); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+}
+
+/* ===== LOGO ===== */
+.logo-animada {
+    width: 55%;
+    max-width: 800px;
+    flex-shrink: 0;
+    pointer-events: none;
+    animation: appearInPlace 0.9s ease-out both;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+    gap: 1em;
+    font-family: 'Cooper Hewitt', sans-serif;
+    background-color: rgba(255, 222, 89, 0.5);
+    border-radius: 2%;
+    border: solid 4px rgb(255, 197, 89);
+    width: 30%;
+    height: 81vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    animation:
+        appearInPlace 0.9s ease-out both,
+        float 4s ease-in-out infinite;
+    animation-delay: 0.15s, 1.55s;
+}
+
+/* ===== FOTO PERFIL ===== */
+#foto-perfil {
+    display: block;
+    width: 40%;
+    margin-top: 4em;
+}
+
+/* ===== TÍTULO ===== */
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 40px;
+    color: #3a2a00;
+    font-weight: 900;
+    letter-spacing: 3px;
+}
+
+/* ===== CONTAINER DOS BOTÕES ===== */
+.container-botoes {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    gap: 20px;
+    margin-top: 2em;
+}
+
+/* ===== BOTÕES ===== */
+#entrar, #voltar {
+    cursor: pointer;
+    background-color: rgba(251, 165, 6, 0.381);
+    border-radius: 10px;
+    font-size: 26px;
+    width: 100%;
+    height: 10vh;
+    border: solid 5px rgba(251, 165, 6);
+    font-family: inherit;
+    font-weight: bold;
+    color: #3a2a00;
+    transition: background-color 0.25s ease, transform 0.2s ease,
+                box-shadow 0.25s ease;
+}
+
+#entrar:hover, #voltar:hover {
+    background-color: rgba(255, 128, 0, 0.6);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 128, 0, 0.4);
+}
+
+#entrar:active, #voltar:active {
+    background-color: rgba(252, 244, 79, 0.6);
+    transform: translateY(0) scale(0.98);
+}
+
+/* ===== BOTÃO VOLTAR FIXO NO CANTO ===== */
+.btn-voltar-topo {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    text-decoration: none;
+    transition: transform 0.2s ease, filter 0.2s ease;
+
+    animation: appearInPlace 0.7s ease-out both;
+}
+
+.btn-voltar-topo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.btn-voltar-topo:hover {
+    transform: scale(1.15) rotate(-5deg);
+    filter: brightness(1.2) drop-shadow(0 0 15px rgba(255, 197, 89, 0.9));
+}
+
+.btn-voltar-topo:active {
+    transform: scale(0.95);
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 1200px) {
+    body.fundo { gap: 5em; }
+    .logo-animada { width: 50%; }
+    .container { width: 35%; }
+}
+
+@media (max-width: 900px) {
+    body.fundo {
+        flex-direction: column;
+        gap: 1em;
+        padding: 1em;
+    }
+    .logo-animada { width: 60%; }
+    .container {
+        width: 80%;
+        height: auto;
+        padding: 2em;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+        padding: 20px 0 40px;
+    }
+    #foto-perfil { width: 50%; margin-top: 1em; }
+    h1 { font-size: 28px; letter-spacing: 1px; }
+    #entrar, #voltar { font-size: 18px; height: auto; padding: 14px 0; }
+    .logo-animada { width: 70%; }
+}
