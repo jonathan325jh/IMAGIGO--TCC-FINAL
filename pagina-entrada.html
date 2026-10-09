@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="pagEntrada.css?v=4.0">
+    <title>Página de Entrada</title>
+    <style>
+        .boneco-area { position: relative; display: inline-block; overflow: visible; background: transparent !important; }
+        #video-fundo-home {
+            position: absolute; top: -20px; left: -20px;
+            width: calc(100% + 40px); height: calc(100% + 40px);
+            object-fit: cover; z-index: 1; pointer-events: none;
+            border-radius: 12px; background: transparent !important;
+        }
+        #boneco-principal {
+            position: relative; z-index: 2; overflow: visible;
+            background-color: transparent !important;
+        }
+        #bloco-criar-personagem, #bloco-layout-centro { display: none; }
+
+        .barra-xp-fill {
+            height: 100%; background-color: #ff9800 !important;
+            transition: width 0.4s ease-in-out; border-radius: 8px;
+        }
+        .xp-numeros { font-weight: bold; color: #333; display: block; margin-top: 4px; }
+
+        .modal-banido {
+            position: fixed; inset: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(8px);
+            display: none; align-items: center; justify-content: center;
+            z-index: 99999; padding: 20px;
+        }
+        .modal-banido.ativo { display: flex; }
+        .modal-banido-conteudo {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 4px solid #ef4444; border-radius: 24px;
+            padding: 36px 32px; max-width: 460px; width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(239, 68, 68, 0.4);
+            animation: modalBanPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: #fff;
+        }
+        @keyframes modalBanPop {
+            0%   { opacity: 0; transform: scale(0.85); }
+            60%  { opacity: 1; transform: scale(1.03); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes flutuarIconeBan {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50%      { transform: translateY(-10px) rotate(5deg); }
+        }
+        .modal-banido-icone {
+            margin-bottom: 16px;
+            animation: flutuarIconeBan 2s ease-in-out infinite;
+            display: flex; justify-content: center;
+        }
+        .modal-banido-icone img {
+            width: 100px; height: 100px; object-fit: contain;
+            image-rendering: pixelated;
+        }
+        .modal-banido-titulo { font-size: 26px; color: #ef4444; margin: 0 0 12px 0; letter-spacing: 1px; }
+        .modal-banido-texto { font-size: 15px; color: #cbd5e1; line-height: 1.6; margin: 0 0 24px 0; }
+        .btn-modal-banido {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            color: #fff; border: none; padding: 14px 40px;
+            border-radius: 14px; font-family: inherit; font-size: 16px;
+            font-weight: bold; cursor: pointer;
+            box-shadow: 0 5px 0 #7f1d1d;
+            transition: transform 0.15s ease;
+        }
+        .btn-modal-banido:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-modal-banido:active { transform: translateY(3px); box-shadow: 0 2px 0 #7f1d1d; }
+
+        .toast-xp-global {
+            position: fixed; bottom: 30px; right: 30px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: #fff; padding: 16px 22px; border-radius: 16px;
+            border: 3px solid #facc15;
+            display: flex; align-items: center; gap: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.45), 0 4px 0 #a16207;
+            z-index: 99999; transform: translateX(140%);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 340px;
+        }
+        .toast-xp-global.ativo { transform: translateX(0); }
+        .toast-xp-global .toast-icone {
+            font-size: 32px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .toast-xp-global .toast-icone img {
+            width: 40px; height: 40px; object-fit: contain;
+            image-rendering: pixelated;
+        }
+        .toast-xp-global .toast-conteudo { display: flex; flex-direction: column; }
+        .toast-xp-global .toast-titulo { font-weight: bold; color: #facc15; font-size: 16px; display: block; }
+        .toast-xp-global .toast-subtitulo { font-size: 13px; color: #cbd5e1; line-height: 1.35; }
+
+        .modal-msg-dev {
+            position: fixed; inset: 0;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            display: none; align-items: center; justify-content: center;
+            z-index: 99999; padding: 20px;
+        }
+        .modal-msg-dev.ativo { display: flex; }
+        .modal-msg-dev-conteudo {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 4px solid #4a7bc7;
+            border-radius: 24px;
+            padding: 32px 28px;
+            max-width: 460px; width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(74, 123, 199, 0.5);
+            animation: modalDevPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: #fff;
+        }
+        @keyframes modalDevPop {
+            0%   { opacity: 0; transform: scale(0.85) translateY(30px); }
+            60%  { opacity: 1; transform: scale(1.04) translateY(-4px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes flutuarIcone {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50%      { transform: translateY(-8px) scale(1.05); }
+        }
+        .modal-msg-dev-icone {
+            margin-bottom: 16px;
+            animation: flutuarIcone 2.2s ease-in-out infinite;
+            display: flex; justify-content: center;
+        }
+        .modal-msg-dev-icone img {
+            width: 100px; height: 100px; object-fit: contain;
+            image-rendering: pixelated;
+        }
+        .modal-msg-dev-titulo {
+            font-size: 24px; color: #60a5fa;
+            margin: 0 0 14px 0; letter-spacing: 0.5px;
+        }
+        .modal-msg-dev-texto {
+            font-size: 15px; color: #cbd5e1; line-height: 1.6;
+            margin: 0 0 20px 0; white-space: pre-wrap; word-break: break-word;
+        }
+        .modal-msg-dev-xp {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            color: #78350f;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 8px 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 0 #a16207;
+            animation: pulseXP 1.6s ease-in-out infinite;
+        }
+        .modal-msg-dev-xp img {
+            width: 36px; height: 36px; object-fit: contain;
+            image-rendering: pixelated;
+        }
+        @keyframes pulseXP {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 0 #a16207; }
+            50%      { transform: scale(1.05); box-shadow: 0 6px 0 #a16207, 0 0 20px rgba(250, 204, 21, 0.6); }
+        }
+        .btn-msg-dev-ok {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, #4a7bc7, #1e40af);
+            color: #fff; border: none; border-radius: 14px;
+            font-family: inherit; font-size: 16px; font-weight: bold;
+            cursor: pointer; box-shadow: 0 5px 0 #1e3a8a;
+            transition: transform 0.15s ease;
+        }
+        .btn-msg-dev-ok:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-msg-dev-ok:active { transform: translateY(3px); box-shadow: 0 2px 0 #1e3a8a; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="pagina-entrada.html" id="inicio">INÍCIO</a>
+        <a href="config-conta.html" id="config">CONFIGURAÇÃO</a>
+        <img src="foto-logo.png" alt="Logo" class="logo-img">
+        <a href="sobre-nos.html" id="sobre">SOBRE NÓS</a>
+        <a href="suporte.html" id="suporte">SUPORTE</a>
+        <a href="perfil.html" class="link-perfil">
+            <div class="avatar-container">
+                <img src="perfil-azul.png" id="perfil" alt="Perfil">
+            </div>
+        </a>
+    </header>
+
+    <div class="container-entrada" id="container-entrada">
+        <div id="bloco-criar-personagem">
+            <p id="criar-p">CRIE SEU PERSONAGEM</p>
+            <a href="criar.html"><img src="perso-btn.png" alt="Criar Personagem"></a>
+        </div>
+
+        <div id="bloco-layout-centro" class="layout-centro">
+            <div class="boneco-area" id="boneco-container">
+                <svg id="boneco-principal" width="300" height="420" viewBox="0 0 200 280">
+                    <defs>
+                        <clipPath id="recorte-corpo-home">
+                            <path d="M 100,60 C 75,60 62,72 44,100 C 35,114 47,128 55,115 C 65,99 71,90 76,94 C 73,115 67,155 62,215 C 60,228 76,228 78,215 C 84,175 92,142 100,142 C 108,142 116,175 122,215 C 124,228 140,228 138,215 C 133,155 127,115 124,94 C 129,90 135,99 145,115 C 153,128 165,114 156,100 C 138,72 125,60 100,60 Z" />
+                        </clipPath>
+                    </defs>
+                    <g id="elementos-fundo-svg"></g>
+                    <circle id="cabeca-boneco" cx="100" cy="40" r="18" fill="#4a7bc7" />
+                    <path id="corpo-boneco" d="M 100,60 C 75,60 62,72 44,100 C 35,114 47,128 55,115 C 65,99 71,90 76,94 C 73,115 67,155 62,215 C 60,228 76,228 78,215 C 84,175 92,142 100,142 C 108,142 116,175 122,215 C 124,228 140,228 138,215 C 133,155 127,115 124,94 C 129,90 135,99 145,115 C 153,128 165,114 156,100 C 138,72 125,60 100,60 Z" fill="#4a7bc7" />
+                    <g clip-path="url(#recorte-corpo-home)" id="grupo-estampas"></g>
+                    <image id="img-cachecol" x="55" y="60" width="90" height="55" href="" />
+                    <image id="img-roupa"    x="33" y="35" width="140" height="170" href="" />
+                    <image id="img-chapeu"   x="70" y="2"  width="60"  height="46"  href="" />
+                </svg>
+                <div class="sombra"></div>
+            </div>
+
+            <div class="card-usuario-foto">
+                <div class="topo-perfil-card">
+                    <div class="foto-perfil-circulo">
+                        <img src="perfil.png" alt="Foto">
+                    </div>
+                    <div class="dados-texto">
+                        <h2 class="nome-usuario-foto" id="txt-nome">Carregando...</h2>
+                        <span class="level-texto" id="txt-level">Level 0</span>
+                        <div class="barra-xp-container">
+                            <div class="barra-xp-fill" id="barra-xp" style="width: 0%;"></div>
+                        </div>
+                        <span class="xp-numeros" id="txt-xp">0 / 100 XP</span>
+                    </div>
+                </div>
+                <div class="secao-insignias">
+                    <h3>Insígnias</h3>
+                    <div class="container-icones-insignia" id="container-insignias"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="botoes">
+        <a href="tutoriais.html" id="tutoriais">Tutoriais</a>
+        <a href="forum.html" id="forum">Fórum</a>
+        <a href="gestao.html" id="banco">Gestão</a>
+        <a href="Jogos.html" id="gestao">Jogos</a>
+    </div>
+
+    <div class="modal-banido" id="modalBanido">
+        <div class="modal-banido-conteudo">
+            <div class="modal-banido-icone">
+                <img src="banner-cadeado.png" alt="Bloqueado">
+            </div>
+            <h2 class="modal-banido-titulo">Conta Suspensa</h2>
+            <p class="modal-banido-texto" id="modalBanidoMotivo">
+                Você violou as diretrizes e termos de uso do site.
+            </p>
+            <button class="btn-modal-banido" onclick="irParaLogin()">Entendi</button>
+        </div>
+    </div>
+
+    <div class="modal-msg-dev" id="modalMsgDev">
+        <div class="modal-msg-dev-conteudo">
+            <div class="modal-msg-dev-icone">
+                <img id="msgDevIconeImg" src="banner-info.png" alt="Ícone">
+            </div>
+            <h2 class="modal-msg-dev-titulo" id="msgDevTitulo">—</h2>
+            <p class="modal-msg-dev-texto" id="msgDevTexto">—</p>
+            <div class="modal-msg-dev-xp" id="msgDevXP" style="display:none;">
+                <img src="banner-xp.png" alt="XP">
+                <span id="msgDevXPTexto">+0 XP</span>
+            </div>
+            <button class="btn-msg-dev-ok" onclick="fecharMensagemDev()">Entendi!</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+    const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const tipoUsuario = sessionStorage.getItem('tipo_usuario');
+    const emailUsuario = sessionStorage.getItem('usuario_email') || "";
+
+    if (tipoUsuario !== 'usuario' || !emailUsuario) {
+        window.location.href = "login.html";
+    }
+
+    let ultimoXPConhecido = Number(sessionStorage.getItem('ultimo_xp_' + emailUsuario) || -1);
+
+    function atualizarBarraXP(xp) {
+        const xpNum = Number(xp) || 0;
+        const level = Math.floor(xpNum / 100);
+        const progresso = xpNum % 100;
+
+        const elTxtLevel = document.getElementById('txt-level');
+        const elBarra = document.getElementById('barra-xp');
+        const elTxtXP = document.getElementById('txt-xp');
+
+        if (elTxtLevel) elTxtLevel.textContent = `Level ${level}`;
+        if (elBarra) {
+            elBarra.style.transition = 'width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            elBarra.style.width = `${progresso}%`;
+        }
+        if (elTxtXP) elTxtXP.textContent = `${progresso} / 100 XP`;
+    }
+
+    function exibirToastXP(quantidade, motivo, caminhoImagem = 'banner-verificado.png') {
+        const toast = document.createElement('div');
+        toast.className = 'toast-xp-global';
+        toast.innerHTML = `
+            <div class="toast-icone">
+                <img src="${caminhoImagem}" alt="Ícone">
+            </div>
+            <div class="toast-conteudo">
+                <span class="toast-titulo">+${quantidade} XP</span>
+                <span class="toast-subtitulo">${motivo}</span>
+            </div>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('ativo'), 60);
+        setTimeout(() => {
+            toast.classList.remove('ativo');
+            setTimeout(() => toast.remove(), 500);
+        }, 6500);
+    }
+
+    const NOMES_ITENS = {
+        'roupa-touca': 'Touca de Inverno',
+        'roupa-touca-2': 'Cachecol',
+        'beca': 'Beca',
+        'roupa-1': 'Capa de Vampiro',
+        'chapeu-formando': 'Chapéu de Formando'
+    };
+
+    function exibirToastDesbloqueio(level, item) {
+        const toast = document.createElement('div');
+        toast.className = 'toast-desbloqueio';
+        toast.innerHTML = `
+            <img src="banner-cadeado.png" alt="Desbloqueado">
+            <div>
+                <span class="titulo">Novo item desbloqueado!</span>
+                <span class="sub">${NOMES_ITENS[item] || item} — Nível ${level}</span>
+            </div>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('ativo'), 80);
+        setTimeout(() => {
+            toast.classList.remove('ativo');
+            setTimeout(() => toast.remove(), 500);
+        }, 6000);
+    }
+
+    const ITENS_POR_LEVEL = {
+        10:  ['roupa-touca'],
+        15:  ['roupa-touca-2'],
+        20:  ['beca'],
+        50:  ['roupa-1', 'chapeu-formando'],
+        100: [],
+        200: []
+    };
+
+    function verificarDesbloqueios(nivelAtual) {
+        const chave = 'ultimo_level_' + emailUsuario;
+        const ultimoRaw = sessionStorage.getItem(chave);
+        const ultimoLevel = ultimoRaw === null ? null : Number(ultimoRaw);
+
+        if (ultimoLevel === null) {
+            sessionStorage.setItem(chave, nivelAtual);
+            return;
+        }
+
+        if (nivelAtual <= ultimoLevel) return;
+
+        const novos = [];
+        Object.entries(ITENS_POR_LEVEL).forEach(([lvl, itens]) => {
+            const lvlNum = Number(lvl);
+            if (lvlNum > ultimoLevel && lvlNum <= nivelAtual) {
+                itens.forEach(item => novos.push({ level: lvlNum, item }));
+            }
+        });
+
+        sessionStorage.setItem(chave, nivelAtual);
+
+        if (novos.length > 0) {
+            novos.forEach((n, i) => {
+                setTimeout(() => exibirToastDesbloqueio(n.level, n.item), i * 1500);
+            });
+        }
+    }
+
+    const LEVELS_INSIGNIAS = [50, 100, 200, 300];
+
+    function verificarResgateInsignia(nivelAtual) {
+        const chave = 'insignias_resgatadas_' + emailUsuario;
+        const resgatadas = JSON.parse(sessionStorage.getItem(chave) || '[]');
+
+        const disponiveis = LEVELS_INSIGNIAS.filter(lvl =>
+            nivelAtual >= lvl && !resgatadas.includes(lvl)
+        );
+
+        if (disponiveis.length === 0) return;
+
+        exibirPopupResgate(disponiveis[0]);
+    }
+
+    function exibirPopupResgate(level) {
+        if (document.getElementById('popup-resgate-xp')) return;
+
+        const popup = document.createElement('div');
+        popup.id = 'popup-resgate-xp';
+        popup.className = 'popup-resgate-overlay';
+        popup.innerHTML = `
+            <div class="popup-resgate-card">
+                <img src="banner-xp.png" alt="Recompensa XP" class="popup-resgate-img">
+                <h2 class="popup-resgate-titulo">Parabéns!</h2>
+                <p class="popup-resgate-texto">
+                    Você alcançou o <strong>Nível ${level}</strong> e ganhou uma recompensa!
+                </p>
+                <div class="popup-resgate-badge">+200 XP</div>
+                <button type="button" class="popup-resgate-btn" id="btn-resgatar-xp">
+                    Resgatar Recompensa
+                </button>
+                <button type="button" class="popup-resgate-btn-secundario" id="btn-resgatar-depois">
+                    Depois
+                </button>
+            </div>
+        `;
+        document.body.appendChild(popup);
+        setTimeout(() => popup.classList.add('ativo'), 50);
+
+        document.getElementById('btn-resgatar-xp').addEventListener('click', async () => {
+            await resgatarXP(level);
+        });
+
+        document.getElementById('btn-resgatar-depois').addEventListener('click', () => {
+            marcarInsigniaComoResgatada(level);
+            fecharPopupResgate();
+        });
+    }
+
+    function fecharPopupResgate() {
+        const popup = document.getElementById('popup-resgate-xp');
+        if (!popup) return;
+        popup.classList.remove('ativo');
+        setTimeout(() => popup.remove(), 350);
+    }
+
+    function marcarInsigniaComoResgatada(level) {
+        const chave = 'insignias_resgatadas_' + emailUsuario;
+        const resgatadas = JSON.parse(sessionStorage.getItem(chave) || '[]');
+        if (!resgatadas.includes(level)) {
+            resgatadas.push(level);
+            sessionStorage.setItem(chave, JSON.stringify(resgatadas));
+        }
+    }
+
+    async function resgatarXP(level) {
+        const btn = document.getElementById('btn-resgatar-xp');
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Resgatando...';
+        }
+
+        try {
+            const { data, error } = await supabaseClient
+                .from('usuarios')
+                .select('xp')
+                .eq('email', emailUsuario)
+                .maybeSingle();
+
+            if (error) throw error;
+
+            const xpAtual = Number(data?.xp) || 0;
+            const novoXP = xpAtual + 200;
+
+            const { error: errUp } = await supabaseClient
+                .from('usuarios')
+                .update({ xp: novoXP })
+                .eq('email', emailUsuario);
+
+            if (errUp) throw errUp;
+
+            marcarInsigniaComoResgatada(level);
+            atualizarBarraXP(novoXP);
+
+            ultimoXPConhecido = novoXP;
+            sessionStorage.setItem('ultimo_xp_' + emailUsuario, novoXP);
+            sessionStorage.setItem('ultimo_level_' + emailUsuario, Math.floor(novoXP / 100));
+
+            fecharPopupResgate();
+            exibirToastResgate(200, `Recompensa do Nível ${level}`);
+            setTimeout(() => buscarEAtualizarDados(), 800);
+
+        } catch (e) {
+            console.error('Erro ao resgatar XP:', e);
+            alert('Não foi possível resgatar agora. Tente novamente.');
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Resgatar Recompensa';
+            }
+        }
+    }
+
+    function exibirToastResgate(quantidade, motivo) {
+        const toast = document.createElement('div');
+        toast.className = 'toast-xp-global';
+        toast.innerHTML = `
+            <div class="toast-icone">
+                <img src="banner-xp.png" alt="XP">
+            </div>
+            <div class="toast-conteudo">
+                <span class="toast-titulo">+${quantidade} XP</span>
+                <span class="toast-subtitulo">${motivo}</span>
+            </div>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('ativo'), 60);
+        setTimeout(() => {
+            toast.classList.remove('ativo');
+            setTimeout(() => toast.remove(), 500);
+        }, 6500);
+    }
+
+    async function checarSeFoiExcluido() {
+        if (!emailUsuario) return false;
+        try {
+            const { data, error } = await supabaseClient
+                .from('usuarios_excluidos')
+                .select('motivo')
+                .eq('email', emailUsuario)
+                .maybeSingle();
+
+            if (error) { console.error('Erro ao checar exclusão:', error); return false; }
+
+            if (data) {
+                const motivo = data.motivo || 'Você violou as diretrizes e termos de uso do site.';
+                document.getElementById('modalBanidoMotivo').textContent = motivo;
+                document.getElementById('modalBanido').classList.add('ativo');
+                return true;
+            }
+        } catch (err) {
+            console.error('Erro ao checar exclusão:', err);
+        }
+        return false;
+    }
+
+    function irParaLogin() {
+        sessionStorage.clear();
+        localStorage.clear();
+        window.location.href = 'login.html';
+    }
+
+    const caminhoRoupas = { 'nenhuma': '', 'beca': 'camisa.png', 'roupa-1': 'roupa-1.png' };
+    const caminhoChapeus = { 'nenhum': '', 'roupa-touca': 'roupa-touca.png', 'roupa-touca-2': 'roupa-touca-2.png', 'chapeu-formando': 'chapeu.png' };
+    const caminhoAuras = { 'nenhuma': '', 'fogo': '', 'brilho': '' };
+
+    const AJUSTE_ROUPAS_HOME = {
+        'beca':    { x: 33, y: 35, w: 140, h: 170 },
+        'roupa-1': { x: 20, y: 20, w: 160, h: 210 }
+    };
+    const AJUSTE_CHAPEUS_HOME = {
+        'roupa-touca':     { x: 68, y: -14, w: 64, h: 50 },
+        'chapeu-formando': { x: 70, y: 2,   w: 60, h: 46 }
+    };
+    const AJUSTE_CACHECOL_HOME = { x: 55, y: 60, w: 90, h: 55 };
+    const AJUSTE_PADRAO_ROUPA_HOME  = { x: 33, y: 35, w: 140, h: 170 };
+    const AJUSTE_PADRAO_CHAPEU_HOME = { x: 70, y: 2,  w: 60,  h: 46  };
+
+    async function buscarEAtualizarDados() {
+        try {
+            const { data: usuarios, error } = await supabaseClient
+                .from('usuarios')
+                .select('nome, nome_personagem, level, xp, personagem_criado, cor_1, cor_2, estampa, roupa, chapeu, animacao_fundo')
+                .eq('email', emailUsuario);
+
+            if (error) throw error;
+            if (!usuarios || usuarios.length === 0) return;
+
+            const userData = usuarios[0];
+            const nome = userData.nome_personagem || userData.nome || 'Usuário';
+            const xpBruto = Number(userData.xp);
+            const xp = isNaN(xpBruto) ? 0 : xpBruto;
+
+            let levelCalculado = Number(userData.level);
+            if (!levelCalculado || isNaN(levelCalculado)) {
+                levelCalculado = Math.floor(xp / 100);
+            }
+
+            if (ultimoXPConhecido >= 0 && xp > ultimoXPConhecido) {
+                const ganho = xp - ultimoXPConhecido;
+                if (ganho === 70) {
+                    exibirToastXP(70, 'Sua publicação foi verificada pelo desenvolvedor!', 'banner-verificado.png');
+                }
+            }
+            ultimoXPConhecido = xp;
+            sessionStorage.setItem('ultimo_xp_' + emailUsuario, xp);
+
+            verificarDesbloqueios(levelCalculado);
+            verificarResgateInsignia(levelCalculado);
+
+            const foiCriado = userData.personagem_criado == 1 || userData.personagem_criado === true;
+
+            if (!foiCriado) {
+                document.getElementById('bloco-criar-personagem').style.display = 'block';
+                document.getElementById('bloco-layout-centro').style.display = 'none';
+            } else {
+                document.getElementById('bloco-criar-personagem').style.display = 'none';
+                document.getElementById('bloco-layout-centro').style.display = 'flex';
+            }
+
+            atualizarBarraXP(xp);
+
+            const cor1 = userData.cor_1 || '#4a7bc7';
+            const cor2 = userData.cor_2 || '#ff0000';
+            const estampa = userData.estampa || 'nenhuma';
+            const roupa = userData.roupa || 'nenhuma';
+            const chapeu = userData.chapeu || 'nenhum';
+            const animacao = userData.animacao_fundo || 'nenhuma';
+
+            document.getElementById('txt-nome').textContent = nome;
+
+            const containerInsignias = document.getElementById('container-insignias');
+            containerInsignias.innerHTML = '';
+            const listaInsignias = [
+                { rotulo: 'LVL 50',  classe: 'insignia-verde-icon',   desbloqueada: levelCalculado >= 50  },
+                { rotulo: 'LVL 100', classe: 'insignia-laranja-icon', desbloqueada: levelCalculado >= 100 },
+                { rotulo: 'LVL 200', classe: 'insignia-azul-icon',    desbloqueada: levelCalculado >= 200 },
+                { rotulo: 'LVL 300', classe: 'insignia-dourada-icon', desbloqueada: levelCalculado >= 300 }
+            ];
+            listaInsignias.forEach(item => {
+                const el = document.createElement('div');
+                if (item.desbloqueada) {
+                    el.className = `insignia-circulo ${item.classe}`;
+                } else {
+                    el.className = 'insignia-circulo insignia-bloqueada';
+                }
+                el.innerText = item.rotulo;
+                containerInsignias.appendChild(el);
+            });
+
+            document.getElementById('cabeca-boneco').setAttribute('fill', cor1);
+            document.getElementById('corpo-boneco').setAttribute('fill', cor1);
+
+            const grupoEstampas = document.getElementById('grupo-estampas');
+            grupoEstampas.innerHTML = '';
+            if (estampa === 'bolinhas') {
+                const pos = [
+                    {cx: 72,cy: 80,r: 6},{cx: 92,cy: 88,r: 7},{cx: 112,cy: 80,r: 6},{cx: 128,cy: 92,r: 5},
+                    {cx: 80,cy: 105,r: 7},{cx: 105,cy: 112,r: 8},{cx: 125,cy: 118,r: 6},{cx: 70,cy: 130,r: 6},
+                    {cx: 90,cy: 138,r: 7},{cx: 112,cy: 145,r: 6},{cx: 128,cy: 152,r: 5},{cx: 78,cy: 160,r: 7},
+                    {cx: 98,cy: 168,r: 6},{cx: 118,cy: 178,r: 7},{cx: 85,cy: 190,r: 6},{cx: 108,cy: 198,r: 6},
+                    {cx: 72,cy: 205,r: 5},{cx: 95,cy: 212,r: 6}
+                ];
+                pos.forEach(p => {
+                    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    c.setAttribute('cx', p.cx);
+                    c.setAttribute('cy', p.cy);
+                    c.setAttribute('r', p.r);
+                    c.setAttribute('fill', cor2);
+                    grupoEstampas.appendChild(c);
+                });
+            } else if (estampa === 'linhas') {
+                for (let offset = -250; offset < 400; offset += 16) {
+                    const linha = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    linha.setAttribute('x1', offset + 250);
+                    linha.setAttribute('y1', 0);
+                    linha.setAttribute('x2', offset);
+                    linha.setAttribute('y2', 280);
+                    linha.setAttribute('stroke', cor2);
+                    linha.setAttribute('stroke-width', 5);
+                    grupoEstampas.appendChild(linha);
+                }
+            }
+
+            const elCachecol = document.getElementById('img-cachecol');
+            if (elCachecol) {
+                if (chapeu === 'roupa-touca-2') {
+                    elCachecol.setAttribute('href', caminhoChapeus['roupa-touca-2']);
+                    const a = AJUSTE_CACHECOL_HOME;
+                    elCachecol.setAttribute('x', a.x);
+                    elCachecol.setAttribute('y', a.y);
+                    elCachecol.setAttribute('width', a.w);
+                    elCachecol.setAttribute('height', a.h);
+                } else {
+                    elCachecol.setAttribute('href', '');
+                }
+            }
+
+            const elRoupa = document.getElementById('img-roupa');
+            elRoupa.setAttribute('href', caminhoRoupas[roupa] || '');
+            const ajR = AJUSTE_ROUPAS_HOME[roupa] || AJUSTE_PADRAO_ROUPA_HOME;
+            elRoupa.setAttribute('x', ajR.x);
+            elRoupa.setAttribute('y', ajR.y);
+            elRoupa.setAttribute('width', ajR.w);
+            elRoupa.setAttribute('height', ajR.h);
+
+            const elChapeu = document.getElementById('img-chapeu');
+            if (chapeu && chapeu !== 'nenhum' && chapeu !== 'roupa-touca-2') {
+                elChapeu.setAttribute('href', caminhoChapeus[chapeu] || '');
+                const aC = AJUSTE_CHAPEUS_HOME[chapeu] || AJUSTE_PADRAO_CHAPEU_HOME;
+                elChapeu.setAttribute('x', aC.x);
+                elChapeu.setAttribute('y', aC.y);
+                elChapeu.setAttribute('width', aC.w);
+                elChapeu.setAttribute('height', aC.h);
+            } else {
+                elChapeu.setAttribute('href', '');
+            }
+
+            const auraSrc = caminhoAuras[animacao] || '';
+            const bonecoContainer = document.getElementById('boneco-container');
+            const elFundoSvg = document.getElementById('elementos-fundo-svg');
+
+            const videoAntigo = document.getElementById('video-fundo-home');
+            if (videoAntigo) videoAntigo.remove();
+            elFundoSvg.innerHTML = '';
+
+            if (auraSrc) {
+                if (auraSrc.endsWith('.mp4')) {
+                    const videoHTML = `<video id="video-fundo-home" autoplay loop muted playsinline src="${auraSrc}"></video>`;
+                    bonecoContainer.insertAdjacentHTML('afterbegin', videoHTML);
+                } else {
+                    elFundoSvg.innerHTML = `<image id="img-animacao" x="-20" y="-20" width="240" height="320" href="${auraSrc}" preserveAspectRatio="none" />`;
+                }
+            }
+
+        } catch (err) {
+            console.error('Erro ao carregar dados no Supabase:', err);
+        }
+    }
+
+    const BANNERS_MENSAGEM = {
+        'info':     'banner-info.png',
+        'xp':       'banner-xp.png',
+        'sucesso':  'banner-verificado.png',
+        'aviso':    'banner-caviso.png',
+        'parabens': 'banner-level.png',
+        'coracao':  'banner-carinho.png'
+    };
+
+    let mensagemAtualDev = null;
+
+    async function verificarMensagensDev() {
+        if (!emailUsuario) return;
+
+        try {
+            const { data: mensagens, error } = await supabaseClient
+                .from('mensagens_dev')
+                .select('*')
+                .eq('email_destinatario', emailUsuario)
+                .eq('lida', false)
+                .order('criada_em', { ascending: true })
+                .limit(1);
+
+            if (error) {
+                console.warn('Erro ao buscar mensagens:', error.message);
+                return;
+            }
+
+            if (mensagens && mensagens.length > 0) {
+                mensagemAtualDev = mensagens[0];
+                exibirMensagemDev(mensagemAtualDev);
+            }
+        } catch (e) {
+            console.warn('Verificação de mensagens falhou:', e);
+        }
+    }
+
+    function exibirMensagemDev(msg) {
+        const banner = BANNERS_MENSAGEM[msg.icone] || BANNERS_MENSAGEM.info;
+        document.getElementById('msgDevIconeImg').src = banner;
+        document.getElementById('msgDevTitulo').textContent = msg.titulo || 'Mensagem';
+        document.getElementById('msgDevTexto').textContent = msg.mensagem || '';
+
+        const elXP = document.getElementById('msgDevXP');
+        const xpEnviado = Number(msg.xp_enviado) || 0;
+        if (xpEnviado > 0) {
+            document.getElementById('msgDevXPTexto').textContent = `+${xpEnviado} XP`;
+            elXP.style.display = 'inline-flex';
+        } else {
+            elXP.style.display = 'none';
+        }
+
+        document.getElementById('modalMsgDev').classList.add('ativo');
+    }
+
+    async function fecharMensagemDev() {
+        if (!mensagemAtualDev) return;
+
+        try {
+            await supabaseClient
+                .from('mensagens_dev')
+                .update({ lida: true })
+                .eq('id', mensagemAtualDev.id);
+        } catch (e) {
+            console.warn('Não foi possível marcar como lida:', e);
+        }
+
+        document.getElementById('modalMsgDev').classList.remove('ativo');
+        mensagemAtualDev = null;
+
+        setTimeout(verificarMensagensDev, 800);
+    }
+
+    (async () => {
+        const foiExcluido = await checarSeFoiExcluido();
+        if (!foiExcluido) {
+            buscarEAtualizarDados();
+            setTimeout(verificarMensagensDev, 1200);
+        }
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+        supabaseClient
+            .channel('mudancas-usuarios')
+            .on('postgres_changes', {
+                event: 'UPDATE',
+                schema: 'public',
+                table: 'usuarios',
+                filter: `email=eq.${emailUsuario}`
+            }, (payload) => {
+                console.log('[REALTIME] Atualização recebida:', payload);
+                buscarEAtualizarDados();
+            })
+            .subscribe((status) => {
+                console.log('[REALTIME] Status:', status);
+            });
+    });
+
+    window.addEventListener('pageshow', () => {
+        buscarEAtualizarDados();
+        verificarMensagensDev();
+    });
+    window.addEventListener('focus', () => {
+        buscarEAtualizarDados();
+        verificarMensagensDev();
+    });
+
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'usuario_xp_atualizado') buscarEAtualizarDados();
+    });
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            buscarEAtualizarDados();
+            verificarMensagensDev();
+        }
+    });
+
+    setInterval(() => {
+        if (document.visibilityState === 'visible') {
+            buscarEAtualizarDados();
+            verificarMensagensDev();
+        }
+    }, 5000);
+</script>
+</body>
+</html>
