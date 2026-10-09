@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel do Desenvolvedor — GIGO</title>
+<link rel="stylesheet" href="pagEntrada.css?v=4.0">
+<style>
+    html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body {
+        background-image: url('pagEntrada.png');
+        background-size: cover;
+        background-position: center;
+        font-family: 'Cooper Hewitt', sans-serif;
+        display: flex;
+        flex-direction: column;
+    }
+
+    header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 10px 30px; height: 90px; position: relative; gap: 20px; flex-shrink: 0;
+    }
+    header .logo-img {
+        width: 130px; height: auto; position: absolute;
+        left: 50%; top: 50%; transform: translate(-50%, -50%); pointer-events: none;
+    }
+    header .link-forum {
+        text-decoration: none; color: #000; font-weight: bold; font-size: 20px;
+        text-align: center; padding: 12px 0; width: 180px; border-radius: 10px;
+        background-color: #ffac0690; border: solid 3px #ffaa06;
+        transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease; z-index: 2;
+    }
+    header .link-forum:hover { transform: scale(1.08); background-color: #ff9b06; color: #fff; }
+    header .avatar-container {
+        width: 45px; height: 45px; border-radius: 50%;
+        border: 3px solid #e2c148; background-color: #fff; padding: 2px;
+        overflow: hidden; display: flex; align-items: center; justify-content: center;
+        box-sizing: border-box; z-index: 2;
+    }
+    header .avatar-container img {
+        width: 100%; height: 100%; border-radius: 50%;
+        object-fit: contain; object-position: center; display: block;
+        background-color: #f5f5f5; cursor: pointer;
+    }
+    header .avatar-container img:hover { transform: scale(1.1); }
+
+    .painel-dev {
+        max-width: 1400px; width: calc(100% - 80px); margin: 60px auto;
+        flex: 1; display: flex; flex-direction: column;
+        background-color: rgba(255, 222, 89, 0.5);
+        border-radius: 20px; border: solid 4px rgb(255, 197, 89);
+        padding: 25px 40px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        overflow: hidden; box-sizing: border-box; min-height: 0;
+    }
+    .painel-dev h1 {
+        text-align: center; font-size: 32px; color: #3a2a00;
+        margin-bottom: 15px; text-shadow: 0 2px 0 rgba(255, 255, 255, 0.6); flex-shrink: 0;
+    }
+    .painel-dev h1 .badge-dev {
+        font-size: 14px; background: #d32f2f; color: #fff;
+        padding: 4px 12px; border-radius: 20px; vertical-align: middle;
+        margin-left: 10px; letter-spacing: 1px;
+    }
+
+    .barra-pesquisa { width: 100%; display: flex; justify-content: center; margin-bottom: 15px; flex-shrink: 0; }
+    .barra-pesquisa input {
+        width: 100%; max-width: 500px; padding: 12px 22px; font-size: 16px;
+        font-family: inherit; background: rgba(255, 255, 255, 0.85);
+        border: solid 3px rgba(251, 165, 6); border-radius: 30px;
+        color: #3a2a00; outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .barra-pesquisa input::placeholder { color: #a5741e; }
+    .barra-pesquisa input:focus {
+        border-color: #fb8c00; box-shadow: 0 0 0 4px rgba(251, 140, 0, 0.25);
+    }
+
+    .contador-usuarios {
+        text-align: center; margin-bottom: 12px; font-size: 15px;
+        color: #3a2a00; font-weight: bold; flex-shrink: 0;
+    }
+
+    .tabela-wrapper {
+        width: 100%; flex: 1; min-height: 0; overflow-y: auto; overflow-x: auto;
+        border-radius: 14px; background: rgba(255, 255, 255, 0.35);
+        padding: 4px; box-sizing: border-box;
+    }
+    .tabela-wrapper::-webkit-scrollbar { width: 12px; height: 12px; }
+    .tabela-wrapper::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); border-radius: 10px; }
+    .tabela-wrapper::-webkit-scrollbar-thumb {
+        background: rgba(251, 165, 6, 0.8); border-radius: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    table {
+        width: 100%; table-layout: fixed; border-collapse: collapse;
+        font-size: 14px; min-width: 1100px;
+    }
+
+    thead th:nth-child(1) { width: 35px; }
+    thead th:nth-child(2) { width: 16%; }
+    thead th:nth-child(3) { width: 20%; }
+    thead th:nth-child(4) { width: 70px; }
+    thead th:nth-child(5) { width: 70px; }
+    thead th:nth-child(6) { width: 70px; }
+    thead th:nth-child(7) { width: 110px; }
+    thead th:nth-child(8) { width: 130px; }
+    thead th:nth-child(9) { width: 130px; }
+    thead th:nth-child(10){ width: 100px; }
+
+    thead { background: rgba(251, 165, 6, 0.95); position: sticky; top: 0; z-index: 10; }
+    thead th {
+        padding: 12px 10px; text-align: left; color: #3a2a00; font-weight: bold;
+        letter-spacing: 0.5px; border-bottom: 3px solid rgba(251, 165, 6);
+        background: rgba(251, 165, 6, 0.95); overflow: hidden;
+        text-overflow: ellipsis; white-space: nowrap; font-size: 13px;
+    }
+    tbody tr {
+        background: rgba(255, 255, 255, 0.7);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        transition: background 0.15s;
+    }
+    tbody tr:hover { background: rgba(255, 255, 255, 0.95); }
+    tbody td {
+        padding: 10px 10px; color: #222; overflow: hidden;
+        text-overflow: ellipsis; white-space: nowrap; font-size: 13px;
+    }
+
+    tbody td:nth-child(8), tbody td:nth-child(9), tbody td:nth-child(10),
+    thead th:nth-child(8), thead th:nth-child(9), thead th:nth-child(10) {
+        text-align: center; overflow: visible; text-overflow: clip;
+    }
+
+    .nome-user { font-weight: bold; color: #1e3a8a; }
+    .xp-user { color: #7a4a00; font-weight: bold; }
+    .level-user {
+        display: inline-block; background: #4a5fc1; color: #fff;
+        padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;
+    }
+    .barra-xp-mini {
+        width: 100%; max-width: 100px; height: 10px;
+        background: rgba(0, 0, 0, 0.15); border-radius: 6px;
+        overflow: hidden; margin-top: 4px;
+    }
+    .barra-xp-mini-fill { height: 100%; background: #ff9800; border-radius: 6px; transition: width 0.3s ease; }
+
+    .status-badge {
+        display: inline-block; font-size: 12px; font-weight: bold;
+        padding: 4px 10px; border-radius: 10px; min-width: 60px;
+        text-align: center; white-space: nowrap;
+    }
+    .status-on {
+        background: rgba(16, 185, 129, 0.18);
+        border: 1px solid rgba(16, 185, 129, 0.55); color: #047857;
+    }
+    .status-off {
+        background: rgba(239, 68, 68, 0.14);
+        border: 1px solid rgba(239, 68, 68, 0.45); color: #b91c1c;
+    }
+    .status-vazio {
+        background: rgba(0, 0, 0, 0.06);
+        border: 1px solid rgba(0, 0, 0, 0.15); color: #666; opacity: 0.6;
+    }
+
+    .btn-mensagem, .btn-lixeira {
+        background: transparent; border: none; font-size: 18px; cursor: pointer;
+        transition: transform 0.15s ease; padding: 4px 6px; border-radius: 8px;
+    }
+    .btn-mensagem { color: #4a7bc7; }
+    .btn-mensagem:hover { color: #1e40af; transform: scale(1.25); background: rgba(74, 123, 199, 0.12); }
+    .btn-lixeira { color: #d32f2f; }
+    .btn-lixeira:hover { color: #b71c1c; transform: scale(1.25); background: rgba(211, 47, 47, 0.1); }
+
+    .loading {
+        text-align: center; padding: 40px; font-size: 18px;
+        color: #3a2a00; white-space: normal;
+    }
+
+    .modal-excluir, .modal-mensagem {
+        position: fixed; inset: 0;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(6px);
+        display: none; align-items: center; justify-content: center;
+        z-index: 20000; padding: 20px; overflow-y: auto;
+    }
+    .modal-excluir.ativo, .modal-mensagem.ativo { display: flex; animation: fadeInModal 0.25s ease; }
+    @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes modalPop {
+        0%   { opacity: 0; transform: scale(0.85) translateY(30px); }
+        60%  { opacity: 1; transform: scale(1.03) translateY(-4px); }
+        100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes flutuarLixeira {
+        0%, 100% { transform: translateY(0) rotate(-5deg); }
+        50%      { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    .modal-excluir-conteudo {
+        background: linear-gradient(145deg, #1e293b, #0f172a);
+        border: 4px solid #ef4444; border-radius: 24px;
+        padding: 32px 28px; max-width: 440px; width: 100%;
+        text-align: center; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); color: #fff;
+    }
+    .modal-excluir-icone {
+        font-size: 60px; margin-bottom: 12px;
+        animation: flutuarLixeira 2s ease-in-out infinite;
+    }
+    .modal-excluir-titulo { font-size: 22px; color: #ef4444; margin: 0 0 10px 0; }
+    .modal-excluir-texto { font-size: 14px; color: #cbd5e1; margin: 0 0 20px 0; line-height: 1.5; }
+    .modal-excluir-texto strong { color: #facc15; }
+    .modal-excluir-botoes { display: flex; flex-direction: column; gap: 10px; }
+    .btn-confirmar-excluir, .btn-cancelar-excluir {
+        padding: 14px; border: none; border-radius: 14px;
+        font-family: inherit; font-size: 15px; font-weight: bold; cursor: pointer;
+    }
+    .btn-confirmar-excluir {
+        background: linear-gradient(135deg, #ef4444, #b91c1c);
+        color: #fff; box-shadow: 0 5px 0 #7f1d1d;
+    }
+    .btn-cancelar-excluir {
+        background: transparent; color: #94a3b8; border: 2px solid #475569;
+    }
+
+    .modal-mensagem-conteudo {
+        background: linear-gradient(145deg, #1e293b, #0f172a);
+        border: 4px solid #4a7bc7; border-radius: 24px;
+        padding: 28px 26px; max-width: 520px; width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        color: #fff; max-height: 92vh; overflow-y: auto; box-sizing: border-box;
+    }
+    .modal-mensagem-titulo {
+        font-size: 22px; color: #60a5fa; margin: 0 0 8px 0; text-align: center;
+    }
+    .modal-mensagem-sub {
+        font-size: 14px; color: #cbd5e1; margin: 0 0 18px 0; text-align: center;
+    }
+    .modal-mensagem-sub strong { color: #facc15; }
+
+    .label-modal {
+        display: block; font-size: 12px; font-weight: bold;
+        color: #94a3b8; margin-bottom: 4px; margin-top: 10px;
+        letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .input-modal {
+        width: 100%; padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 2px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px; color: #fff; font-family: inherit;
+        font-size: 14px; outline: none; box-sizing: border-box;
+        transition: border-color 0.2s ease;
+    }
+    .input-modal:focus { border-color: #4a7bc7; background: rgba(255, 255, 255, 0.12); }
+    .input-modal::placeholder { color: #64748b; }
+    .textarea-modal { resize: vertical; min-height: 80px; }
+
+    .banner-picker {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 6px;
+    }
+    .banner-opcao {
+        background: rgba(255, 255, 255, 0.06);
+        border: 2px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 8px;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+    .banner-opcao:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-2px);
+    }
+    .banner-opcao.ativo {
+        border-color: #60a5fa;
+        background: rgba(74, 123, 199, 0.25);
+        box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3);
+    }
+    .banner-opcao img {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        image-rendering: pixelated;
+    }
+    .banner-opcao span {
+        font-size: 11px;
+        color: #cbd5e1;
+        font-weight: bold;
+    }
+
+    .modal-mensagem-botoes { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+    .btn-enviar-mensagem {
+        padding: 14px; border: none; border-radius: 14px;
+        font-family: inherit; font-size: 15px; font-weight: bold; cursor: pointer;
+        background: linear-gradient(135deg, #4a7bc7, #1e40af);
+        color: #fff; box-shadow: 0 5px 0 #1e3a8a;
+        transition: transform 0.15s ease;
+    }
+    .btn-enviar-mensagem:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    .btn-enviar-mensagem:active { transform: translateY(3px); box-shadow: 0 2px 0 #1e3a8a; }
+    .btn-enviar-mensagem:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-cancelar-mensagem {
+        padding: 12px; background: transparent; color: #94a3b8;
+        border: 2px solid #475569; border-radius: 14px;
+        font-family: inherit; font-size: 14px; font-weight: bold; cursor: pointer;
+    }
+
+    .notif-dev {
+        position: fixed; top: 20px; left: 50%;
+        transform: translateX(-50%) translateY(-150%);
+        background: #1e293b; color: #fff;
+        padding: 14px 22px; border-radius: 16px;
+        border: 3px solid #10b981;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 4px 0 #047857;
+        display: flex; align-items: center; gap: 12px;
+        font-weight: bold; z-index: 30000;
+        opacity: 0; pointer-events: none;
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    }
+    .notif-dev.ativo { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .notif-dev.erro { border-color: #ef4444; box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 4px 0 #b91c1c; }
+    .notif-dev img { width: 32px; height: 32px; object-fit: contain; image-rendering: pixelated; }
+
+    @media (max-width: 900px) {
+        header { height: 75px; padding: 8px 16px; gap: 10px; }
+        header .logo-img { width: 100px; }
+        header .link-forum { width: 120px; font-size: 14px; padding: 8px 0; }
+        header .avatar-container img { width: 38px; height: 38px; }
+        .painel-dev { padding: 20px; margin: 20px; width: calc(100% - 40px); }
+        .painel-dev h1 { font-size: 22px; }
+        table { font-size: 11px; min-width: 1000px; }
+        thead th, tbody td { padding: 6px; }
+        .barra-xp-mini { height: 8px; }
+        .status-badge { font-size: 10px; padding: 3px 6px; min-width: 50px; }
+        .banner-opcao img { width: 48px; height: 48px; }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <a href="forum.html" class="link-forum">Fórum</a>
+    <img src="foto-logo.png" alt="Logo" class="logo-img">
+    <a href="perfil-dev.html">
+        <div class="avatar-container">
+            <img src="perfil-azul.png" id="perfil" alt="Perfil Dev">
+        </div>
+    </a>
+</header>
+
+<div class="painel-dev">
+    <h1>Painel do Desenvolvedor <span class="badge-dev">DEV</span></h1>
+
+    <div class="barra-pesquisa">
+        <input type="text" id="pesquisa" placeholder="Pesquisar por nome, email ou pronome..." oninput="filtrarUsuarios()">
+    </div>
+
+    <div class="contador-usuarios" id="contador-usuarios">Carregando usuários...</div>
+
+    <div class="tabela-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Pronome</th>
+                    <th>XP</th>
+                    <th>Level</th>
+                    <th>Progresso</th>
+                    <th>Notificações</th>
+                    <th>Termos Aceitos</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-usuarios">
+                <tr><td colspan="10" class="loading">Carregando...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-excluir" id="modalExcluir">
+    <div class="modal-excluir-conteudo">
+        <div class="modal-excluir-icone">
+            <img src="banner-excluir.png" alt="Excluir" style="width:80px;height:80px;object-fit:contain;image-rendering:pixelated;">
+        </div>
+        <h2 class="modal-excluir-titulo">Confirmar exclusão</h2>
+        <p class="modal-excluir-texto">
+            Tem certeza que deseja excluir o usuário<br>
+            <strong id="nomeExcluir">—</strong>?<br>
+            <small style="opacity: 0.7;">Esta ação não pode ser desfeita.</small>
+        </p>
+        <div class="modal-excluir-botoes">
+            <button class="btn-confirmar-excluir" onclick="confirmarExclusao()">Sim, excluir</button>
+            <button class="btn-cancelar-excluir" onclick="fecharModalExcluir()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-mensagem" id="modalMensagem">
+    <div class="modal-mensagem-conteudo">
+        <h2 class="modal-mensagem-titulo">Enviar Mensagem</h2>
+        <p class="modal-mensagem-sub">Para: <strong id="nomeMensagem">—</strong></p>
+
+        <label class="label-modal">Título</label>
+        <input type="text" id="inputTitulo" class="input-modal" placeholder="Ex: Bem-vindo ao GIGO!" maxlength="80">
+
+        <label class="label-modal">Mensagem</label>
+        <textarea id="inputMensagem" class="input-modal textarea-modal" placeholder="Escreva o recado..." rows="4" maxlength="500"></textarea>
+
+        <label class="label-modal">XP a enviar (opcional)</label>
+        <input type="number" id="inputXP" class="input-modal" placeholder="Ex: 50" min="0" max="10000" value="0">
+
+        <label class="label-modal">Banner / Ícone</label>
+        <div class="banner-picker" id="bannerPicker">
+            <div class="banner-opcao ativo" data-valor="info">
+                <img src="banner-info.png" alt="Informação">
+                <span>Info</span>
+            </div>
+            <div class="banner-opcao" data-valor="xp">
+                <img src="banner-xp.png" alt="XP">
+                <span>XP</span>
+            </div>
+            <div class="banner-opcao" data-valor="sucesso">
+                <img src="banner-verificado.png" alt="Verificado">
+                <span>Sucesso</span>
+            </div>
+            <div class="banner-opcao" data-valor="aviso">
+                <img src="banner-caviso.png" alt="Aviso">
+                <span>Aviso</span>
+            </div>
+            <div class="banner-opcao" data-valor="parabens">
+                <img src="banner-level.png" alt="Parabéns">
+                <span>Level</span>
+            </div>
+            <div class="banner-opcao" data-valor="coracao">
+                <img src="banner-carinho.png" alt="Carinho">
+                <span>Carinho</span>
+            </div>
+        </div>
+
+        <div class="modal-mensagem-botoes">
+            <button class="btn-enviar-mensagem" onclick="enviarMensagem()">Enviar</button>
+            <button class="btn-cancelar-mensagem" onclick="fecharModalMensagem()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<div class="notif-dev" id="notifDev">
+    <img id="notifIcone" src="banner-info.png" alt="Ícone">
+    <span id="notifTexto">Feito!</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const tipoUsuario = sessionStorage.getItem('tipo_usuario');
+    const emailDev = sessionStorage.getItem('dev_email');
+
+    if (tipoUsuario !== 'desenvolvedor' || !emailDev) {
+        window.location.href = 'login.html';
+    }
+
+    sessionStorage.setItem('dev_autenticado', 'true');
+    sessionStorage.setItem('dev_autenticado_email', emailDev);
+
+    let todosUsuarios = [];
+    let usuarioParaExcluir = null;
+    let usuarioParaMensagem = null;
+    let bannerSelecionado = 'info';
+
+    const BANNERS = {
+        'info':     'banner-info.png',
+        'xp':       'banner-xp.png',
+        'sucesso':  'banner-verificado.png',
+        'aviso':    'banner-caviso.png',
+        'parabens': 'banner-level.png',
+        'coracao':  'banner-carinho.png'
+    };
+
+    function notificarDev(texto, bannerKey = 'info', erro = false) {
+        const el = document.getElementById('notifDev');
+        document.getElementById('notifIcone').src = BANNERS[bannerKey] || BANNERS.info;
+        document.getElementById('notifTexto').textContent = texto;
+        el.classList.toggle('erro', erro);
+        el.classList.add('ativo');
+        setTimeout(() => el.classList.remove('ativo'), 3000);
+    }
+
+    function badgeStatus(valor, textoAtivo = 'Ativado', textoInativo = 'Desativado') {
+        if (valor === undefined || valor === null) {
+            return `<span class="status-badge status-vazio">—</span>`;
+        }
+        const ativo = valor !== false && valor !== 0 && valor !== 'false';
+        if (ativo) {
+            return `<span class="status-badge status-on">${textoAtivo}</span>`;
+        }
+        return `<span class="status-badge status-off">${textoInativo}</span>`;
+    }
+
+    async function carregarUsuarios() {
+        const tbody = document.getElementById('tabela-usuarios');
+        try {
+            const { data: usuarios, error } = await supabaseClient
+                .from('usuarios')
+                .select('nome, nome_personagem, email, xp, level, sexo, recebe_notificacoes, termos_aceitos')
+                .order('xp', { ascending: false });
+
+            if (error) throw error;
+
+            todosUsuarios = usuarios || [];
+            renderizarTabela();
+        } catch (err) {
+            console.error('Erro ao carregar usuários:', err);
+            tbody.innerHTML = `<tr><td colspan="10" class="loading">
+                Erro ao carregar usuários.<br>
+                <small style="font-size: 13px; opacity: 0.8;">${err.message || ''}</small>
+            </td></tr>`;
+        }
+    }
+
+    function renderizarTabela() {
+        const tbody = document.getElementById('tabela-usuarios');
+        const contador = document.getElementById('contador-usuarios');
+        const termo = (document.getElementById('pesquisa').value || '').toLowerCase().trim();
+
+        const filtrados = todosUsuarios.filter(u => {
+            if (!termo) return true;
+            const nome = (u.nome_personagem || u.nome || '').toLowerCase();
+            const email = (u.email || '').toLowerCase();
+            const pronome = (u.sexo || '').toLowerCase();
+            return nome.includes(termo) || email.includes(termo) || pronome.includes(termo);
+        });
+
+        contador.textContent = termo
+            ? `${filtrados.length} resultado${filtrados.length !== 1 ? 's' : ''} encontrado${filtrados.length !== 1 ? 's' : ''}`
+            : `${todosUsuarios.length} usuário${todosUsuarios.length > 1 ? 's' : ''} cadastrado${todosUsuarios.length > 1 ? 's' : ''}`;
+
+        if (filtrados.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="10" class="loading">Nenhum usuário encontrado.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = '';
+
+        filtrados.forEach((u, i) => {
+            const xp = Number(u.xp) || 0;
+            const level = Math.floor(xp / 100);
+            const progresso = xp % 100;
+            const nome = u.nome_personagem || u.nome || '—';
+            const pronome = (u.sexo || '—').toUpperCase();
+            const emailEscapado = (u.email || '').replace(/'/g, "\\'");
+            const nomeEscapado = nome.replace(/'/g, "\\'");
+
+            const stNotif  = badgeStatus(u.recebe_notificacoes, 'Ativado', 'Desativado');
+            const stTermos = badgeStatus(u.termos_aceitos, 'Aceito', 'Não aceito');
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${i + 1}</td>
+                <td class="nome-user" title="${nome}">${nome}</td>
+                <td title="${u.email || ''}">${u.email || '—'}</td>
+                <td><strong style="color:#7c3aed; font-size: 12px;">${pronome}</strong></td>
+                <td class="xp-user">${xp}</td>
+                <td><span class="level-user">Lv ${level}</span></td>
+                <td>
+                    <div class="barra-xp-mini">
+                        <div class="barra-xp-mini-fill" style="width: ${progresso}%;"></div>
+                    </div>
+                    <small style="font-size: 10px;">${progresso}/100</small>
+                </td>
+                <td>${stNotif}</td>
+                <td>${stTermos}</td>
+                <td>
+                    <button class="btn-mensagem" title="Enviar mensagem"
+                        onclick="abrirModalMensagem('${emailEscapado}', '${nomeEscapado}')">💬</button>
+                    <button class="btn-lixeira" title="Excluir usuário"
+                        onclick="abrirModalExcluir('${emailEscapado}', '${nomeEscapado}')">🗑️</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function filtrarUsuarios() { renderizarTabela(); }
+
+    function abrirModalExcluir(email, nome) {
+        usuarioParaExcluir = { email, nome };
+        document.getElementById('nomeExcluir').textContent = nome;
+        document.getElementById('modalExcluir').classList.add('ativo');
+    }
+
+    function fecharModalExcluir() {
+        document.getElementById('modalExcluir').classList.remove('ativo');
+        usuarioParaExcluir = null;
+    }
+
+    async function confirmarExclusao() {
+        if (!usuarioParaExcluir) return;
+        const { email, nome } = usuarioParaExcluir;
+
+        try {
+            const { error: errExc } = await supabaseClient
+                .from('usuarios_excluidos')
+                .insert([{ email, motivo: 'Você violou as diretrizes e termos de uso do site.' }]);
+
+            if (errExc && errExc.code !== '23505') {
+                notificarDev('Erro ao excluir: ' + errExc.message, 'aviso', true);
+                return;
+            }
+
+            const { error: errDel } = await supabaseClient
+                .from('usuarios').delete().eq('email', email);
+
+            if (errDel) {
+                notificarDev('Erro ao deletar: ' + errDel.message, 'aviso', true);
+                return;
+            }
+
+            notificarDev(`Usuário "${nome}" excluído!`, 'sucesso');
+            fecharModalExcluir();
+            carregarUsuarios();
+        } catch (err) {
+            notificarDev('Erro: ' + err.message, 'aviso', true);
+        }
+    }
+
+    function abrirModalMensagem(email, nome) {
+        usuarioParaMensagem = { email, nome };
+        document.getElementById('nomeMensagem').textContent = nome;
+        document.getElementById('inputTitulo').value = '';
+        document.getElementById('inputMensagem').value = '';
+        document.getElementById('inputXP').value = '0';
+
+        bannerSelecionado = 'info';
+        document.querySelectorAll('.banner-opcao').forEach(b => {
+            b.classList.toggle('ativo', b.dataset.valor === 'info');
+        });
+
+        document.getElementById('modalMensagem').classList.add('ativo');
+        setTimeout(() => document.getElementById('inputTitulo').focus(), 100);
+    }
+
+    function fecharModalMensagem() {
+        document.getElementById('modalMensagem').classList.remove('ativo');
+        usuarioParaMensagem = null;
+    }
+
+    document.querySelectorAll('.banner-opcao').forEach(btn => {
+        btn.addEventListener('click', () => {
+            bannerSelecionado = btn.dataset.valor;
+            document.querySelectorAll('.banner-opcao').forEach(b => b.classList.remove('ativo'));
+            btn.classList.add('ativo');
+        });
+    });
+
+    async function enviarMensagem() {
+        if (!usuarioParaMensagem) return;
+
+        const { email, nome } = usuarioParaMensagem;
+        const titulo = document.getElementById('inputTitulo').value.trim();
+        const mensagem = document.getElementById('inputMensagem').value.trim();
+        const xpEnviado = parseInt(document.getElementById('inputXP').value) || 0;
+
+        if (!titulo || !mensagem) {
+            notificarDev('Preencha o título e a mensagem!', 'aviso', true);
+            return;
+        }
+
+        const btn = document.querySelector('.btn-enviar-mensagem');
+        btn.disabled = true;
+        btn.textContent = 'Enviando...';
+
+        try {
+            const { error: errMsg } = await supabaseClient
+                .from('mensagens_dev')
+                .insert([{
+                    email_destinatario: email,
+                    titulo,
+                    mensagem,
+                    xp_enviado: xpEnviado,
+                    icone: bannerSelecionado,
+                    lida: false
+                }]);
+
+            if (errMsg) throw errMsg;
+
+            if (xpEnviado > 0) {
+                const { data: userData, error: errBusca } = await supabaseClient
+                    .from('usuarios')
+                    .select('xp, level')
+                    .eq('email', email)
+                    .maybeSingle();
+
+                if (errBusca) throw errBusca;
+
+                if (userData) {
+                    const xpAtual = Number(userData.xp) || 0;
+                    const novoXP = xpAtual + xpEnviado;
+                    const novoLevel = Math.max(Number(userData.level) || 0, Math.floor(novoXP / 100));
+
+                    const { error: errUp } = await supabaseClient
+                        .from('usuarios')
+                        .update({ xp: novoXP, level: novoLevel })
+                        .eq('email', email);
+
+                    if (errUp) throw errUp;
+                }
+            }
+
+            notificarDev(
+                `Mensagem enviada para "${nome}"${xpEnviado > 0 ? ` (+${xpEnviado} XP)` : ''}!`,
+                'sucesso'
+            );
+            fecharModalMensagem();
+            carregarUsuarios();
+
+        } catch (err) {
+            console.error('Erro ao enviar mensagem:', err);
+            notificarDev('Erro: ' + (err.message || err), 'aviso', true);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Enviar';
+        }
+    }
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            fecharModalExcluir();
+            fecharModalMensagem();
+        }
+    });
+
+    carregarUsuarios();
+    window.addEventListener('pageshow', carregarUsuarios);
+    window.addEventListener('focus', carregarUsuarios);
+</script>
+
+</body>
+</html>

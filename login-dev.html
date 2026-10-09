@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acesso Desenvolvedor — GIGO</title>
+<link rel="stylesheet" href="login.css">
+<style>
+
+    .aviso-restrito {
+        background: #a02098;
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+        letter-spacing: 0.5px;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+
+    /* ===== CONTAINER ROSA ===== */
+    .container {
+        background-color: #f07ae892 !important;
+        border: 4px solid #a02098 !important;
+    }
+
+    .container h1 {
+        color: #fff !important;
+    }
+
+    /* ===== INPUTS ===== */
+    .container .campo input {
+        background-color: rgba(255, 255, 255, 0.25) !important;
+        border: 3px solid #d64ec9 !important;
+        color: #fff !important;
+    }
+
+    .container .campo input::placeholder {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    .container .campo input:focus {
+        background-color: rgba(255, 255, 255, 0.4) !important;
+        border-color: #f07ae8 !important;
+    }
+
+    /* ===== BOTÃO ROSA ===== */
+    .container #entrar {
+        background: #d64ec9 !important;
+        color: #fff !important;
+        border: 3px solid #a02098 !important;
+    }
+
+    .container #entrar:hover {
+        background: #e066d3 !important;
+    }
+
+    /* ===== FOTO DE PERFIL ===== */
+    .container #foto-perfil {
+        border: 3px solid #d64ec9;
+        border-radius: 50%;
+        padding: 2px;
+    }
+
+    /* ===== MENSAGEM DE ERRO ===== */
+    #erro-dev {
+        color: #fff;
+        font-weight: bold;
+        font-size: 14px;
+        background: #a02098;
+        border-radius: 8px;
+        padding: 8px 14px;
+        text-align: center;
+        width: 100%;
+        display: none;
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+
+<body class="fundo">
+
+<a href="login.html" class="btn-voltar-topo">
+    <img src="voltar-bt.png" alt="Voltar">
+</a>
+
+<div class="container">
+    <p id="erro-dev"></p>
+
+    <img src="foto-login.png" id="foto-perfil" alt="Perfil">
+
+    <h1>DESENVOLVEDOR</h1>
+
+    <div class="aviso-restrito">
+        Área restrita a pessoas autorizadas
+    </div>
+
+    <form id="dev-form" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <div class="campo">
+            <input type="email" id="dev-email" placeholder="E-MAIL" required>
+        </div>
+
+        <div class="campo">
+            <input type="text" id="dev-codigo" placeholder="CÓDIGO DE ACESSO" required>
+        </div>
+    </form>
+
+    <div class="container-link-login" style="display:flex;flex-direction:column;align-items:center;gap:10px;width:80%;margin-top:1em;">
+        <button type="submit" id="entrar" form="dev-form">Entrar</button>
+    </div>
+</div>
+
+<img src="foto-logo.png" class="logo-animada" alt="Logo">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const form = document.getElementById('dev-form');
+    const erroBox = document.getElementById('erro-dev');
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        erroBox.style.display = 'none';
+        erroBox.innerText = '';
+
+        const emailDigitado = document.getElementById('dev-email').value.trim();
+        const codigoDigitado = document.getElementById('dev-codigo').value.trim();
+
+        if (!emailDigitado || !codigoDigitado) {
+            erroBox.innerText = "Preencha e-mail e código!";
+            erroBox.style.display = 'block';
+            return;
+        }
+
+        try {
+            const { data: devs, error } = await supabaseClient
+                .from('desenvolvedores')
+                .select('*')
+                .eq('email', emailDigitado)
+                .eq('codigo', codigoDigitado);
+
+            if (error) {
+                console.error("Erro Supabase:", error);
+                erroBox.innerText = `Erro: ${error.message}`;
+                erroBox.style.display = 'block';
+                return;
+            }
+
+            if (devs && devs.length > 0) {
+                const dev = devs[0];
+
+                localStorage.clear();
+                sessionStorage.clear();
+
+                sessionStorage.setItem('dev_nome', dev.nome || '');
+                sessionStorage.setItem('dev_email', dev.email);
+                sessionStorage.setItem('tipo_usuario', 'desenvolvedor');
+
+                localStorage.setItem('ultimo_email_dev', dev.email);
+
+                window.location.href = 'pagina-entrada-dev.html';
+            } else {
+                erroBox.innerText = "E-mail ou código incorretos!";
+                erroBox.style.display = 'block';
+            }
+
+        } catch (erro) {
+            console.error("Erro no acesso do desenvolvedor:", erro);
+            erroBox.innerText = `Erro: ${erro.message}`;
+            erroBox.style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>

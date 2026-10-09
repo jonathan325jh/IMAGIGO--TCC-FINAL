@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Customizador de Personagem</title>
+    <link rel="stylesheet" href="personagem.css">
+    <style>
+        .boneco-area {
+            position: relative;
+            display: inline-block;
+            overflow: visible;
+        }
+        #video-fundo {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: calc(100% + 40px);
+            height: calc(100% + 40px);
+            object-fit: cover;
+            z-index: 1;
+            display: none;
+            pointer-events: none;
+            border-radius: 12px;
+        }
+        #boneco-svg {
+            position: relative;
+            z-index: 2;
+            overflow: visible;
+            pointer-events: none;
+        }
+        #boneco-svg image {
+            pointer-events: none;
+        }
+
+        /* ===== LINHA DO SELECT ===== */
+        .linha-select {
+            position: relative;
+        }
+
+        .linha-select .linha-inner {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ===== SELECT — visual IGUAL aos outros ===== */
+        .painel .linha-select select,
+        .linha-select select {
+            flex: 1;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            font-family: inherit !important;
+            font-size: inherit !important;
+            padding: 6px 8px !important;
+            border-radius: 6px !important;
+            border: none !important;
+            color: #f59e0b !important;
+            outline: none !important;
+            cursor: pointer;
+            transition: background-color 0.25s, box-shadow 0.25s;
+        }
+
+        .linha-select select:focus {
+            box-shadow: 0 0 0 2px rgba(74, 123, 199, 0.35) !important;
+        }
+
+        .painel .linha-select select.bloqueado,
+        .linha-select select.bloqueado {
+            background-color: rgba(239, 68, 68, 0.18) !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: #7f1d1d !important;
+        }
+
+        .painel .linha-select select.liberado,
+        .linha-select select.liberado {
+            background-color: rgba(16, 185, 129, 0.18) !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: #065f46 !important;
+        }
+
+        /* ===== Nome escolhido ao lado do select ===== */
+        .nome-item-lado {
+            font-size: 12px;
+            font-weight: bold;
+            color: #1f2937;
+            white-space: nowrap;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            min-width: 60px;
+            text-align: center;
+            display: none;
+        }
+        .nome-item-lado.visivel {
+            display: inline-block;
+        }
+        .nome-item-lado.bloqueado {
+            color: #991b1b;
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        /* ===== CADEADO ===== */
+        .cadeado-mini {
+            width: 18px;
+            height: 18px;
+            image-rendering: pixelated;
+            pointer-events: none;
+            display: none;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+        .cadeado-mini.visivel {
+            display: block;
+        }
+        .cadeado-mini.bloqueado {
+            filter:
+                brightness(0) saturate(100%)
+                invert(18%) sepia(96%) saturate(6000%)
+                hue-rotate(360deg) brightness(98%) contrast(110%);
+        }
+
+        /* Aviso embaixo — só aparece quando bloqueado */
+        .aviso-level {
+            display: block;
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: 4px;
+            min-height: 0;
+        }
+        .aviso-level:empty { display: none; }
+        .aviso-level.bloqueado { color: #b91c1c; }
+
+        /* ===== MENU TRÊS PONTOS — IGUAL À GESTÃO ===== */
+        .voltar-dois {
+            position: absolute;
+            top: 30px;
+            left: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .voltar-dois .btn-topo {
+            width: 6rem;
+            background: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .voltar-dois .btn-topo img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .voltar-dois .btn-topo:hover {
+            transform: scale(1.08);
+            filter: brightness(1.15) drop-shadow(0 0 12px rgba(255, 204, 102, 0.7));
+        }
+
+        .menu-opcoes {
+            position: absolute;
+            top: 80px;
+            left: 0;
+            width: 260px;
+            padding: 14px 12px;
+            background: linear-gradient(160deg, rgba(245, 248, 255, 0.98), rgba(226, 236, 252, 0.98));
+            backdrop-filter: blur(12px);
+            border: 2px solid #7ea8ff;
+            border-radius: 16px;
+            box-shadow:
+                0 20px 45px rgba(30, 60, 130, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 1100;
+            opacity: 0;
+            transform: translateY(-12px) scale(0.96);
+            pointer-events: none;
+            transform-origin: top left;
+            transition:
+                opacity 0.28s ease,
+                transform 0.32s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .menu-opcoes.aberto {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .menu-cabecalho {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 6px 12px 12px;
+            border-bottom: 2px solid rgba(126, 168, 255, 0.4);
+            margin-bottom: 8px;
+        }
+
+        .menu-titulo {
+            font-size: 15px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #1e40af;
+            text-shadow: 0 1px 2px rgba(126, 168, 255, 0.4);
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 11px 14px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #1e293b;
+            font-size: 15px;
+            font-weight: 700;
+            transition:
+                background 0.22s ease,
+                transform 0.22s ease,
+                color 0.22s ease,
+                box-shadow 0.22s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #4a7bc7, #7ea8ff);
+            transform: scaleY(0);
+            transform-origin: center;
+            transition: transform 0.3s ease;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .menu-item:hover {
+            background: rgba(74, 123, 199, 0.15);
+            color: #1e40af;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(74, 123, 199, 0.2);
+        }
+
+        .menu-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .menu-item:active {
+            transform: translateX(5px) scale(0.98);
+        }
+
+        .menu-texto {
+            flex: 1;
+        }
+
+        .menu-divisor {
+            height: 2px;
+            background: rgba(126, 168, 255, 0.35);
+            margin: 8px 10px;
+            border-radius: 2px;
+        }
+
+        .menu-sair {
+            color: #b91c1c;
+        }
+
+        .menu-sair:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: #dc2626;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+        }
+
+        .menu-sair::before {
+            background: linear-gradient(180deg, #ef4444, #f87171);
+        }
+
+        #btnOpcoes.ativo img {
+            transform: rotate(90deg);
+            filter: brightness(1.2) drop-shadow(0 0 8px rgba(74, 123, 199, 0.8));
+        }
+
+        #btnOpcoes img {
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+    </style>
+</head>
+<body class="corpito">
+
+<div class="customizador-wrapper">
+    <div class="header-info-esquerda">
+        <h1 class="titulo-personagem" id="titulo-nome">...</h1>
+        <span class="nivel-tag" id="nivel-tag">LV1</span>
+    </div>
+
+    <div class="voltar-dois">
+        <a href="" onclick="history.back(); return false;" class="btn-topo">
+            <img src="voltar-bt.png" id="voltar" alt="Voltar">
+        </a>
+
+        <button type="button" class="btn-topo" id="btnOpcoes" aria-label="Abrir menu" aria-expanded="false">
+            <img src="tres-pontos-azul-btn.png" id="tres-pontos" alt="Opções">
+        </button>
+
+        <nav class="menu-opcoes" id="menuOpcoes" aria-hidden="true">
+            <div class="menu-cabecalho">
+                <span class="menu-titulo">MENU</span>
+            </div>
+
+            <a href="pagina-entrada.html" class="menu-item">
+                <span class="menu-texto">Início</span>
+            </a>
+
+            <a href="tutoriais.html" class="menu-item">
+                <span class="menu-texto">Tutoriais</span>
+            </a>
+
+            <a href="forum.html" class="menu-item">
+                <span class="menu-texto">Fórum</span>
+            </a>
+
+            <a href="gestao.html" class="menu-item">
+                <span class="menu-texto">Gestão</span>
+            </a>
+
+            <a href="Jogos.html" class="menu-item">
+                <span class="menu-texto">Jogos</span>
+            </a>
+
+            <a href="perfil.html" class="menu-item">
+                <span class="menu-texto">Perfil</span>
+            </a>
+
+            <a href="config-conta.html" class="menu-item">
+                <span class="menu-texto">Configurações</span>
+            </a>
+
+            <a href="sobre-nos.html" class="menu-item">
+                <span class="menu-texto">Sobre Nós</span>
+            </a>
+
+            <a href="suporte.html" class="menu-item">
+                <span class="menu-texto">Suporte</span>
+            </a>
+
+            <div class="menu-divisor"></div>
+
+            <a href="login.html" class="menu-item menu-sair" id="menuSair">
+                <span class="menu-texto">Sair da conta</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="conteudo-principal">
+        <div class="container-esq">
+            <div class="boneco-area">
+                <video id="video-fundo" autoplay loop muted playsinline></video>
+
+                <svg id="boneco-svg" width="285" height="388" viewBox="0 0 200 280">
+                    <defs>
+                        <clipPath id="recorte-corpo">
+                            <path d="
+                            M 100,60 
+                            C 75,60 62,72 44,100 
+                            C 35,114 47,128 55,115 
+                            C 65,99 71,90 76,94 
+                            C 73,115 67,155 62,215 
+                            C 60,228 76,228 78,215 
+                            C 84,175 92,142 100,142 
+                            C 108,142 116,175 122,215 
+                            C 124,228 140,228 138,215 
+                            C 133,155 127,115 124,94 
+                            C 129,90 135,99 145,115 
+                            C 153,128 165,114 156,100 
+                            C 138,72 125,60 100,60 Z" />
+                        </clipPath>
+                    </defs>
+
+                    <image id="img-animacao" x="-20" y="-20" width="240" height="320" href="" />
+
+                    <circle cx="100" cy="40" r="18" class="cor-corpo" fill="#4a7bc7" />
+                    <path d="
+                    M 100,60 
+                    C 75,60 62,72 44,100 
+                    C 35,114 47,128 55,115 
+                    C 65,99 71,90 76,94 
+                    C 73,115 67,155 62,215 
+                    C 60,228 76,228 78,215 
+                    C 84,175 92,142 100,142 
+                    C 108,142 116,175 122,215 
+                    C 124,228 140,228 138,215 
+                    C 133,155 127,115 124,94 
+                    C 129,90 135,99 145,115 
+                    C 153,128 165,114 156,100 
+                    C 138,72 125,60 100,60 Z" class="cor-corpo" fill="#4a7bc7" />
+
+                    <g id="grupo-estampa" clip-path="url(#recorte-corpo)"></g>
+
+                    <image id="img-cachecol" x="55" y="60" width="90" height="55" href="" />
+                    <image id="img-roupa" x="33" y="35" width="140" height="170" href="" />
+                    <image id="img-chapeu" x="70" y="2" width="60" height="46" href="" />
+                </svg>
+            </div>
+
+            <div class="sombra"></div>
+
+            <input type="text" id="input-nome" class="input-nome" placeholder="Nome......" value="" style="position: relative; z-index: 10;">
+        </div>
+
+        <div class="painel-container-externo">
+            <div class="painel">
+                <div class="linha custom-container">
+                    <span class="label-visual">Pronomes:</span>
+                    <select id="pronome">
+                        <option value="" selected>Selecione</option>
+                        <option value="Ele/Dele">Ele/Dele</option>
+                        <option value="Ela/Dela">Ela/Dela</option>
+                        <option value="Elu/Delu">Elu/Delu</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+
+                <div class="linha">
+                    <span class="label-visual">Cor 1:</span>
+                    <input type="color" id="picker-c1" value="#4a7bc7">
+                </div>
+
+                <div class="linha">
+                    <span class="label-visual">Estilo:</span>
+                    <select id="sel-estampa">
+                        <option value="nenhuma" selected>Nenhuma</option>
+                        <option value="bolinhas">Bolinhas</option>
+                        <option value="linhas">Linhas</option>
+                    </select>
+                </div>
+
+                <div class="linha">
+                    <span class="label-visual">Cor 2:</span>
+                    <input type="color" id="picker-c2" value="#ff0000">
+                </div>
+
+                <!-- ROUPA -->
+                <div class="linha linha-select" id="linha-roupa">
+                    <span class="label-visual">Roupa:</span>
+                    <div class="linha-inner">
+                        <select id="sel-roupa"></select>
+                        <span class="nome-item-lado" id="lado-roupa"></span>
+                        <img src="banner-cadeado.png" class="cadeado-mini" id="cadeado-roupa" alt="Bloqueado">
+                    </div>
+                    <span class="aviso-level" id="aviso-roupa"></span>
+                </div>
+
+                <!-- CHAPÉU -->
+                <div class="linha linha-select" id="linha-chapeu">
+                    <span class="label-visual">Chapéu:</span>
+                    <div class="linha-inner">
+                        <select id="sel-chapeu"></select>
+                        <span class="nome-item-lado" id="lado-chapeu"></span>
+                        <img src="banner-cadeado.png" class="cadeado-mini" id="cadeado-chapeu" alt="Bloqueado">
+                    </div>
+                    <span class="aviso-level" id="aviso-chapeu"></span>
+                </div>
+
+                <div class="linha">
+                    <span class="label-visual">Partículas:</span>
+                    <select id="sel-animacao">
+                        <option value="nenhuma" selected>Nenhuma</option>
+                        <option value="fogo">Aura de Fogo (MP4)</option>
+                        <option value="brilho">Brilho / Estrelas (GIF)</option>
+                    </select>
+                </div>
+
+                <button type="button" id="btnSalvar" class="btn-salvar">Salvar Personagem</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ===== SESSION STORAGE ===== */
+const emailSalvo = sessionStorage.getItem('usuario_email');
+if (!emailSalvo) {
+    window.location.href = 'login.html';
+}
+
+/* ===== MENU TRÊS PONTOS ===== */
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('btnOpcoes');
+    const menu = document.getElementById('menuOpcoes');
+    if (!btn || !menu) return;
+
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const aberto = menu.classList.toggle('aberto');
+        btn.setAttribute('aria-expanded', aberto);
+        btn.classList.toggle('ativo', aberto);
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!menu.contains(e.target) && !btn.contains(e.target)) {
+            menu.classList.remove('aberto');
+            btn.setAttribute('aria-expanded', 'false');
+            btn.classList.remove('ativo');
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            menu.classList.remove('aberto');
+            btn.setAttribute('aria-expanded', 'false');
+            btn.classList.remove('ativo');
+        }
+    });
+});
+
+/* ===== MAPAS ===== */
+const NOMES_ROUPAS = {
+    'nenhuma': 'Nenhuma',
+    'beca': 'Beca',
+    'roupa-1': 'Capa de Vampiro'
+};
+
+const NOMES_CHAPEUS = {
+    'nenhum': 'Nenhum',
+    'roupa-touca': 'Touca de Inverno',
+    'roupa-touca-2': 'Cachecol',
+    'chapeu-formando': 'Chapéu de Formando'
+};
+
+const CAMINHO_ROUPAS = {
+    'nenhuma': '',
+    'beca': 'camisa.png',
+    'roupa-1': 'roupa-1.png'
+};
+
+const CAMINHO_CHAPEUS = {
+    'nenhum': '',
+    'roupa-touca': 'roupa-touca.png',
+    'roupa-touca-2': 'roupa-touca-2.png',
+    'chapeu-formando': 'chapeu.png'
+};
+
+const CAMINHO_AURAS = {
+    'nenhuma': '',
+    'fogo': '',
+    'brilho': ''
+};
+
+const AJUSTE_ROUPAS = {
+    'beca':    { x: 33, y: 35, w: 140, h: 170 },
+    'roupa-1': { x: 20, y: 20, w: 160, h: 210 }
+};
+
+const AJUSTE_CHAPEUS = {
+    'roupa-touca':     { x: 68, y: -14, w: 64, h: 50 },
+    'chapeu-formando': { x: 70, y: 2,   w: 60, h: 46 }
+};
+
+const AJUSTE_CACHECOL = { x: 55, y: 60, w: 90, h: 55 };
+
+const AJUSTE_PADRAO_ROUPA  = { x: 33, y: 35, w: 140, h: 170 };
+const AJUSTE_PADRAO_CHAPEU = { x: 70, y: 2,  w: 60,  h: 46  };
+
+const LEVEL_MIN_ROUPA = {
+    'nenhuma': 0,
+    'beca': 20,
+    'roupa-1': 50
+};
+
+const LEVEL_MIN_CHAPEU = {
+    'nenhum': 0,
+    'roupa-touca': 10,
+    'roupa-touca-2': 15,
+    'chapeu-formando': 50
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const picker1 = document.getElementById('picker-c1');
+    const picker2 = document.getElementById('picker-c2');
+    const selEstampa = document.getElementById('sel-estampa');
+    const selRoupa = document.getElementById('sel-roupa');
+    const selChapeu = document.getElementById('sel-chapeu');
+    const selAnimacao = document.getElementById('sel-animacao');
+    const inputNome = document.getElementById('input-nome');
+    const tituloNome = document.getElementById('titulo-nome');
+    const nivelTag = document.getElementById('nivel-tag');
+    const selPronome = document.getElementById('pronome');
+    const btnSalvar = document.getElementById('btnSalvar');
+
+    const partesCorpo = document.querySelectorAll('.cor-corpo');
+    const grupoEstampa = document.getElementById('grupo-estampa');
+    const imgRoupa = document.getElementById('img-roupa');
+    const imgCachecol = document.getElementById('img-cachecol');
+    const imgChapeu = document.getElementById('img-chapeu');
+    const imgAnimacao = document.getElementById('img-animacao');
+    const videoFundo = document.getElementById('video-fundo');
+
+    const cadeadoRoupa = document.getElementById('cadeado-roupa');
+    const cadeadoChapeu = document.getElementById('cadeado-chapeu');
+    const avisoRoupa = document.getElementById('aviso-roupa');
+    const avisoChapeu = document.getElementById('aviso-chapeu');
+    const ladoRoupa = document.getElementById('lado-roupa');
+    const ladoChapeu = document.getElementById('lado-chapeu');
+
+    let levelAtual = 1;
+
+    function construirSelect(selectEl, mapaNomes, tabelaLevel) {
+        selectEl.innerHTML = '';
+        Object.entries(mapaNomes).forEach(([valor, exibido]) => {
+            const req = tabelaLevel[valor] || 0;
+            const opt = document.createElement('option');
+            opt.value = valor;
+
+            if (req > 0) {
+                opt.textContent = `${exibido} — LV${req}`;
+            } else {
+                opt.textContent = exibido;
+            }
+
+            opt.dataset.level = req;
+            selectEl.appendChild(opt);
+        });
+    }
+
+    function atualizarVisual(selectEl, cadeadoEl, avisoEl, ladoEl, tabela) {
+        const valor = selectEl.value;
+        const req = valor ? (tabela[valor] || 0) : 0;
+        const bloqueado = req > 0 && levelAtual < req;
+
+        selectEl.classList.remove('bloqueado');
+
+        if (bloqueado) {
+            selectEl.classList.add('bloqueado');
+            cadeadoEl.classList.add('visivel', 'bloqueado');
+        } else {
+            cadeadoEl.classList.remove('visivel', 'bloqueado');
+        }
+
+        const nomeExibido = valor && valor !== 'nenhuma' && valor !== 'nenhum'
+            ? selectEl.options[selectEl.selectedIndex]?.textContent.split(' — ')[0]
+            : '';
+
+        if (nomeExibido) {
+            ladoEl.textContent = nomeExibido;
+            ladoEl.classList.add('visivel');
+            ladoEl.classList.toggle('bloqueado', bloqueado);
+        } else {
+            ladoEl.textContent = '';
+            ladoEl.classList.remove('visivel', 'bloqueado');
+        }
+
+        if (bloqueado) {
+            avisoEl.textContent = `Bloqueado — precisa LV${req}`;
+            avisoEl.className = 'aviso-level bloqueado';
+        } else {
+            avisoEl.textContent = '';
+            avisoEl.className = 'aviso-level';
+        }
+    }
+
+    function aplicarRoupa() {
+        atualizarVisual(selRoupa, cadeadoRoupa, avisoRoupa, ladoRoupa, LEVEL_MIN_ROUPA);
+    }
+
+    function aplicarChapeu() {
+        atualizarVisual(selChapeu, cadeadoChapeu, avisoChapeu, ladoChapeu, LEVEL_MIN_CHAPEU);
+    }
+
+    async function carregarLevel() {
+        try {
+            const { data, error } = await supabaseClient
+                .from('usuarios')
+                .select('level, xp')
+                .eq('email', emailSalvo)
+                .maybeSingle();
+
+            if (error) throw error;
+            if (data) {
+                const xp = Number(data.xp) || 0;
+                levelAtual = Number(data.level) || Math.floor(xp / 100) || 1;
+            }
+        } catch (e) {
+            console.warn('Não foi possível carregar level:', e);
+        }
+        nivelTag.textContent = 'LV' + levelAtual;
+    }
+
+    inputNome.addEventListener('input', (e) => {
+        tituloNome.textContent = e.target.value || '';
+    });
+
+    function atualizarCorCorpo(cor) {
+        partesCorpo.forEach(el => {
+            el.setAttribute('fill', cor);
+            el.style.fill = cor;
+        });
+    }
+
+    function atualizarEstampa() {
+        grupoEstampa.innerHTML = '';
+        const tipo = selEstampa.value;
+        const cor = picker2.value;
+
+        if (tipo === 'bolinhas') {
+            const pos = [
+                {cx: 72,  cy: 80,  r: 6}, {cx: 92,  cy: 88,  r: 7},
+                {cx: 112, cy: 80,  r: 6}, {cx: 128, cy: 92,  r: 5},
+                {cx: 80,  cy: 105, r: 7}, {cx: 105, cy: 112, r: 8},
+                {cx: 125, cy: 118, r: 6}, {cx: 70,  cy: 130, r: 6},
+                {cx: 90,  cy: 138, r: 7}, {cx: 112, cy: 145, r: 6},
+                {cx: 128, cy: 152, r: 5}, {cx: 78,  cy: 160, r: 7},
+                {cx: 98,  cy: 168, r: 6}, {cx: 118, cy: 178, r: 7},
+                {cx: 85,  cy: 190, r: 6}, {cx: 108, cy: 198, r: 6},
+                {cx: 72,  cy: 205, r: 5}, {cx: 95,  cy: 212, r: 6}
+            ];
+            pos.forEach(p => {
+                const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                c.setAttribute('cx', p.cx);
+                c.setAttribute('cy', p.cy);
+                c.setAttribute('r', p.r);
+                c.setAttribute('fill', cor);
+                c.style.fill = cor;
+                grupoEstampa.appendChild(c);
+            });
+        } else if (tipo === 'linhas') {
+            for (let offset = -250; offset < 400; offset += 16) {
+                const linha = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                linha.setAttribute('x1', offset + 250);
+                linha.setAttribute('y1', 0);
+                linha.setAttribute('x2', offset);
+                linha.setAttribute('y2', 280);
+                linha.setAttribute('stroke', cor);
+                linha.setAttribute('stroke-width', 5);
+                linha.style.stroke = cor;
+                grupoEstampa.appendChild(linha);
+            }
+        }
+    }
+
+    function aplicarAjuste(el, ajuste) {
+        el.setAttribute('x', ajuste.x);
+        el.setAttribute('y', ajuste.y);
+        el.setAttribute('width', ajuste.w);
+        el.setAttribute('height', ajuste.h);
+    }
+
+    function atualizarMidias() {
+        const valorRoupa = selRoupa.value || 'nenhuma';
+        const valorChapeu = selChapeu.value || 'nenhum';
+
+        const temCachecol = valorChapeu === 'roupa-touca-2';
+        imgCachecol.setAttribute('href', temCachecol ? CAMINHO_CHAPEUS['roupa-touca-2'] : '');
+        if (temCachecol) aplicarAjuste(imgCachecol, AJUSTE_CACHECOL);
+
+        imgRoupa.setAttribute('href', CAMINHO_ROUPAS[valorRoupa] || '');
+        aplicarAjuste(imgRoupa, AJUSTE_ROUPAS[valorRoupa] || AJUSTE_PADRAO_ROUPA);
+
+        if (valorChapeu && valorChapeu !== 'nenhum' && valorChapeu !== 'roupa-touca-2') {
+            imgChapeu.setAttribute('href', CAMINHO_CHAPEUS[valorChapeu] || '');
+            aplicarAjuste(imgChapeu, AJUSTE_CHAPEUS[valorChapeu] || AJUSTE_PADRAO_CHAPEU);
+        } else {
+            imgChapeu.setAttribute('href', '');
+        }
+
+        const anim = CAMINHO_AURAS[selAnimacao.value] || '';
+        if (anim.endsWith('.mp4')) {
+            imgAnimacao.setAttribute('href', '');
+            videoFundo.src = anim;
+            videoFundo.style.display = 'block';
+            videoFundo.play();
+        } else {
+            videoFundo.pause();
+            videoFundo.src = '';
+            videoFundo.style.display = 'none';
+            imgAnimacao.setAttribute('href', anim);
+        }
+    }
+
+    function aoMudarSelect(selectEl, tabela, aplicarFn, valorInicial) {
+        const req = tabela[selectEl.value] || 0;
+        if (req > 0 && levelAtual < req) {
+            selectEl.value = valorInicial;
+            aplicarFn();
+            atualizarMidias();
+            alert(`Este item precisa de LV${req}. Você ainda está no LV${levelAtual}.`);
+            return;
+        }
+        aplicarFn();
+        atualizarMidias();
+    }
+
+    selRoupa.addEventListener('change', () => aoMudarSelect(selRoupa, LEVEL_MIN_ROUPA, aplicarRoupa, 'nenhuma'));
+    selChapeu.addEventListener('change', () => aoMudarSelect(selChapeu, LEVEL_MIN_CHAPEU, aplicarChapeu, 'nenhum'));
+
+    picker1.addEventListener('input', (e) => atualizarCorCorpo(e.target.value));
+    picker1.addEventListener('change', (e) => atualizarCorCorpo(e.target.value));
+    picker2.addEventListener('input', atualizarEstampa);
+    picker2.addEventListener('change', atualizarEstampa);
+    selEstampa.addEventListener('change', atualizarEstampa);
+    selAnimacao.addEventListener('change', atualizarMidias);
+
+    btnSalvar.addEventListener('click', salvarPersonagem);
+
+    async function carregarPersonagem() {
+        try {
+            const { data: usuarios, error } = await supabaseClient
+                .from('usuarios')
+                .select('*')
+                .eq('email', emailSalvo);
+
+            if (error) throw error;
+
+            if (usuarios && usuarios.length > 0) {
+                const u = usuarios[0];
+
+                inputNome.value = u.nome_personagem || '';
+                tituloNome.textContent = u.nome_personagem || '';
+                selPronome.value = u.pronome || '';
+
+                const c1 = u.cor1 || u.cor_1 || '#4a7bc7';
+                const c2 = u.cor2 || u.cor_2 || '#ff0000';
+
+                picker1.value = c1;
+                picker2.value = c2;
+                selEstampa.value = u.estampa || 'nenhuma';
+                selAnimacao.value = u.animacao_fundo || 'nenhuma';
+
+                selRoupa.value = u.roupa || 'nenhuma';
+                selChapeu.value = u.chapeu || 'nenhum';
+
+                aplicarRoupa();
+                aplicarChapeu();
+
+                atualizarCorCorpo(c1);
+                atualizarEstampa();
+                atualizarMidias();
+            }
+        } catch (erro) {
+            console.error('Erro ao carregar dados do personagem:', erro);
+        }
+    }
+
+    async function salvarPersonagem() {
+        btnSalvar.disabled = true;
+
+        try {
+            const payload = {
+                nome_personagem: inputNome.value,
+                cor_1: picker1.value,
+                cor_2: picker2.value,
+                pronome: selPronome.value,
+                estampa: selEstampa.value,
+                roupa: selRoupa.value || 'nenhuma',
+                chapeu: selChapeu.value || 'nenhum',
+                animacao_fundo: selAnimacao.value,
+                personagem_criado: 1
+            };
+
+            const { data, error } = await supabaseClient
+                .from('usuarios')
+                .update(payload)
+                .eq('email', emailSalvo)
+                .select();
+
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+                alert('Atenção: Nenhum registro foi atualizado. Verifique se o e-mail cadastrado é idêntico ao do banco.');
+                btnSalvar.disabled = false;
+                return;
+            }
+
+            sessionStorage.setItem('usuario_xp_atualizado', Date.now());
+            window.location.href = 'pagina-entrada.html';
+        } catch (err) {
+            alert('Erro ao salvar no banco de dados: ' + err.message);
+            console.error(err);
+            btnSalvar.disabled = false;
+        }
+    }
+
+    await carregarLevel();
+
+    construirSelect(selRoupa, NOMES_ROUPAS, LEVEL_MIN_ROUPA);
+    construirSelect(selChapeu, NOMES_CHAPEUS, LEVEL_MIN_CHAPEU);
+
+    selRoupa.value = 'nenhuma';
+    selChapeu.value = 'nenhum';
+
+    aplicarRoupa();
+    aplicarChapeu();
+    carregarPersonagem();
+});
+</script>
+</body>
+</html>

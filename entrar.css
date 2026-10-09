@@ -1,0 +1,340 @@
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    outline: none;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== BODY ===== */
+body.fundo {
+    background-image: url('Login.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8em;
+
+    min-height: 100vh;
+    margin: 0;
+   padding: 2em 4em;
+    overflow: hidden;
+
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes appearInPlace {
+    0%   { opacity: 0; transform: scale(0.92); }
+    60%  { opacity: 1; transform: scale(1.02); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+}
+
+/* ===== LOGO ===== */
+.logo-animada {
+    width: 55%;
+    max-width: 800px;
+    flex-shrink: 0;
+    pointer-events: none;
+    animation: appearInPlace 0.9s ease-out both;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+    gap: 1em;
+    font-family: 'Cooper Hewitt', sans-serif;
+    background-color: rgba(255, 222, 89, 0.5);
+    border-radius: 2%;
+    border: solid 4px rgb(255, 197, 89);
+    width: 30%;
+    height: 81vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    flex-shrink: 0;
+
+    animation:
+        appearInPlace 0.9s ease-out both,
+        float 4s ease-in-out infinite;
+    animation-delay: 0.15s, 1.55s;
+}
+
+/* ===== HEADER / BOTÃO VOLTAR ===== */
+header {
+    width: auto;
+    height: 5vh;
+    padding-bottom: 6rem;
+}
+
+header.volar-dois {
+    margin-right: 23rem;
+}
+
+/* ===== FORM ===== */
+.form {
+    margin-bottom: 2em;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 16em;
+    height: 6vh;
+    text-align: center;
+    font-size: 20px;
+    background-color: rgba(251, 165, 6, 0.381);
+    border: solid 4px rgba(251, 165, 6);
+    border-radius: 5px;
+    color: #3a2a00;
+    font-family: inherit;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+input:focus {
+    background-color: rgba(255, 200, 60, 0.6);
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.6);
+}
+
+::placeholder {
+    color: black;
+    opacity: 0.75;
+}
+
+/* ===== TÍTULO ===== */
+#titulo {
+    font-size: 35px;
+    color: #3a2a00;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+}
+
+h2 {
+    font-size: 20px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    color: #3a2a00;
+}
+
+/* ===== OPÇÕES RADIO ===== */
+.opcoes {
+    display: flex;
+    justify-content: center;
+    gap: 1.2em;
+    margin-top: 0.4em;
+    margin-bottom: 1em;
+    width: 100%;
+}
+
+.grupo-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+}
+
+.grupo-checkbox label {
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #3a2a00;
+}
+
+input[type="radio"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 1.7rem;
+    height: 1.7rem;
+    cursor: pointer;
+    background-color: rgba(255, 170, 0, 0.5);
+    border: 3px solid #ff7700;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    transition: transform 0.2s ease;
+}
+
+input[type="radio"]:hover {
+    transform: scale(1.1);
+}
+
+input[type="radio"]:checked {
+    background-color: rgba(255, 170, 0, 0.5);
+}
+
+input[type="radio"]:checked::before {
+    content: "X";
+    color: rgb(255, 120, 30);
+    font-size: 1.7rem;
+    font-weight: bold;
+}
+
+/* ===== BOTÃO ENVIAR ===== */
+.container-link {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1em;
+}
+
+.botao-link {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
+    background-color: rgba(251, 165, 6, 0.8);
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+    width: 12em;
+    padding: 10px 0;
+    border: solid 4px rgba(251, 165, 6);
+    border-radius: 10px;
+    font-family: inherit;
+    transition: background-color 0.25s ease, transform 0.2s ease,
+                box-shadow 0.25s ease;
+}
+
+.botao-link:hover {
+    background-color: rgba(255, 128, 0, 0.8);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 128, 0, 0.4);
+}
+
+.botao-link:active {
+    background-color: rgba(252, 244, 79, 0.6);
+    transform: translateY(0) scale(0.97);
+}
+
+button {
+    outline: none;
+    text-decoration: none;
+}
+
+input#email {
+    width: 16em;
+    height: 6vh;
+    text-align: center;
+    font-size: 20px;
+    background-color: rgba(251, 165, 6, 0.381);
+    border: solid 4px rgba(251, 165, 6);
+    border-radius: 5px;
+}
+
+/* ===== LINK LOGIN ===== */
+.container-link-login a {
+    text-decoration: none;
+    font-size: 20px;
+    color: rgb(35, 0, 68);
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.container-link-login a:hover {
+    color: red;
+    transform: scale(1.05);
+}
+
+/* ===== BOTÃO VOLTAR FIXO NO CANTO ===== */
+.btn-voltar-topo {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    text-decoration: none;
+    transition: transform 0.2s ease, filter 0.2s ease;
+
+    animation: appearInPlace 0.7s ease-out both;
+}
+
+.btn-voltar-topo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.btn-voltar-topo:hover {
+    transform: scale(1.15) rotate(-5deg);
+    filter: brightness(1.2) drop-shadow(0 0 15px rgba(255, 197, 89, 0.9));
+}
+
+.btn-voltar-topo:active {
+    transform: scale(0.95);
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 1200px) {
+    body.fundo { gap: 5em; }
+    .logo-animada { width: 50%; }
+    .container { width: 35%; }
+}
+
+@media (max-width: 900px) {
+    body.fundo {
+        flex-direction: column;
+        gap: 1em;
+        padding: 1em;
+    }
+    .logo-animada { width: 60%; }
+    .container {
+        width: 80%;
+        height: auto;
+        padding: 2em;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+        padding: 20px 0 40px;
+    }
+    #titulo { font-size: 26px; }
+    h2 { font-size: 17px; }
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+        font-size: 16px;
+        height: auto;
+        padding: 10px 0;
+    }
+    .botao-link { font-size: 18px; padding: 10px 0; }
+    .grupo-checkbox label { font-size: 15px; }
+    .container-link-login a { font-size: 16px; }
+    .logo-animada { width: 70%; }
+
+    .btn-voltar-topo {
+        width: 50px;
+        height: 50px;
+        top: 10px;
+        left: 10px;
+    }
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central de Jogos Divertidos - Minha Casa</title>
+<link rel="stylesheet" href="jogos.css">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="pontos-bg">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<header class="header-flutuante">
+    <div class="botoes-esquerda">
+        <a href="pagina-entrada.html" class="btn-topo">
+            <img src="voltar-azul-btn.png" alt="Voltar">
+        </a>
+        <button type="button" class="btn-topo" id="btnOpcoes" aria-label="Abrir menu" aria-expanded="false">
+            <img src="tres-pontos-azul-btn.png" alt="Opções">
+        </button>
+
+        <nav class="menu-opcoes" id="menuOpcoes" aria-hidden="true">
+            <div class="menu-cabecalho">
+                <img src="logo-suporte.png" alt="Logo" class="menu-logo">
+                <span class="menu-titulo">MENU</span>
+            </div>
+
+            <a href="pagina-entrada.html" class="menu-item"><span class="menu-texto">Início</span></a>
+            <a href="tutoriais.html" class="menu-item"><span class="menu-texto">Tutoriais</span></a>
+            <a href="forum.html" class="menu-item"><span class="menu-texto">Fórum</span></a>
+            <a href="gestao.html" class="menu-item"><span class="menu-texto">Gestão</span></a>
+            <a href="Jogos.html" class="menu-item"><span class="menu-texto">Jogos</span></a>
+            <a href="perfil.html" class="menu-item"><span class="menu-texto">Perfil</span></a>
+            <a href="config-conta.html" class="menu-item"><span class="menu-texto">Configurações</span></a>
+            <a href="sobre-nos.html" class="menu-item"><span class="menu-texto">Sobre Nós</span></a>
+            <a href="suporte.html" class="menu-item"><span class="menu-texto">Suporte</span></a>
+
+            <div class="menu-divisor"></div>
+
+            <a href="login.html" class="menu-item menu-sair" id="menuSair">
+                <span class="menu-texto">Sair da conta</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="logo-header">
+        <img src="logo-suporte.png" alt="Logo">
+    </div>
+</header>
+
+<div class="container-banner">
+    <img src="jogos-banner.png" alt="">
+</div>
+
+<div class="container-jogos">
+    <div class="card-jogo">
+        <div class="card-texto">
+            <h3>CASA DOS SONHOS</h3>
+            <p>Um simulador onde você usa o salário do seu trabalho para construir e decorar a casa dos sonhos, transformando seu planejamento financeiro em conquistas visuais.</p>
+        </div>
+        <button class="btn-jogar" onclick="window.location.href='casa.html'">JOGAR</button>
+    </div>
+
+    <div class="card-jogo">
+        <div class="card-texto">
+            <h3>TRAMPO</h3>
+            <p>Um quiz que simula sua rotina de trabalho, onde conhecimento vira renda. Responda a perguntas sobre finanças para cumprir seus expedientes e ganhar moedas conforme aprende.</p>
+        </div>
+        <button class="btn-jogar" onclick="window.location.href='quiz.html'">JOGAR</button>
+    </div>
+</div>
+
+<script src="menu.js"></script>
+</body>
+</html>

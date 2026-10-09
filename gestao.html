@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script src="https://kit.fontawesome.com/9ed48bdc42.js" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gastos Mensais</title>
+  <link rel="stylesheet" href="gestao.css">
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<div class="modal-valor" id="modalValor">
+  <div class="modal-valor-conteudo">
+    <div class="modal-valor-icone">💰</div>
+    <h2 class="modal-valor-titulo" id="modalValorTitulo">Adicionar valor</h2>
+    <p class="modal-valor-subtitulo" id="modalValorFalta">Faltam R$0,00</p>
+
+    <input type="number" class="modal-valor-input" id="modalValorInput" placeholder="Quanto quer adicionar?" step="0.01" min="0">
+
+    <div class="modal-valor-botoes">
+      <button class="btn-modal-add" onclick="confirmarValorMeta()">➕ Adicionar</button>
+      <button class="btn-modal-cancelar" onclick="fecharModalValor()">❌ Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="menu-editar-overlay" id="menuEditar">
+  <div class="menu-editar-box">
+    <h2 class="menu-editar-titulo" id="menuEditarTitulo">Editar</h2>
+    <p class="menu-editar-sub" id="menuEditarSub">O que deseja fazer?</p>
+
+    <div class="menu-editar-opcoes">
+      <button class="menu-editar-btn adicionar" onclick="menuAcaoAdicionar()">➕ Adicionar valor</button>
+      <button class="menu-editar-btn renomear" onclick="menuAcaoRenomear()">✏️ Trocar nome</button>
+      <button class="menu-editar-btn excluir" onclick="menuAcaoExcluir()">🗑️ Excluir</button>
+      <button class="menu-editar-btn cancelar" onclick="fecharMenuEditar()">❌ Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<body class="fundo-receita">
+
+ <header class="header-flutuante">
+    <a href="javascript:history.back()" class="btn-topo">
+        <img src="voltar-bt.png" alt="Voltar">
+    </a>
+    <button type="button" class="btn-topo" id="btnOpcoes" aria-label="Abrir menu" aria-expanded="false">
+        <img src="tres-pontos-azul-btn.png" alt="Opções">
+    </button>
+
+    <nav class="menu-opcoes" id="menuOpcoes" aria-hidden="true">
+        <div class="menu-cabecalho">
+            <span class="menu-titulo">MENU</span>
+        </div>
+
+        <a href="pagina-entrada.html" class="menu-item">
+            <span class="menu-texto">Início</span>
+        </a>
+
+        <a href="tutoriais.html" class="menu-item">
+            <span class="menu-texto">Tutoriais</span>
+        </a>
+
+        <a href="forum.html" class="menu-item">
+            <span class="menu-texto">Fórum</span>
+        </a>
+
+        <a href="gestao.html" class="menu-item">
+            <span class="menu-texto">Gestão</span>
+        </a>
+
+        <a href="Jogos.html" class="menu-item">
+            <span class="menu-texto">Jogos</span>
+        </a>
+
+        <a href="perfil.html" class="menu-item">
+            <span class="menu-texto">Perfil</span>
+        </a>
+
+        <a href="config-conta.html" class="menu-item">
+            <span class="menu-texto">Configurações</span>
+        </a>
+
+        <a href="sobre-nos.html" class="menu-item">
+            <span class="menu-texto">Sobre Nós</span>
+        </a>
+
+        <a href="suporte.html" class="menu-item">
+            <span class="menu-texto">Suporte</span>
+        </a>
+
+        <div class="menu-divisor"></div>
+
+        <a href="login.html" class="menu-item menu-sair" id="menuSair">
+           <span class="menu-texto">Sair da conta</span>
+        </a>
+    </nav>
+</header>
+
+<div id="container-notificacao"></div>
+
+<h1 class="app-title">GASTOS<br><span class="mensais">MENSAIS</span></h1>
+
+<div class="top-card">
+  <div class="doughnut-wrapper">
+    <canvas id="graficoRosca"></canvas>
+    <div class="doughnut-center-text">
+      <div class="title">Total</div>
+      <div class="amount" id="textoTotal">R$0,00</div>
+    </div>
+  </div>
+
+  <div class="top-summary">
+    <div class="summary-pill pill-renda" id="resumoRenda">Renda mensal: R$0,00</div>
+    <div class="summary-pill pill-saldo" id="resumoSaldo">Saldo em caixa: R$0,00</div>
+    <div class="summary-pill pill-despesa" id="resumoDespesa">Despesas: R$0,00</div>
+  </div>
+</div>
+
+<div class="categories-list" id="listaCategorias"></div>
+
+<br><br>
+
+<div class="management-box">
+  <div class="input-row">
+    <div class="color-btn">
+      <input type="color" id="corEntrada" value="#29b6f6">
+    </div>
+    <input type="number" id="valorEntrada" placeholder="Digite a quantia (R$) entrada">
+    <input type="text" id="nomeEntrada" placeholder="Digite o nome da entrada">
+    <button class="btn-add" onclick="adicionarRenda(true)">ADICIONAR</button>
+    <button class="btn-remove-entrada" onclick="adicionarRenda(false)">SUBTRAIR</button>
+  </div>
+
+  <div class="input-row">
+    <div class="color-btn">
+      <input type="color" id="corDespesa" value="#ef5350">
+    </div>
+    <input type="number" id="valorDespesa" placeholder="Digite a quantia (R$) despesa">
+    <input type="text" id="nomeDespesa" placeholder="Digite o nome da despesa">
+    <button class="btn-add" onclick="adicionarDespesa()">ADICIONAR</button>
+  </div>
+
+  <div class="goals-section">
+    <div class="goals-title">Metas</div>
+    <div class="goals-content">
+      <div class="goals-form">
+        <label>Nome</label>
+        <input type="text" id="metaNome">
+        <label>Quantia da meta</label>
+        <input type="number" id="metaValor">
+        <label>Início</label>
+        <input type="date" id="metaInicio">
+        <button class="btn-add" style="margin-top:5px;" onclick="adicionarMeta()">ADICIONAR</button>
+      </div>
+
+      <div class="goals-display" id="listaMetas"></div>
+    </div>
+  </div>
+</div>
+
+<script src="menu.js"></script>
+<script>
+  const SUPABASE_URL = 'https://yxsfpmqwhpvajzyrapyi.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA';
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let rendaTotal = 0;
+let despesas = [];
+let metas = [];
+let despesaProgresso = JSON.parse(sessionStorage.getItem('despesaProgresso')) || {};
+let metaSelecionada = null;
+let tipoModal = 'meta';
+let menuTipo = null;
+let menuId = null;
+
+const ctxRosca = document.getElementById('graficoRosca').getContext('2d');
+const chartRosca = new Chart(ctxRosca, {
+  type: 'doughnut',
+  data: { labels: [], datasets: [{ data: [], backgroundColor: [], borderWidth: 0 }] },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '75%' }
+});
+
+function formatarMoeda(val) {
+  return Number(val || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function exibirNotificacao(titulo, subtitulo, caminhoImagem = 'banner-xp.png', ehLevelUp = false) {
+  const container = document.getElementById('container-notificacao');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = `toast-xp ${ehLevelUp ? 'toast-level' : ''}`;
+  toast.innerHTML = `
+    <div class="toast-icone">
+      <img src="${caminhoImagem}" alt="Ícone" style="width:100%;height:100%;object-fit:contain;">
+    </div>
+    <div class="toast-conteudo">
+      <span class="toast-titulo">${titulo}</span>
+      <span class="toast-subtitulo">${subtitulo}</span>
+    </div>
+    <button class="toast-fechar" onclick="fecharToast(this.parentElement)">&times;</button>
+    <div class="toast-barra-progresso"></div>
+  `;
+  container.appendChild(toast);
+  setTimeout(() => fecharToast(toast), 7000);
+}
+
+function fecharToast(toastElement) {
+  if (!toastElement) return;
+  toastElement.style.animation = 'slideOut 0.4s ease forwards';
+  setTimeout(() => toastElement.remove(), 400);
+}
+
+async function adicionarXP(quantidade, motivo) {
+  try {
+    let emailSalvo = sessionStorage.getItem('usuario_email') || localStorage.getItem('usuario_email');
+
+    if (!emailSalvo) {
+      const { data: { session } } = await _supabase.auth.getSession();
+      if (session && session.user) emailSalvo = session.user.email;
+    }
+
+    if (!emailSalvo) {
+      exibirNotificacao(`+${quantidade} XP Conquistados!`, motivo, 'banner-xp.png');
+      return;
+    }
+
+    const { data: usuario, error } = await _supabase
+      .from('usuarios')
+      .select('xp, level')
+      .eq('email', emailSalvo)
+      .maybeSingle();
+
+    if (error || !usuario) {
+      console.warn('Não foi possível buscar usuário:', error);
+      exibirNotificacao(`+${quantidade} XP Conquistados!`, motivo, 'banner-xp.png');
+      return;
+    }
+
+    const xpAtual = parseInt(usuario.xp || 0);
+    const levelAtual = parseInt(usuario.level || Math.floor(xpAtual / 100)) || 0;
+    const novoXp = xpAtual + quantidade;
+    const novoLevel = Math.max(levelAtual, Math.floor(novoXp / 100));
+
+    const { error: errUp } = await _supabase
+      .from('usuarios')
+      .update({ xp: novoXp, level: novoLevel })
+      .eq('email', emailSalvo);
+
+    if (errUp) {
+      console.error('Erro ao atualizar XP no Supabase:', errUp);
+      exibirNotificacao(`+${quantidade} XP Conquistados!`, motivo, 'banner-xp.png');
+      return;
+    }
+
+    exibirNotificacao(`+${quantidade} XP Conquistados!`, motivo, 'banner-xp.png');
+
+    if (novoLevel > levelAtual) {
+      setTimeout(() => {
+        exibirNotificacao(`NÍVEL ALCANÇADO!`, `Você subiu para o Level ${novoLevel}!`, 'banner-level.png', true);
+      }, 600);
+    }
+
+    sessionStorage.setItem('usuario_xp_atualizado', Date.now());
+
+  } catch (err) {
+    console.error("Erro ao processar adição de XP:", err);
+  }
+}
+
+function salvarLocal() {
+  sessionStorage.setItem('rendaTotal', rendaTotal.toString());
+  sessionStorage.setItem('despesas', JSON.stringify(despesas));
+  sessionStorage.setItem('metas', JSON.stringify(metas));
+  sessionStorage.setItem('despesaProgresso', JSON.stringify(despesaProgresso));
+}
+
+async function carregarDados() {
+  rendaTotal = Number(sessionStorage.getItem('rendaTotal')) || 0;
+  despesas = JSON.parse(sessionStorage.getItem('despesas')) || [];
+  metas = JSON.parse(sessionStorage.getItem('metas')) || [];
+  despesaProgresso = JSON.parse(sessionStorage.getItem('despesaProgresso')) || {};
+  atualizarTela();
+
+  try {
+    const { data: dadosEntradas } = await _supabase.from('entradas').select('*');
+    if (dadosEntradas && dadosEntradas.length > 0) {
+      rendaTotal = dadosEntradas.reduce((acc, item) => acc + Number(item.valor), 0);
+    }
+
+    const { data: dadosDespesas } = await _supabase.from('despesas').select('*');
+    if (dadosDespesas && dadosDespesas.length > 0) {
+      despesas = dadosDespesas.map(d => ({
+        id: d.id,
+        nome: d.nome,
+        valor: Number(d.valor),
+        cor: d.cor
+      }));
+    }
+
+    const { data: dadosMetas } = await _supabase.from('metas').select('*');
+    if (dadosMetas && dadosMetas.length > 0) {
+      metas = dadosMetas.map(m => {
+        const formatarData = (strData) => {
+          if (!strData) return '';
+          const partes = strData.split('T')[0].split('-');
+          return partes.length === 3 ? `${partes[2]}/${partes[1]}/${partes[0]}` : strData;
+        };
+        return {
+          id: m.id,
+          nome: m.nome,
+          valorTotal: Number(m.valor_total),
+          valorJuntado: Number(m.valor_juntado) || 0,
+          valorSemanal: Number(m.valor_semanal),
+          inicio: formatarData(m.data_inicio),
+          fim: formatarData(m.data_fim),
+          concluida: m.concluida === true || m.concluida == 1
+        };
+      });
+    }
+
+    salvarLocal();
+    atualizarTela();
+  } catch (err) {
+    console.warn('Executando em modo local:', err);
+  }
+}
+
+async function adicionarRenda(isSomar = true) {
+  const valInput = parseFloat(document.getElementById('valorEntrada').value);
+  const nome = document.getElementById('nomeEntrada').value.trim();
+
+  if (!isNaN(valInput) && valInput > 0) {
+    const val = isSomar ? valInput : -valInput;
+    rendaTotal += val;
+    document.getElementById('valorEntrada').value = '';
+    document.getElementById('nomeEntrada').value = '';
+    salvarLocal();
+    atualizarTela();
+
+    try {
+      await _supabase.from('entradas').insert([{
+        nome: nome || (isSomar ? 'Entrada' : 'Saída'),
+        valor: val
+      }]);
+    } catch (e) {
+      console.error('Erro ao enviar para o Supabase:', e);
+    }
+  }
+}
+
+async function adicionarDespesa() {
+  const nome = document.getElementById('nomeDespesa').value.trim();
+  const valor = parseFloat(document.getElementById('valorDespesa').value);
+  const cor = document.getElementById('corDespesa').value;
+
+  if (nome && !isNaN(valor) && valor > 0) {
+    const tempId = Date.now();
+    const novaDespesa = { id: tempId, nome, valor, cor };
+    despesas.push(novaDespesa);
+    despesaProgresso[tempId] = 0;
+
+    document.getElementById('nomeDespesa').value = '';
+    document.getElementById('valorDespesa').value = '';
+
+    salvarLocal();
+    atualizarTela();
+
+    try {
+      const { data, error } = await _supabase
+        .from('despesas')
+        .insert([{ nome, valor, cor }])
+        .select();
+
+      if (!error && data && data.length > 0) {
+        const idReal = data[0].id;
+        despesaProgresso[idReal] = despesaProgresso[tempId] || 0;
+        delete despesaProgresso[tempId];
+        novaDespesa.id = idReal;
+        salvarLocal();
+        atualizarTela();
+      }
+    } catch (e) {
+      console.error('Erro ao enviar para o Supabase:', e);
+    }
+  }
+}
+
+window.removerDespesa = async function(id) {
+  despesas = despesas.filter(d => d.id !== id);
+  delete despesaProgresso[id];
+  salvarLocal();
+  atualizarTela();
+  exibirNotificacao('Despesa removida!', 'A despesa foi excluída.', 'banner-excluir.png');
+
+  try {
+    await _supabase.from('despesas').delete().eq('id', id);
+  } catch (e) {
+    console.error('Erro ao remover do Supabase:', e);
+  }
+};
+
+async function adicionarMeta() {
+  const nome = document.getElementById('metaNome').value.trim();
+  const valor = parseFloat(document.getElementById('metaValor').value);
+  const inicioInput = document.getElementById('metaInicio').value;
+
+  if (!nome || isNaN(valor) || valor <= 0 || !inicioInput) return;
+
+  const [ano, mes, dia] = inicioInput.split('-').map(Number);
+  const dataFimCalc = new Date(ano, mes - 1, dia);
+  dataFimCalc.setMonth(dataFimCalc.getMonth() + 1);
+
+  const fimInput = `${dataFimCalc.getFullYear()}-${String(dataFimCalc.getMonth() + 1).padStart(2, '0')}-${String(dataFimCalc.getDate()).padStart(2, '0')}`;
+  const valorSemanal = valor / 4;
+  const tempId = Date.now();
+
+  const formatarData = (strData) => {
+    if (!strData) return '';
+    const partes = strData.split('T')[0].split('-');
+    return partes.length === 3 ? `${partes[2]}/${partes[1]}/${partes[0]}` : strData;
+  };
+
+  const novaMeta = {
+    id: tempId,
+    nome,
+    valorTotal: valor,
+    valorJuntado: 0,
+    valorSemanal,
+    inicio: formatarData(inicioInput),
+    fim: formatarData(fimInput),
+    concluida: false
+  };
+
+  metas.push(novaMeta);
+
+  document.getElementById('metaNome').value = '';
+  document.getElementById('metaValor').value = '';
+  document.getElementById('metaInicio').value = '';
+
+  salvarLocal();
+  atualizarTela();
+
+  try {
+    const { data, error } = await _supabase.from('metas').insert([{
+      nome,
+      valor_total: valor,
+      valor_semanal: valorSemanal,
+      data_inicio: inicioInput,
+      data_fim: fimInput
+    }]).select();
+
+    if (!error && data && data.length > 0) {
+      novaMeta.id = data[0].id;
+      salvarLocal();
+    }
+  } catch (e) {
+    console.error('Erro ao salvar meta no Supabase:', e);
+  }
+}
+
+window.removerMeta = async function(id) {
+  metas = metas.filter(m => m.id !== id);
+  salvarLocal();
+  atualizarTela();
+  exibirNotificacao('Meta removida!', 'A meta foi excluída.', 'banner-excluir.png');
+
+  try {
+    await _supabase.from('metas').delete().eq('id', id);
+  } catch (e) {
+    console.error('Erro ao remover do Supabase:', e);
+  }
+};
+
+window.adicionarValorMeta = function(id) {
+  const meta = metas.find(m => m.id === id);
+  if (!meta || meta.concluida) return;
+
+  const falta = meta.valorTotal - (meta.valorJuntado || 0);
+  tipoModal = 'meta';
+  metaSelecionada = id;
+
+  document.getElementById('modalValorTitulo').textContent = `Adicionar em "${meta.nome}"`;
+  document.getElementById('modalValorFalta').innerHTML = `Faltam <b>${formatarMoeda(falta)}</b> para completar`;
+  document.getElementById('modalValorInput').value = '';
+  document.getElementById('modalValorInput').max = falta;
+
+  const modal = document.getElementById('modalValor');
+  modal.classList.add('ativo');
+  setTimeout(() => document.getElementById('modalValorInput').focus(), 100);
+};
+
+window.abrirModalDespesa = function(id) {
+  const desp = despesas.find(d => d.id === id);
+  if (!desp) return;
+
+  const guardado = Number(despesaProgresso[id] || 0);
+  const falta = Math.max(0, desp.valor - guardado);
+
+  tipoModal = 'despesa';
+  metaSelecionada = id;
+
+  document.getElementById('modalValorTitulo').textContent = `Adicionar em "${desp.nome}"`;
+  document.getElementById('modalValorFalta').innerHTML = `Faltam <b>${formatarMoeda(falta)}</b> para quitar`;
+  document.getElementById('modalValorInput').value = '';
+  document.getElementById('modalValorInput').max = falta;
+
+  const modal = document.getElementById('modalValor');
+  modal.classList.add('ativo');
+  setTimeout(() => document.getElementById('modalValorInput').focus(), 100);
+};
+
+window.fecharModalValor = function() {
+  document.getElementById('modalValor').classList.remove('ativo');
+  metaSelecionada = null;
+};
+
+window.confirmarValorMeta = async function() {
+  const input = document.getElementById('modalValorInput');
+  const val = parseFloat(input.value.replace(',', '.'));
+  const id = Number(metaSelecionada);
+
+  if (isNaN(val) || val <= 0) {
+    input.style.borderColor = '#ef4444';
+    setTimeout(() => input.style.borderColor = '', 800);
+    return;
+  }
+
+  if (tipoModal === 'meta') {
+    const meta = metas.find(m => m.id === id);
+    if (!meta) return;
+
+    meta.valorJuntado = (meta.valorJuntado || 0) + val;
+
+    if (meta.valorJuntado >= meta.valorTotal) {
+      meta.valorJuntado = meta.valorTotal;
+      meta.concluida = true;
+      salvarLocal();
+      atualizarTela();
+      fecharModalValor();
+
+      try {
+        await _supabase.from('metas').update({
+          valor_juntado: meta.valorJuntado,
+          concluida: true
+        }).eq('id', meta.id);
+      } catch (e) {}
+
+      await adicionarXP(50, `Meta "${meta.nome}" concluída! 🎉`);
+      return;
+    }
+
+    salvarLocal();
+    atualizarTela();
+    fecharModalValor();
+
+    try {
+      await _supabase.from('metas').update({ valor_juntado: meta.valorJuntado }).eq('id', meta.id);
+    } catch (e) {}
+  }
+  else if (tipoModal === 'despesa') {
+    const desp = despesas.find(d => d.id === id);
+    if (!desp) return;
+
+    const atual = Number(despesaProgresso[id] || 0);
+    const novo = Math.min(desp.valor, atual + val);
+    despesaProgresso[id] = novo;
+
+    salvarLocal();
+    atualizarTela();
+    fecharModalValor();
+
+    if (novo >= desp.valor) {
+      await adicionarXP(30, `Despesa "${desp.nome}" quitada! 💸`);
+    }
+  }
+};
+
+window.abrirMenuEditar = function(tipo, id) {
+  menuTipo = tipo;
+  menuId = id;
+
+  const item = despesas.find(d => d.id === id);
+  if (!item) return;
+
+  document.getElementById('menuEditarTitulo').textContent = `Editar: ${item.nome}`;
+  document.getElementById('menuEditarSub').textContent = 'Escolha uma ação para esta despesa';
+  document.getElementById('menuEditar').classList.add('ativo');
+};
+
+window.fecharMenuEditar = function() {
+  document.getElementById('menuEditar').classList.remove('ativo');
+  menuTipo = null;
+  menuId = null;
+};
+
+window.menuAcaoAdicionar = function() {
+  const id = menuId;
+  fecharMenuEditar();
+  if (!id) return;
+  abrirModalDespesa(id);
+};
+
+window.menuAcaoRenomear = async function() {
+  const id = menuId;
+  fecharMenuEditar();
+  if (!id) return;
+
+  const desp = despesas.find(d => d.id === id);
+  if (!desp) return;
+
+  const novo = prompt('Novo nome da despesa:', desp.nome);
+  if (novo === null) return;
+
+  const nome = novo.trim();
+  if (!nome) return;
+
+  desp.nome = nome;
+  salvarLocal();
+  atualizarTela();
+
+  try {
+    await _supabase.from('despesas').update({ nome }).eq('id', id);
+  } catch (e) {}
+};
+
+window.menuAcaoExcluir = async function() {
+  const id = menuId;
+  fecharMenuEditar();
+  if (!id) return;
+
+  const confirmar = confirm('Tem certeza que deseja excluir? Esta ação não pode ser desfeita.');
+  if (!confirmar) return;
+
+  await removerDespesa(id);
+};
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    fecharMenuEditar();
+    const modal = document.getElementById('modalValor');
+    if (modal.classList.contains('ativo')) fecharModalValor();
+  }
+
+  const modal = document.getElementById('modalValor');
+  if (modal.classList.contains('ativo') && e.key === 'Enter') {
+    confirmarValorMeta();
+  }
+});
+
+function atualizarTela() {
+  const totalDespesas = despesas.reduce((acc, d) => acc + d.valor, 0);
+  const saldo = rendaTotal - totalDespesas;
+
+  document.getElementById('textoTotal').innerText = formatarMoeda(totalDespesas);
+  document.getElementById('resumoRenda').innerText = `Renda mensal: ${formatarMoeda(rendaTotal)}`;
+  document.getElementById('resumoSaldo').innerText = `Saldo em caixa: ${formatarMoeda(saldo)}`;
+  document.getElementById('resumoDespesa').innerText = `Despesas: ${formatarMoeda(totalDespesas)}`;
+
+  chartRosca.data.labels = despesas.map(d => d.nome);
+  chartRosca.data.datasets[0].data = despesas.map(d => d.valor);
+  chartRosca.data.datasets[0].backgroundColor = despesas.map(d => d.cor);
+  chartRosca.update();
+
+  const containerCategorias = document.getElementById('listaCategorias');
+  containerCategorias.innerHTML = '';
+
+  despesas.forEach(d => {
+    const guardado = Number(despesaProgresso[d.id] || 0);
+    const pctGuardado = d.valor > 0 ? Math.min(100, (guardado / d.valor) * 100) : 0;
+    const completo = pctGuardado >= 100;
+
+    containerCategorias.innerHTML += `
+      <div class="category-card" style="border-top: 4px solid ${d.cor};">
+        <div class="category-header" style="background-color: ${d.cor}22; color: #333;">
+          <strong>${d.nome}</strong>
+          <button class="btn-editar-img" title="Editar" onclick="abrirMenuEditar('despesa', ${d.id})">
+            <img src="gestao-btn.png" alt="Editar">
+          </button>
+        </div>
+        <div class="category-body">
+          <div style="font-size: 1.2rem; font-weight: bold; color: #2c3e50;">${formatarMoeda(d.valor)}</div>
+          <div class="desp-progress-wrap">
+            <div class="desp-bar">
+              <div class="desp-bar-fill" style="width: ${pctGuardado}%;"></div>
+              <span class="desp-bar-label">${pctGuardado.toFixed(0)}% / 100%</span>
+            </div>
+          </div>
+          ${completo ? `<div style="text-align:center; width:100%; font-size:0.8rem; color:#2e7d32; font-weight:bold; padding:4px;">✅ Despesa quitada!</div>` : ''}
+        </div>
+      </div>
+    `;
+  });
+
+  const containerMetas = document.getElementById('listaMetas');
+  containerMetas.innerHTML = '';
+
+  metas.forEach(m => {
+    const juntado = m.valorJuntado || 0;
+    const total = m.valorTotal;
+    const falta = Math.max(0, total - juntado);
+    const pct = total > 0 ? Math.min(100, (juntado / total) * 100) : 0;
+    const concluida = m.concluida || juntado >= total;
+
+    containerMetas.innerHTML += `
+      <div class="goal-card ${concluida ? 'goal-completa' : ''}">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+          <div style="text-align:left; flex:1;">
+            <div class="goal-name">${m.nome}</div>
+            <div class="goal-weekly">${formatarMoeda(m.valorSemanal)} / semana</div>
+            <div class="goal-dates">${m.inicio} - ${m.fim}</div>
+          </div>
+          <button class="btn-delete" onclick="removerMeta(${m.id})" title="Excluir">✖</button>
+        </div>
+        <div class="goal-progress-wrap">
+          <div class="goal-bar">
+            <div class="goal-bar-fill" style="width: ${pct}%;"></div>
+            <span class="goal-bar-label">${pct.toFixed(0)}% / 100%</span>
+          </div>
+          <div class="goal-info"><span>${formatarMoeda(juntado)} de ${formatarMoeda(total)}</span></div>
+        </div>
+        ${!concluida ? `<button class="goal-btn-add" onclick="adicionarValorMeta(${m.id})">➕ ADICIONAR VALOR</button>` : `<div style="text-align:center; margin-top:4px;"><span class="tag-concluida">✅ CONCLUÍDA</span></div>`}
+      </div>
+    `;
+  });
+}
+
+carregarDados();
+</script>
+</body>
+</html>

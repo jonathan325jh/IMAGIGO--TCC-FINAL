@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="receita.css">
+    <title>Receita - Ovos</title>
+    
+    <!-- SDK do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        #container-notificacao {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 350px;
+            width: calc(100% - 40px);
+            pointer-events: none;
+        }
+
+        .toast-xp {
+            pointer-events: auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: #2b2b2b;
+            padding: 14px 18px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            overflow: hidden;
+            transform: translateX(120%);
+            animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        .toast-icone {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+        }
+
+        .toast-conteudo {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .toast-titulo {
+            font-size: 15px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 2px;
+        }
+
+        .toast-subtitulo {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .toast-level .toast-icone {
+            background: linear-gradient(135deg, #ffb703, #fb8500);
+            box-shadow: 0 4px 10px rgba(251, 133, 0, 0.4);
+        }
+
+        .toast-level {
+            border-left: 5px solid #fb8500;
+        }
+
+        .toast-fechar {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+
+        .toast-barra-progresso {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: #28a745;
+            width: 100%;
+            animation: encolherBarra 7s linear forwards;
+        }
+
+        .toast-level .toast-barra-progresso {
+            background: #fb8500;
+        }
+
+        @keyframes slideIn {
+            to { transform: translateX(0); }
+        }
+
+        @keyframes slideOut {
+            to { transform: translateX(130%); opacity: 0; }
+        }
+
+        @keyframes encolherBarra {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        #segundo-h3 {
+            margin-left: 15rem;
+        }
+
+        h3 {
+            color: red;
+            border: none;
+            font-size: 3rem;
+            position: relative;
+            right: 30rem;
+            margin-top: 3rem;
+        }
+
+        #segundo-para {
+            font-size: 2rem;
+            color: #33333396;
+        }header {
+           position: absolute;
+           top: 3rem;
+           left: 40px;
+           z-index: 1000;
+           display: flex;
+           flex-direction: column;
+           gap: 12px;
+        }
+
+   .btn-topo {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      align-items: center;
+     justify-content: center;
+}
+
+.btn-topo:hover {
+    transform: scale(1.1);
+}
+
+.btn-topo img {
+    width: 90px;
+    height: auto;
+    display: block;
+}
+    </style>
+</head>
+<body  class="fundo-receita" >
+ <header class="header-flutuante">
+    <a href="javascript:history.back()" class="btn-topo">
+        <img src="voltar-bt.png" alt="Voltar">
+    </a>
+    <button type="button" class="btn-topo" id="btnOpcoes" aria-label="Abrir menu" aria-expanded="false">
+        <img src="tres-pontos-azul-btn.png" alt="Opções">
+    </button>
+
+    <nav class="menu-opcoes" id="menuOpcoes" aria-hidden="true">
+        <div class="menu-cabecalho">
+            <img src="logo-suporte.png" alt="Logo" class="menu-logo">
+            <span class="menu-titulo">MENU</span>
+        </div>
+
+        <a href="pagina-entrada.html" class="menu-item">
+            <span class="menu-texto">Início</span>
+        </a>
+
+        <a href="tutoriais.html" class="menu-item">
+            <span class="menu-texto">Tutoriais</span>
+        </a>
+
+        <a href="forum.html" class="menu-item">
+            <span class="menu-texto">Fórum</span>
+        </a>
+
+        <a href="gestao.html" class="menu-item">
+            <span class="menu-texto">Gestão</span>
+        </a>
+
+        <a href="Jogos.html" class="menu-item">
+            <span class="menu-texto">Jogos</span>
+        </a>
+
+        <a href="perfil.html" class="menu-item">
+            <span class="menu-texto">Perfil</span>
+        </a>
+
+        <a href="config-conta.html" class="menu-item">
+            <span class="menu-texto">Configurações</span>
+        </a>
+
+        <a href="sobre-nos.html" class="menu-item">
+            <span class="menu-texto">Sobre Nós</span>
+        </a>
+
+        <a href="suporte.html" class="menu-item">
+            <span class="menu-texto">Suporte</span>
+        </a>
+
+        <div class="menu-divisor"></div>
+
+        <a href="login.html" class="menu-item menu-sair" id="menuSair">
+           <span class="menu-texto">Sair da conta</span>
+        </a>
+    </nav>
+</header>
+
+
+
+    <div class="container-receitas">
+        <h1>Receitas</h1>
+
+        <div class="img-receita">
+            <img src="ovo soltinho.png" alt="">
+        </div>
+
+        <div class="textos">
+            <p class="p-titulo">OVO FRITO, COZIDO E MEXIDO</p>
+            <div class="btn-paragrafo">
+                <p class="btn-1">Fácil</p>
+                <br>
+                <p class="btn-2">Receitas</p>
+            </div>
+        </div>
+
+        <div class="segunda-parte">
+            <h2>Ingredientes</h2>
+            <ul>
+                <h3 id="segundo-h3">Ovo Frito (Gema Mole e Borda Crocante)</h3>
+                <br><br>
+                <li>1 ovo fresco</li>   
+                <li>1 colher (sopa) de manteiga, óleo ou azeite</li> 
+                <li>1 colher (sopa) de óleo ou azeite</li>
+                <li>2 dentes de alho picados ou amassados</li>
+                <li>1 colher (café) de sal</li>
+                <li>meia colher (chá)</li>
+            </ul>
+
+            <h2 id="segundo-titulo">Modo de preparo</h2>
+            <ul>
+                <p> 
+                    <li>Aqueça a frigideira: Coloque a gordura na frigideira em fogo médio-baixo <br> até derreter ou aquecer.</li> 
+                    <li>Adicione o ovo: Quebre o ovo primeiro em uma xícara (para garantir que não <br> está estragado) e deslize-o suavemente na frigideira.</li> 
+                    <li>Tempere: Salpique o sal e a pimenta sobre o ovo.</li>
+                    <li>Controle a clara: Deixe cozinhar por cerca de 2 a 3 minutos. Se quiser a <br> clara de cima mais firme sem virar o ovo, tampe a frigideira nos últimos 30 <br> segundos ou jogue colheradas da gordura quente sobre a clara.</li>
+                    <li>Retire: Use uma espátula de silicone para soltar as bordas e retire com cuidado.</li>
+                </p>
+            </ul>
+        </div>
+
+        <div class="segunda-parte">
+            <h2>Ingredientes</h2>
+            <ul>
+                <h3 id="segundo-h3">Ovo Cozido (Guia de Tempos)</h3>
+                <p id="segundo-para">Para evitar aquela linha verde ao redor da gema <br> (sinal de cozimento excessivo), o controle do tempo é fundamental</p>
+            </ul>
+
+            <h2 id="segundo-titulo">Modo de preparo</h2>
+            <ul>
+                <p> 
+                    <li>Ferva a água: Coloque água suficiente para cobrir os ovos em uma panela e leve <br> ao fogo alto.</li> 
+                    <li>Adicione o ovo: Quando começar a ferver, abaixe o fogo para médio e, com a ajuda <br> de uma colher, deite o ovo delicadamente na água (isso evita que a casca trinque).</li> 
+                    <li>Conte o tempo: Mantenha o fogo médio e cronometre o ponto de sua preferência:<br></li>
+                    <li>6 minutos: Clara cozida e gema bem líquida.</li>
+                    <li>7 minutos: Clara firme e gema cremosa/firme nas bordas</li>
+                    <li>Ovo cozido tradicional (gema totalmente firme, mas amarela e macia).</li>
+                    <li>Choque térmico: Retire o ovo da água fervente e mergulhe-o imediatamente em uma <br> tigela com água e gelo. Isso interrompe o cozimento e facilita muito o processo de descascar.</li> 
+                </p>
+            </ul>
+        </div>
+
+        <div class="segunda-parte">
+            <h2>Ingredientes</h2>
+            <ul>
+                <h3 id="segundo-h3">Ovo Mexido (Estilo Hotel, Super Cremoso)</h3>
+                <p id="segundo-para">O erro mais comum é usar fogo alto e deixar o ovo secar. O ovo <br> mexido perfeito deve ser cozido em fogo baixo e retirado ainda úmido.</p>
+                <br>
+                <li>2 ovos</li>   
+                <li>1 colher (chá) de manteiga</li> 
+                <li>1 colher (sopa) de leite, creme de leite ou água <br> (opcional, para dar mais leveza)</li>
+                <li>Sal e pimenta-do-reino a gosto</li>
+            </ul>
+
+            <h2 id="segundo-titulo">Modo de preparo</h2>
+            <ul>
+                <p> 
+                    <li>Bata os ovos: Em uma tigela, bata os ovos com o leite (ou água) e uma pitada de sal <br> usando um garfo até a mistura ficar homogênea.</li> 
+                    <li>Derreta a manteiga: Coloque a manteiga na frigideira em fogo baixo. Não deixe a manteiga <br> escurecer.</li> 
+                    <li>Cozimento lento: Despeje os ovos batidos. Espere cerca de 10 a 15 segundos até as bordas <br> começarem a se formar.</li>
+                    <li>Movimento constante: Com uma espátula, empurre os ovos das bordas para o centro da frigideira. <br> Faça movimentos suaves em formato de "8".</li>
+                    <li>Ponto de retirada: Assim que os ovos formarem blocos macios e úmidos (ainda brilhantes), <br> desligue o fogo imediatamente. Eles continuarão cozinhando com o calor residual da própria <br> frigideira. Sirva logo em seguida.</li>
+                </p>
+            </ul>
+        </div>
+    </div>
+    <br><br><br>
+
+    <div id="container-notificacao"></div>
+<script src="menu.js"></script>
+<script>
+    const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const idArtigo = 'receita_ovo_frito_cozido_mexido';
+
+    function exibirNotificacao(titulo, subtitulo, caminhoImagem, ehLevelUp = false) {
+        const container = document.getElementById('container-notificacao');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = `toast-xp ${ehLevelUp ? 'toast-level' : ''}`;
+        toast.innerHTML = `
+            <div class="toast-icone"><img src="${caminhoImagem}" alt="Ícone"></div>
+            <div class="toast-conteudo">
+                <span class="toast-titulo">${titulo}</span>
+                <span class="toast-subtitulo">${subtitulo}</span>
+            </div>
+            <button class="toast-fechar" onclick="fecharToast(this.parentElement)">&times;</button>
+            <div class="toast-barra-progresso"></div>`;
+        container.appendChild(toast);
+        setTimeout(() => fecharToast(toast), 7000);
+    }
+
+    function fecharToast(t) {
+        if (!t) return;
+        t.style.animation = 'slideOut 0.4s ease forwards';
+        setTimeout(() => t.remove(), 400);
+    }
+
+    async function adicionarXP(email, quantidade, motivo) {
+        exibirNotificacao(`+${quantidade} XP Conquistados!`, motivo, 'banner-xp.png');
+        try {
+            const { data: usuario, error } = await supabaseClient
+                .from('usuarios').select('xp, level')
+                .eq('email', email).maybeSingle();
+            if (error || !usuario) return;
+
+            const xpAtual = parseInt(usuario.xp || 0);
+            const levelAtual = Math.floor(xpAtual / 100);
+            const novoXp = xpAtual + quantidade;
+            const novoLevel = Math.floor(novoXp / 100);
+
+            const { error: upErr } = await supabaseClient
+                .from('usuarios').update({ xp: novoXp, level: novoLevel })
+                .eq('email', email);
+            if (upErr) return;
+
+            if (novoLevel > levelAtual) {
+                setTimeout(() => exibirNotificacao('NÍVEL ALCANÇADO!', `Você subiu para o Level ${novoLevel}!`, 'banner-level.png', true), 600);
+            }
+        } catch (e) { console.error(e); }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        let emailSalvo = sessionStorage.getItem('usuario_email') || localStorage.getItem('usuario_email');
+        if (!emailSalvo) {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session?.user?.email) emailSalvo = session.user.email;
+        }
+        if (!emailSalvo) { window.location.href = "login.html"; return; }
+
+        const chave = `xp_lido_${emailSalvo}_${idArtigo}`;
+        if (!localStorage.getItem(chave)) {
+            localStorage.setItem(chave, 'true');
+            await adicionarXP(emailSalvo, 25, 'Por aprender os segredos do preparo de Ovos!');
+        }
+    });
+</script>
+</body>
+</html>

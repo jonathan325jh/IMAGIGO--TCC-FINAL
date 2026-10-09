@@ -1,0 +1,476 @@
+* {
+    padding: 0;
+    margin: 0;
+    outline: none;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-image: url(fundo-perfil.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+}
+
+@keyframes fadeInUp {
+    0%   { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+    0%   { opacity: 0; transform: translateX(-50px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 8px 25px rgba(247, 185, 70, 0.5);
+    }
+    50% {
+        box-shadow: 0 15px 40px rgba(247, 185, 70, 0.8),
+                    0 0 30px rgba(255, 204, 102, 0.5);
+    }
+}
+
+@keyframes avatarGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 rgba(255, 170, 6, 0);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 170, 6, 0.8);
+        transform: scale(1.04);
+    }
+}
+
+@keyframes insigniaPop {
+    0%   { opacity: 0; transform: scale(0.4); }
+    60%  { opacity: 1; transform: scale(1.15); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes insigniaShine {
+    0%, 100% { box-shadow: 0 0 5px currentColor; }
+    50%      { box-shadow: 0 0 20px currentColor; }
+}
+
+.header-flutuante {
+    position: absolute;
+    top: 35px;
+    left: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    z-index: 1000;
+    animation: fadeInLeft 0.8s ease-out both;
+}
+
+.header-flutuante .lado-esquerdo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+}
+
+.header-flutuante .btn-topo {
+    width: 7rem;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.header-flutuante .btn-topo img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.header-flutuante .btn-topo:hover {
+    transform: scale(1.08);
+    filter: brightness(1.15) drop-shadow(0 0 12px rgba(255, 204, 102, 0.7));
+}
+
+.menu-opcoes {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 260px;
+    padding: 14px 12px;
+    background: linear-gradient(160deg, rgba(245, 248, 255, 0.98), rgba(226, 236, 252, 0.98));
+    backdrop-filter: blur(12px);
+    border: 2px solid #7ea8ff;
+    border-radius: 16px;
+    box-shadow:
+        0 20px 45px rgba(30, 60, 130, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 1100;
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+    pointer-events: none;
+    transform-origin: top left;
+    transition:
+        opacity 0.28s ease,
+        transform 0.32s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.menu-opcoes.aberto {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.menu-cabecalho {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 6px 12px 12px;
+    border-bottom: 2px solid rgba(126, 168, 255, 0.4);
+    margin-bottom: 8px;
+}
+
+.menu-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 3px 8px rgba(74, 123, 199, 0.4));
+    transition: transform 0.3s ease;
+}
+
+.menu-logo:hover {
+    transform: scale(1.08) rotate(-3deg);
+}
+
+.menu-titulo {
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #1e40af;
+    text-shadow: 0 1px 2px rgba(126, 168, 255, 0.4);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 11px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #1e293b;
+    font-size: 15px;
+    font-weight: 700;
+    transition:
+        background 0.22s ease,
+        transform 0.22s ease,
+        color 0.22s ease,
+        box-shadow 0.22s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #4a7bc7, #7ea8ff);
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+    border-radius: 0 4px 4px 0;
+}
+
+.menu-item:hover {
+    background: rgba(74, 123, 199, 0.15);
+    color: #1e40af;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(74, 123, 199, 0.2);
+}
+
+.menu-item:hover::before {
+    transform: scaleY(1);
+}
+
+.menu-item:active {
+    transform: translateX(5px) scale(0.98);
+}
+
+.menu-texto {
+    flex: 1;
+}
+
+.menu-divisor {
+    height: 2px;
+    background: rgba(126, 168, 255, 0.35);
+    margin: 8px 10px;
+    border-radius: 2px;
+}
+
+.menu-sair {
+    color: #b91c1c;
+}
+
+.menu-sair:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.menu-sair::before {
+    background: linear-gradient(180deg, #ef4444, #f87171);
+}
+
+#btnOpcoes.ativo img {
+    transform: rotate(90deg);
+    filter: brightness(1.2) drop-shadow(0 0 8px rgba(74, 123, 199, 0.8));
+}
+
+#btnOpcoes img {
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.container {
+    background-color: #ffcc668e;
+    border: solid 3px #ffcc66;
+    box-shadow: 0 8px 25px rgba(247, 185, 70, 0.5);
+    width: 480px;
+    min-height: 520px;
+    padding: 3rem 2.5rem 2rem 2.5rem;
+    border-radius: 20px;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    animation:
+        fadeInUp 0.8s ease-out both,
+        float 6s ease-in-out 1s infinite,
+        glow 4s ease-in-out infinite;
+    transition: transform 0.3s ease;
+}
+
+.container:hover {
+    transform: scale(1.01);
+}
+
+.pri-parte {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+#login {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: contain;
+    object-position: center;
+    border: 4px solid #ffcc66;
+    background-color: #ffffff72;
+    padding: 4px;
+    margin-bottom: 1rem;
+    animation: avatarGlow 4s ease-in-out infinite;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#login:hover {
+    transform: scale(1.08) rotate(3deg);
+    box-shadow: 0 0 40px rgba(255, 170, 6, 1);
+    border-color: #ffd966;
+}
+
+.pri-parte h3 {
+    font-size: 26px;
+    color: #333;
+    margin-bottom: 4px;
+    animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.email-texto {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.6s ease-out 0.5s both;
+}
+
+.habilidades {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 2.5rem;
+}
+
+.habilidades h2 {
+    color: #ffaa06;
+    font-size: 22px;
+    animation: fadeInUp 0.6s ease-out 0.7s both;
+}
+
+.circulos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    min-height: 50px;
+    align-items: center;
+}
+
+.insignia-circulo {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.7rem;
+    background: transparent !important;
+    text-align: center;
+    user-select: none;
+    box-sizing: border-box;
+    animation:
+        insigniaPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+        insigniaShine 3s ease-in-out infinite;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+}
+
+.insignia-circulo:hover {
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: 0 0 25px currentColor;
+}
+
+.insignia-circulo:nth-child(1) { animation-delay: 0.9s, 1.4s; }
+.insignia-circulo:nth-child(2) { animation-delay: 1.1s, 1.6s; }
+.insignia-circulo:nth-child(3) { animation-delay: 1.3s, 1.8s; }
+.insignia-circulo:nth-child(4) { animation-delay: 1.5s, 2s; }
+
+.insignia-lvl50  { border: 3px solid #00b894; color: #00b894; }
+.insignia-lvl100 { border: 3px solid #e67e22; color: #e67e22; }
+.insignia-lvl200 { border: 3px solid #0984e3; color: #0984e3; }
+.insignia-lvl300 { border: 3px solid #e84393; color: #e84393; }
+
+.insignia-bloqueada {
+    border: 3px solid #cccccc !important;
+    color: #999999 !important;
+    opacity: 0.5;
+}
+
+.sem-insignia {
+    font-size: 14px;
+    color: #888;
+    font-style: italic;
+}
+
+.botoes-rodape {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 50px;
+}
+
+#btn-sair {
+    background-color: #ff1d59;
+    width: 110px;
+    height: 40px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    animation: fadeInUp 0.6s ease-out 1.7s both;
+}
+
+#btn-sair:hover {
+    transform: scale(1.08) translateY(-2px);
+    background-color: #e0154c;
+    box-shadow: 0 10px 20px rgba(255, 29, 89, 0.5);
+}
+
+#termo {
+    font-size: 20px;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease, transform 0.3s ease;
+    animation: fadeInUp 0.6s ease-out 1.9s both;
+}
+
+#termo:hover {
+    color: #432cd9;
+    transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+    .header-flutuante {
+        top: 20px;
+        left: 1rem;
+    }
+
+    .header-flutuante .btn-topo {
+        width: 4rem;
+    }
+
+    .container {
+        width: 90%;
+        padding: 2rem 1.5rem;
+    }
+
+    #login {
+        width: 100px;
+        height: 100px;
+    }
+
+    .pri-parte h3 {
+        font-size: 22px;
+    }
+
+    .insignia-circulo {
+        width: 45px;
+        height: 45px;
+        font-size: 0.6rem;
+    }
+
+    .botoes-rodape {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .menu-opcoes,
+    .menu-item,
+    .menu-item::before,
+    .menu-logo,
+    #btnOpcoes img {
+        transition: none !important;
+    }
+}

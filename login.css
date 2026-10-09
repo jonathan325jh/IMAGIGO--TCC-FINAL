@@ -1,0 +1,242 @@
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    outline: none;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.fundo {
+    background-image: url('Login.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8em;
+
+    min-height: 100vh;
+    margin: 0;
+    padding: 2em 4em;
+    overflow: hidden;
+
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+}   
+
+/* 🎬 Aparecer no lugar (fade + zoom leve) */
+@keyframes appearInPlace {
+    0% {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.logo-animada {
+    width: 55%;
+    max-width: 800px;
+    flex-shrink: 0;
+    pointer-events: none;
+    animation: appearInPlace 0.9s ease-out both;   /* ← trocado */
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    font-family: 'Cooper Hewitt', sans-serif;
+    background-color: rgba(255, 222, 89, 0.5);
+    border-radius: 2%;
+    border: solid 4px rgb(255, 197, 89);
+    width: 30%;
+    padding: 2em;
+    flex-shrink: 0;
+    position: relative;
+
+    animation:
+        appearInPlace 0.9s ease-out both,   /* ← trocado */
+        float 4s ease-in-out 1.2s infinite;
+    animation-delay: 0.15s, 1.05s;
+}
+
+/* ===== FOTO PERFIL ===== */
+#foto-perfil {
+    display: block;
+    width: 40%;
+    margin-top: 1em;
+}
+
+/* ===== TÍTULO ===== */
+h1 {
+    text-align: center;
+    margin-top: 10px;
+    color: #3a2a00;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+/* ===== CAMPOS ===== */
+.campo {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+.campo input {
+    width: 100%;
+    cursor: text;
+    background-color: rgba(251, 165, 6, 0.381);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 22px;
+    height: 8vh;
+    border: solid 5px rgba(251, 165, 6);
+    padding: 0 20px;
+    color: #3a2a00;
+    text-align: center;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.campo input::placeholder {
+    color: #000000;
+    opacity: 0.75;
+}
+
+.campo input:focus {
+    background-color: rgba(255, 200, 60, 0.6);
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.6);
+}
+
+/* ===== BOTÃO ENTRAR ===== */
+#entrar {
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    cursor: pointer;
+    background-color: rgba(251, 165, 6, 0.8);
+    color: black;
+    font-size: 22px;
+    font-weight: bold;
+    width: 12em;
+    padding: 10px 0;
+    border: solid 4px rgba(251, 165, 6);
+    border-radius: 10px;
+    font-family: inherit;
+    transition: background-color 0.2s ease, transform 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+#entrar:hover {
+    background-color: rgba(255, 128, 0, 0.7);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 128, 0, 0.4);
+}
+
+#entrar:active {
+    background-color: rgba(252, 244, 79, 0.6);
+    transform: translateY(0) scale(0.97);
+}
+
+/* ===== LINK DEV ===== */
+.link-dev {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    text-decoration: none;
+    font-size: 23px;
+    color: black;
+    margin-top: 2rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.link-dev:hover {
+    color: #ff0000;
+    transform: scale(1.05);
+}
+
+.btn-voltar-topo {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    text-decoration: none;
+    transition: transform 0.2s ease, filter 0.2s ease;
+
+    animation: appearInPlace 0.7s ease-out both;   /* ← trocado */
+}
+
+.btn-voltar-topo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.btn-voltar-topo:hover {
+    transform: scale(1.15) rotate(-5deg);
+    filter: brightness(1.2) drop-shadow(0 0 15px rgba(255, 197, 89, 0.9));
+}
+
+.btn-voltar-topo:active {
+    transform: scale(0.95);
+}
+
+/* ===== RESPONSIVO (IGUAL ao style.css) ===== */
+@media (max-width: 1200px) {
+    body.fundo { gap: 5em; }
+    .logo-animada { width: 50%; }    /* igual style.css */
+    .container { width: 35%; }
+}
+
+@media (max-width: 900px) {
+    body.fundo {
+        flex-direction: column;
+        gap: 1em;
+        padding: 1em;
+    }
+    .logo-animada { width: 60%; }    /* igual style.css */
+    .container {
+        width: 80%;
+        height: auto;
+        padding: 2em;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+        padding: 20px 0 40px;
+    }
+    #foto-perfil { width: 50%; margin-top: 1em; }
+    h1 { font-size: 28px; letter-spacing: 1px; }
+    #entrar, #voltar { font-size: 18px; height: auto; padding: 14px 0; }
+    .logo-animada { width: 70%; }    /* igual style.css */
+
+    .btn-voltar-topo {
+        width: 50px;
+        height: 50px;
+        top: 10px;
+        left: 10px;
+    }
+}

@@ -1,0 +1,261 @@
+* {
+    margin: 0;
+    outline: none;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #fdfdfd;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.customizador-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 1200px;
+    padding: 10px 20px;
+}
+
+.header-info-esquerda {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 2rem;
+    transform: translateY(0);
+    min-height: 60px;
+    max-width: 300px;
+}
+
+.titulo-personagem {
+    font-size: 22px;
+    color: #333;
+    font-weight: normal;
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nivel-tag {
+    font-size: 22px;
+    font-weight: bold;
+    color: #f2a93b;
+}
+
+.voltar-dois {
+    display: flex;
+    flex-direction: column; 
+    gap: 12px;
+    position: absolute;
+    top: 30px;
+    left: 100px;
+}
+
+#voltar, #tres-pontos {
+    width: 6rem;
+    height: auto;
+    cursor: pointer;
+    margin: 0;
+}
+
+.conteudo-principal {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.container-esq {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.boneco-area {
+    position: relative;
+    display: inline-block;
+    overflow: visible;
+}
+
+#boneco-svg {
+    position: relative;
+    z-index: 2;
+    overflow: visible;
+    transform: scale(1.1);
+    transform-origin: center center;
+    pointer-events: none;
+}
+
+#boneco-svg image {
+    pointer-events: none;
+}
+
+.sombra {
+    width: 180px;
+    height: 14px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 50%;
+    filter: blur(4px);
+    margin: 5px auto 15px auto;
+}
+
+.input-nome {
+    width: 220px;
+    padding: 10px;
+    border: 2px solid #f2a93b;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 15px;
+    color: #333;
+    background: #fff;
+    position: relative;
+    z-index: 10;
+}
+
+.input-nome::placeholder {
+    color: #bbb;
+}
+
+.painel-container-externo {
+    transform: none;
+    border: 2px solid #f2a93b;
+    border-radius: 25px;
+    padding: 8px;
+    background-color: transparent;
+    transition: transform 0.3s ease;
+    position: relative;
+    z-index: 10;
+}
+
+.painel {
+    border: 1px solid #f2a93b;
+    border-radius: 18px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: #fff;
+}
+
+.linha {
+    border: 2px solid #f2a93b;
+    border-radius: 25px;
+    padding: 8px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 680px;
+    background-color: #ffffff;
+    font-size: 15px;
+    color: #555;
+}
+
+.linha select {
+    border: none;
+    background: transparent;
+    color: #e3b04b;
+    font-size: 16px;
+    text-align: right;
+    cursor: pointer;
+    outline: none;
+}
+
+input[type="color"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 30px;
+    border: 2px solid #f2a93b;
+    border-radius: 50%;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    overflow: hidden;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
+
+.btn-salvar {
+    width: 100%;
+    padding: 12px;
+    border-radius: 25px;
+    border: none;
+    background-color: #fba14c;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    position: relative;
+    z-index: 10;
+}
+
+.btn-salvar:hover {
+    background-color: #e41919;
+    transform: scale(1.02);
+}
+
+.label-visual {
+    font-size: 18px;
+    margin-left: 3rem;
+}
+
+@keyframes aparecerPop {
+    0%   { opacity: 0; transform: scale(0.5) translateY(20px); }
+    60%  { opacity: 1; transform: scale(1.15) translateY(-4px); }
+    100% { opacity: 1; transform: scale(1.1) translateY(0); }
+}
+
+#boneco-svg {
+    animation: aparecerPop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    transform-origin: center center;
+}
+
+@keyframes deslizarDireita {
+    0%   { opacity: 0; transform: translateX(60px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+.painel-container-externo {
+    animation: deslizarDireita 0.7s ease-out both;
+}
+
+@keyframes deslizarEsquerda {
+    0%   { opacity: 0; transform: translateX(-40px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+.header-info-esquerda {
+    animation: deslizarEsquerda 0.6s ease-out both;
+}
+
+@keyframes popBotoes {
+    0%   { opacity: 0; transform: scale(0.4); }
+    60%  { opacity: 1; transform: scale(1.15); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.voltar-dois {
+    animation: popBotoes 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes brilharBotao {
+    0%, 100% { box-shadow: 0 0 0 rgba(251, 161, 76, 0); }
+    50%      { box-shadow: 0 0 22px rgba(251, 161, 76, 0.9); }
+}
+
+.btn-salvar {
+    animation: brilharBotao 2.2s ease-in-out infinite;
+}

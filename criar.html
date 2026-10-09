@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="criar.css">
+    <title>Perfil e Customização</title>
+</head>
+<body class="corpito">
+
+    <header>
+        <a href="pagina-entrada.html" id="inicio">INÍCIO</a>
+        <a href="config-conta.html" id="config">CONFIGURAÇÃO</a>
+
+        <img src="foto-logo.png" alt="Logo" class="logo-img">
+
+        <a href="sobre-nos.html" id="sobre">SOBRE NÓS</a>
+        <a href="suporte.html" id="suporte">SUPORTE</a>
+
+        <a href="perfil.html" class="link-perfil">
+            <div class="avatar-container">
+                <img src="perfil-azul.png" id="perfil" alt="Perfil">
+            </div>
+        </a>
+    </header>
+
+    <div class="conteudo-principal">
+
+        <div class="container">
+            <div class="boneco-area">
+                <svg id="boneco-svg" width="300" height="420" viewBox="0 0 200 280" fill="#ffcc66">
+                    <defs>
+                        <clipPath id="recorte-corpo">
+                            <path d="
+                            M 100,60 
+                            C 75,60 62,72 44,100 
+                            C 35,114 47,128 55,115 
+                            C 65,99 71,90 76,94 
+                            C 73,115 67,155 62,215 
+                            C 60,228 76,228 78,215 
+                            C 84,175 92,142 100,142 
+                            C 108,142 116,175 122,215 
+                            C 124,228 140,228 138,215 
+                            C 133,155 127,115 124,94 
+                            C 129,90 135,99 145,115 
+                            C 153,128 165,114 156,100 
+                            C 138,72 125,60 100,60 Z" />
+                        </clipPath>
+                    </defs>
+                    <circle cx="100" cy="40" r="18" class="cor-corpo" />
+                    <path d="
+                    M 100,60 
+                    C 75,60 62,72 44,100 
+                    C 35,114 47,128 55,115 
+                    C 65,99 71,90 76,94 
+                    C 73,115 67,155 62,215 
+                    C 60,228 76,228 78,215 
+                    C 84,175 92,142 100,142 
+                    C 108,142 116,175 122,215 
+                    C 124,228 140,228 138,215 
+                    C 133,155 127,115 124,94 
+                    C 129,90 135,99 145,115 
+                    C 153,128 165,114 156,100 
+                    C 138,72 125,60 100,60 Z" class="cor-corpo" />
+                    <g id="grupo-bolinhas" clip-path="url(#recorte-corpo)"></g>
+                </svg>
+                <div class="sombra"></div>
+            </div>
+        </div>
+
+        <div class="coluna-formulario">
+            <div class="formulario">
+                <div class="form-itens">
+                    <div class="perfil-topo">
+                        <div class="foto-perfil-circulo">
+                            <img src="foto-login.png" alt="Foto Perfil">
+                        </div>
+                        <div class="perfil-texto">
+                            <h2 class="nome-usuario-foto" id="usuario-nome">Carregando...</h2>
+                            <span class="level-texto" id="usuario-level">Level 0</span>
+                            <div class="container-barra-xp">
+                                <div class="barra-xp-container">
+                                    <div class="barra-xp-fill" id="barra-progresso" style="width: 0%;"></div>
+                                </div>
+                                <span class="xp-numeros" id="texto-xp">0 / 100 XP</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="secao-insignias">
+                        <h3>Insígnias</h3>
+                        <div class="container-icones-insignia" id="container-insignias"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="botao-custom">
+                <a href="personagem.html">Customizar</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="botoes-pao">
+        <a href="tutoriais.html" id="tutoriais">Tutoriais</a>
+        <a href="forum.html" id="forum">Fórum</a>
+        <a href="gestao.html" id="banco">Gestão</a>
+        <a href="jogos.html" id="gestao">Jogos</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const emailSalvo = sessionStorage.getItem('usuario_email') || localStorage.getItem('usuario_email');
+
+        if (!emailSalvo) {
+            window.location.href = 'login.html';
+        }
+
+        async function carregarDadosCriar() {
+            try {
+                const { data: usuarios, error } = await supabaseClient
+                    .from('usuarios')
+                    .select('nome, level, xp')
+                    .eq('email', emailSalvo);
+
+                if (error) throw error;
+
+                if (usuarios && usuarios.length > 0) {
+                    const usuario = usuarios[0];
+                    const nomeUsuario = usuario.nome || 'Usuário';
+                    const level = Number(usuario.level) || 0;
+                    const xp = Number(usuario.xp) || 0;
+
+                    const xpAtualNoNivel = xp % 100;
+                    const xpParaProximoNivel = 100;
+                    const porcentagemXp = Math.min(100, Math.max(0, (xpAtualNoNivel / xpParaProximoNivel) * 100));
+
+                    document.getElementById('usuario-nome').innerText = nomeUsuario;
+                    document.getElementById('usuario-level').innerText = `Level ${level}`;
+                    document.getElementById('barra-progresso').style.width = `${porcentagemXp}%`;
+                    document.getElementById('texto-xp').innerText = `${xpAtualNoNivel} / ${xpParaProximoNivel} XP`;
+
+                    const containerInsignias = document.getElementById('container-insignias');
+                    containerInsignias.innerHTML = '';
+
+                    const regrasInsignias = [
+                        { min: 50,  classe: 'insignia-verde-icon',   nome: 'Mestre Nível 50'   },
+                        { min: 100, classe: 'insignia-laranja-icon', nome: 'Mestre Nível 100'  },
+                        { min: 200, classe: 'insignia-azul-icon',    nome: 'Lenda Nível 200'   },
+                        { min: 300, classe: 'insignia-dourada-icon', nome: 'Lenda Nível 300'   }
+                    ];
+
+                    let temInsignia = false;
+                    regrasInsignias.forEach(regra => {
+                        if (level >= regra.min) {
+                            temInsignia = true;
+                            const divInsignia = document.createElement('div');
+                            divInsignia.className = `circulo-insignia ${regra.classe}`;
+                            divInsignia.title = regra.nome;
+                            containerInsignias.appendChild(divInsignia);
+                        }
+                    });
+
+                    if (!temInsignia) {
+                        containerInsignias.innerHTML = '<p class="sem-insignia">Disponível a partir do Nível 50.</p>';
+                    }
+                } else {
+                    sessionStorage.clear();
+                    localStorage.removeItem('usuario_email');
+                    window.location.href = 'login.html';
+                }
+            } catch (erro) {
+                console.error("Erro ao carregar dados de criação:", erro);
+            }
+        }
+
+        carregarDadosCriar();
+    </script>
+
+</body>
+</html>

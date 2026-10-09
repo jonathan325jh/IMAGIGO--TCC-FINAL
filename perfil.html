@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="perfil.css">
+    <title>Perfil</title>
+    <style>
+        .header-flutuante .btn-topo:hover img {
+            transform: scale(1.1);
+        }
+
+        .menu-opcoes {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 260px;
+            padding: 14px 12px;
+            background: linear-gradient(160deg, rgba(245,248,255,0.98), rgba(226,236,252,0.98));
+            backdrop-filter: blur(12px);
+            border: 2px solid #7ea8ff;
+            border-radius: 16px;
+            box-shadow: 0 20px 45px rgba(30,60,130,0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            opacity: 0;
+            transform: translateY(-12px) scale(0.96);
+            pointer-events: none;
+            transition: opacity 0.28s ease, transform 0.32s cubic-bezier(0.25,1,0.5,1);
+        }
+
+        .menu-opcoes.aberto {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .menu-cabecalho {
+            padding: 6px 12px 12px;
+            border-bottom: 2px solid rgba(126,168,255,0.4);
+            margin-bottom: 8px;
+        }
+
+        .menu-titulo {
+            font-size: 15px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #1e40af;
+        }
+
+        .menu-item {
+            display: flex;
+            padding: 11px 14px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #1e293b;
+            font-size: 15px;
+            font-weight: 700;
+            transition: background 0.22s, transform 0.22s, color 0.22s;
+        }
+
+        .menu-item:hover {
+            background: rgba(74,123,199,0.15);
+            color: #1e40af;
+            transform: translateX(5px);
+        }
+
+        .menu-divisor {
+            height: 2px;
+            background: rgba(126,168,255,0.35);
+            margin: 8px 10px;
+        }
+
+        .menu-sair { color: #b91c1c; }
+        .menu-sair:hover { background: rgba(239,68,68,0.15); color: #dc2626; }
+
+        .circulo-insignia {
+            width: 55px; height: 55px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.7rem;
+            background: transparent !important;
+            text-align: center; user-select: none;
+            box-sizing: border-box;
+            animation: insigniaPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: default;
+        }
+        @keyframes insigniaPop {
+            0% { opacity: 0; transform: scale(0.4); }
+            60% { opacity: 1; transform: scale(1.15); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .insignia-circulo:hover { transform: scale(1.15) rotate(5deg); box-shadow: 0 0 25px currentColor; }
+        .insignia-circulo:nth-child(1) { animation-delay: 0.3s; }
+        .insignia-circulo:nth-child(2) { animation-delay: 0.5s; }
+        .insignia-circulo:nth-child(3) { animation-delay: 0.7s; }
+        .insignia-circulo:nth-child(4) { animation-delay: 0.9s; }
+        .insignia-lvl50  { border: 3px solid #00b894; color: #00b894; }
+        .insignia-lvl100 { border: 3px solid #e67e22; color: #e67e22; }
+        .insignia-lvl200 { border: 3px solid #0984e3; color: #0984e3; }
+        .insignia-lvl300 { border: 3px solid #e84393; color: #e84393; }
+        .insignia-bloqueada { border: 3px solid #ccc !important; color: #999 !important; opacity: 0.5; }
+        .sem-insignia { font-size: 14px; color: #888; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <header class="header-flutuante">
+        <a href="javascript:history.back()" class="btn-topo">
+            <img src="voltar-bt.png" alt="Voltar">
+        </a>
+        <button type="button" class="btn-topo" id="btnOpcoes" aria-label="Abrir menu" aria-expanded="false">
+            <img src="tres-pontos-azul-btn.png" alt="Opções">
+        </button>
+
+        <nav class="menu-opcoes" id="menuOpcoes" aria-hidden="true">
+            <div class="menu-cabecalho">
+                <span class="menu-titulo">MENU</span>
+            </div>
+
+            <a href="pagina-entrada.html" class="menu-item"><span class="menu-texto">Início</span></a>
+            <a href="tutoriais.html" class="menu-item"><span class="menu-texto">Tutoriais</span></a>
+            <a href="forum.html" class="menu-item"><span class="menu-texto">Fórum</span></a>
+            <a href="gestao.html" class="menu-item"><span class="menu-texto">Gestão</span></a>
+            <a href="Jogos.html" class="menu-item"><span class="menu-texto">Jogos</span></a>
+            <a href="perfil.html" class="menu-item"><span class="menu-texto">Perfil</span></a>
+            <a href="config-conta.html" class="menu-item"><span class="menu-texto">Configurações</span></a>
+            <a href="sobre-nos.html" class="menu-item"><span class="menu-texto">Sobre Nós</span></a>
+            <a href="suporte.html" class="menu-item"><span class="menu-texto">Suporte</span></a>
+
+            <div class="menu-divisor"></div>
+
+            <a href="login.html" class="menu-item menu-sair" id="menuSair">
+                <span class="menu-texto">Sair da conta</span>
+            </a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="pri-parte">
+            <img src="perfil-azul.png" id="login" alt="Foto de Perfil">
+
+            <h3 id="usuario-nome">Carregando...</h3>
+            <p class="email-texto" id="usuario-email">...</p>
+
+            <div class="habilidades">
+                <h2>Insígnias</h2>
+                <div class="circulos" id="container-insignias"></div>
+            </div>
+
+            <div class="botoes-rodape">
+                <button type="button" id="btn-sair">Sair da conta</button>
+                <a id="termo" href="termos.html">TERMOS DE USO</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const emailSalvo = sessionStorage.getItem('usuario_email') || localStorage.getItem('usuario_email');
+        if (!emailSalvo) window.location.href = 'login.html';
+
+        async function carregarPerfil() {
+            try {
+                const { data: usuarios, error } = await supabaseClient
+                    .from('usuarios')
+                    .select('nome, email, level, xp')
+                    .eq('email', emailSalvo);
+
+                if (error) throw error;
+
+                if (usuarios && usuarios.length > 0) {
+                    const usuario = usuarios[0];
+                    const nome = usuario.nome || 'Usuário';
+                    const email = usuario.email || emailSalvo;
+                    const level = Number(usuario.level) || 1;
+
+                    document.getElementById('usuario-nome').innerText = nome;
+                    document.getElementById('usuario-email').innerText = email;
+                    renderizarInsignias(level);
+                } else {
+                    sessionStorage.clear();
+                    window.location.href = 'login.html';
+                }
+            } catch (erro) {
+                console.error("Erro ao carregar o perfil:", erro);
+            }
+        }
+
+        function renderizarInsignias(level) {
+            const container = document.getElementById('container-insignias');
+            container.innerHTML = '';
+
+            const listaInsignias = [
+                { rotulo: 'LVL 50',  classe: 'insignia-lvl50',  desbloqueada: level >= 50  },
+                { rotulo: 'LVL 100', classe: 'insignia-lvl100', desbloqueada: level >= 100 },
+                { rotulo: 'LVL 200', classe: 'insignia-lvl200', desbloqueada: level >= 200 },
+                { rotulo: 'LVL 300', classe: 'insignia-lvl300', desbloqueada: level >= 300 }
+            ];
+
+            listaInsignias.forEach(item => {
+                const el = document.createElement('div');
+                el.className = item.desbloqueada
+                    ? `insignia-circulo ${item.classe}`
+                    : 'insignia-circulo insignia-bloqueada';
+                el.innerText = item.rotulo;
+                container.appendChild(el);
+            });
+        }
+
+        document.getElementById('btn-sair').addEventListener('click', () => {
+            sessionStorage.clear();
+            localStorage.removeItem('usuario_email');
+            localStorage.removeItem('usuario_nome');
+            localStorage.removeItem('tipo_usuario');
+            window.location.href = 'login.html';
+        });
+
+        carregarPerfil();
+    </script>
+    <script src="menu.js" defer></script>
+</body>
+</html>

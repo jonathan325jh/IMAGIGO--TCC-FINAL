@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GIGO — Carregando...</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        user-select: none;
+    }
+
+    /* ===== FUNDO ===== */
+    body {
+        background-image: url('Login.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding: 20px;
+    }
+
+    /* ===== CONTEÚDO ===== */
+    .conteudo {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 1000px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== LOGO (na frente) ===== */
+    .logo-wrapper {
+        position: relative;
+        margin-bottom: 10px;
+        z-index: 4;   /* ← logo NA FRENTE do card */
+    }
+
+    .logo {
+        margin-bottom: 4rem;
+        width: 380px;
+        max-width: 70vw;
+        height: auto;
+        display: block;
+        filter: drop-shadow(0 8px 24px rgba(0,0,0,0.2));
+    }
+
+    /* ===== CARD DE TEXTO (atrás da logo) ===== */
+    .texto-card {
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 3px solid #f5b942;
+        border-radius: 20px;
+        padding: 24px 32px;
+        max-width: 900px;
+        width: 100%;
+        color: #1a1a1a;
+        font-size: 17px;
+        line-height: 1.55;
+        text-align: center;
+        margin-top: -130px;
+        position: relative;
+        z-index: 3;   /* ← card ATRÁS da logo */
+        box-shadow:
+            0 10px 30px rgba(0, 0, 0, 0.12),
+            inset 0 0 40px rgba(255, 255, 255, 0.3);
+    }
+
+    .texto-card p {
+        margin-bottom: 12px;
+    }
+    .texto-card p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* ===== BARRA DE CARREGAMENTO ===== */
+    .barra-wrapper {
+        width: 100%;
+        max-width: 950px;
+        position: relative;
+        margin-top: 20px;
+        z-index: 3;
+    }
+
+    .barra {
+        width: 100%;
+        height: 56px;
+        background: rgba(255, 255, 255, 0.35);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 3px solid #4a5fc1;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+            0 6px 20px rgba(0, 0, 0, 0.15),
+            inset 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .barra-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #f5a623, #f7b733, #f5a623);
+        background-size: 200% 100%;
+        border-radius: 8px;
+        transition: width 0.4s ease-out;
+        animation: brilhoBarra 2s linear infinite;
+        position: relative;
+    }
+
+    @keyframes brilhoBarra {
+        0%   { background-position: 0% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    .barra-texto {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 30px;
+        font-weight: 900;
+        color: #1e3a8a;
+        letter-spacing: 2px;
+        z-index: 3;
+        text-shadow:
+            0 2px 0 rgba(255, 255, 255, 0.7),
+            0 0 10px rgba(255, 255, 255, 0.5);
+        pointer-events: none;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* ===== BOTÃO SKIP ===== */
+    .btn-skip {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: rgba(255, 255, 255, 0.85);
+        border: 3px solid #4a5fc1;
+        color: #1e3a8a;
+        font-family: inherit;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 12px 24px;
+        border-radius: 30px;
+        cursor: pointer;
+        display: none;
+        z-index: 5;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        opacity: 0;
+    }
+
+    .btn-skip.visivel {
+        display: block;
+        animation: aparecerSkip 0.5s ease forwards;
+    }
+
+    @keyframes aparecerSkip {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn-skip:hover {
+        background: #4a5fc1;
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(74, 95, 193, 0.5);
+    }
+    .btn-skip:active {
+        transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVO ===== */
+    @media (max-width: 720px) {
+        .texto-card {
+            padding: 18px 22px;
+            font-size: 14px;
+            margin-top: -90px;
+        }
+        .barra {
+            height: 46px;
+        }
+        .barra-texto {
+            font-size: 24px;
+        }
+        .logo {
+            width: 280px;
+        }
+        .btn-skip {
+            bottom: 16px;
+            right: 16px;
+            padding: 10px 18px;
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .texto-card {
+            font-size: 13px;
+            line-height: 1.5;
+            margin-top: -70px;
+        }
+        .barra-texto {
+            font-size: 20px;
+        }
+        .logo {
+            width: 220px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="conteudo">
+
+    <div class="logo-wrapper">
+        <img src="logo-suporte.png" alt="GIGO" class="logo" onerror="this.style.display='none'">
+    </div>
+
+    <div class="texto-card">
+        <p>Lembra daquele seu amigo imaginário? Aquele parceiro inseparável que esteve ao seu lado em cada aventura épica, superou desafios e te ajudou a levantar após cada tombo na infância? Pois é, ele cresceu junto com você.</p>
+
+        <p>Agora, ele assume um novo papel na sua fase adulta, agindo como o mentor que você sempre precisou para encarar o mundo real. Ele está aqui para te pegar pela mão e ensinar o passo a passo de como declarar seu Imposto de Renda sem estresse e, acima de tudo, garantir que você nunca mais tombe no abismo das dívidas.</p>
+
+        <p>Nosso aplicativo é o guia definitivo para a sobrevivência moderna, reunindo funções inteligentes e dicas práticas para o seu cotidiano. Ele desmistifica aquelas obrigações burocráticas e responsabilidades domésticas que ninguém te contou que um adulto teria que enfrentar.</p>
+    </div>
+
+    <div class="barra-wrapper">
+        <div class="barra">
+            <div class="barra-fill" id="barraFill"></div>
+            <div class="barra-texto" id="barraTexto">0%</div>
+        </div>
+    </div>
+
+</div>
+
+<button class="btn-skip" id="btnSkip" onclick="pularCarregamento()">PULAR →</button>
+
+<script>
+    let progresso = 0;
+    let jaPulou = false;
+
+    const elFill = document.getElementById('barraFill');
+    const elTexto = document.getElementById('barraTexto');
+    const elSkip = document.getElementById('btnSkip');
+
+    const VELOCIDADE = 0.8;
+
+    function atualizarBarra() {
+        if (jaPulou) return;
+
+        progresso += Math.random() * VELOCIDADE + 0.3;
+        if (progresso > 100) progresso = 100;
+
+        elFill.style.width = progresso + '%';
+        elTexto.textContent = Math.floor(progresso) + '%';
+
+        if (progresso >= 20 && !elSkip.classList.contains('visivel')) {
+            elSkip.classList.add('visivel');
+        }
+
+        if (progresso >= 100) {
+            irParaPagina();
+            return;
+        }
+
+        const proximoDelay = progresso > 90 ? 180 : 100;
+        setTimeout(atualizarBarra, proximoDelay);
+    }
+
+    function pularCarregamento() {
+        if (jaPulou) return;
+        jaPulou = true;
+        elFill.style.width = '100%';
+        elTexto.textContent = '100%';
+        setTimeout(irParaPagina, 300);
+    }
+
+    function irParaPagina() {
+        window.location.href = 'index-pag1.html';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(atualizarBarra, 400);
+    });
+</script>
+
+</body>
+</html>

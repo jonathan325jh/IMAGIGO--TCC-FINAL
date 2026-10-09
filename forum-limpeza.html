@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórum</title>
+    <link rel="stylesheet" href="forum-conserto.css">
+    <link rel="stylesheet" href="forum.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .btn-editar-post {
+            background: linear-gradient(135deg, #38bdf8, #0284c7);
+            border: 2px solid #7dd3fc;
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            padding: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+            box-shadow: 0 3px 0 #075985, 0 4px 12px rgba(56, 189, 248, 0.4);
+            transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+            flex-shrink: 0;
+        }
+
+            .card-post.post-dev {
+                background: #f07ae892 !important;
+                border: 4px solid #a02098 !important;
+                box-shadow: 0 8px 24px rgba(160, 32, 152, 0.35) !important;
+            }
+
+            .card-post.post-dev .post-nome {
+                color: #a02098 !important;
+                font-weight: bold;
+            }
+
+            .card-post.post-dev .post-nome::after {
+                content: ' • DEV';
+                font-size: 12px;
+                color: #a02098;
+                opacity: 0.9;
+                font-weight: bold;
+                margin-left: 4px;
+            }
+
+            .card-post.post-dev .post-conteudo {
+                color: #4a044e;
+            }
+        .btn-editar-post:hover {
+            transform: scale(1.12) translateY(-2px);
+            filter: brightness(1.15);
+            box-shadow: 0 5px 0 #075985, 0 6px 18px rgba(56, 189, 248, 0.6);
+        }
+        .btn-editar-post:active {
+            transform: scale(1.02) translateY(1px);
+            box-shadow: 0 2px 0 #075985, 0 2px 8px rgba(56, 189, 248, 0.4);
+        }
+        .btn-editar-post img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        /* ===== BOTÃO EXCLUIR COMENTÁRIO (DEV) ===== */
+        .btn-excluir-comentario {
+            background-color: #f07ae892 !important;
+            border: 4px solid #a02098 !important;
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            padding: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+        .btn-excluir-comentario:hover {
+            transform: scale(1.15);
+            filter: brightness(1.1);
+        }
+        .btn-excluir-comentario:active {
+            transform: scale(0.95);
+        }
+        .btn-excluir-comentario img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* ===== COMENTÁRIO DO DEV (destaque) ===== */
+        .comentario.comentario-dev {
+            background: linear-gradient(135deg, rgba(160, 32, 152, 0.15), rgba(240, 122, 232, 0.25));
+            border: 2px solid #a02098;
+            border-radius: 12px;
+            padding: 8px 10px;
+            margin: 6px 0;
+        }
+        .comentario.comentario-dev .comentario-nome {
+            color: #a02098;
+            font-weight: bold;
+        }
+        .comentario.comentario-dev .comentario-nome::after {
+            content: ' • DEV';
+            font-size: 11px;
+            color: #a02098;
+            opacity: 0.85;
+        }
+
+        .menu-post-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+        .menu-post-overlay.ativo {
+            display: flex;
+            animation: fadeInMenu 0.2s ease;
+        }
+        @keyframes fadeInMenu {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        @keyframes popInMenu {
+            0%   { opacity: 0; transform: scale(0.85); }
+            60%  { opacity: 1; transform: scale(1.03); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .menu-post-box {
+            background: linear-gradient(145deg, #f0f9ff, #e0f2fe);
+            border: 3px solid #38bdf8;
+            border-radius: 20px;
+            padding: 24px 20px;
+            max-width: 360px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(2, 132, 199, 0.25);
+            animation: popInMenu 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: #0c4a6e;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .menu-post-titulo {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0369a1;
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-post-btn {
+            padding: 14px 18px;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.15s ease, filter 0.15s ease;
+        }
+        .menu-post-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+        .menu-post-btn:active {
+            transform: translateY(1px) scale(0.98);
+        }
+        .menu-post-btn.editar {
+            background: linear-gradient(135deg, #38bdf8, #0284c7);
+            color: #fff;
+            box-shadow: 0 4px 0 #075985;
+        }
+        .menu-post-btn.excluir {
+            background-color: #f07ae892 !important;
+            border: 4px solid #a02098 !important;
+            color: #fff;
+            box-shadow: 0 4px 0 #a02098;
+        }
+        .menu-post-btn.cancelar {
+            background: transparent;
+            color: #0369a1;
+            border: 2px solid #7dd3fc;
+        }
+        .menu-post-btn.cancelar:hover {
+            background: rgba(56, 189, 248, 0.15);
+        }
+
+        .modal-editar-post {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+        .modal-editar-post.ativo {
+            display: flex;
+            animation: fadeInMenu 0.2s ease;
+        }
+
+        .modal-editar-box {
+            background: linear-gradient(145deg, #f0f9ff, #e0f2fe);
+            border: 3px solid #38bdf8;
+            border-radius: 20px;
+            padding: 24px 22px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(2, 132, 199, 0.25);
+            animation: popInMenu 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: #0c4a6e;
+        }
+
+        .modal-editar-titulo {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0369a1;
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .modal-editar-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 2px solid #bae6fd;
+            background: #ffffff;
+            color: #0c4a6e;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+        .modal-editar-textarea:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+        }
+
+        .modal-editar-botoes {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-flutuante">
+        <div class="lado-esquerdo">
+            <a href="javascript:history.back()" class="btn-topo">
+                <img src="voltar-bt.png" alt="Voltar">
+            </a>
+            <button type="button" class="btn-topo" id="btnOpcoes" aria-label="Abrir menu" aria-expanded="false">
+                <img src="tres-pontos-azul-btn.png" alt="Opções">
+            </button>
+
+            <nav class="menu-opcoes" id="menuOpcoes" aria-hidden="true">
+                <div class="menu-cabecalho">
+                    <img src="logo-suporte.png" alt="Logo" class="menu-logo">
+                    <span class="menu-titulo">MENU</span>
+                </div>
+
+                <a href="pagina-entrada.html" class="menu-item"><span class="menu-texto">Início</span></a>
+                <a href="tutoriais.html" class="menu-item"><span class="menu-texto">Tutoriais</span></a>
+                <a href="forum.html" class="menu-item"><span class="menu-texto">Fórum</span></a>
+                <a href="gestao.html" class="menu-item"><span class="menu-texto">Gestão</span></a>
+                <a href="Jogos.html" class="menu-item"><span class="menu-texto">Jogos</span></a>
+                <a href="perfil.html" class="menu-item"><span class="menu-texto">Perfil</span></a>
+                <a href="config-conta.html" class="menu-item"><span class="menu-texto">Configurações</span></a>
+                <a href="sobre-nos.html" class="menu-item"><span class="menu-texto">Sobre Nós</span></a>
+                <a href="suporte.html" class="menu-item"><span class="menu-texto">Suporte</span></a>
+
+                <div class="menu-divisor"></div>
+
+                <a href="login.html" class="menu-item menu-sair" id="menuSair">
+                    <span class="menu-texto">Sair da conta</span>
+                </a>
+            </nav>
+        </div>
+
+        <img src="sobre-nos.png" class="logo-img" alt="Logo">
+    </header>
+
+    <div class="search">
+        <label for="searchInput">
+            <span class="material-symbols-outlined">search</span>
+        </label>
+        <input type="text" id="searchInput" placeholder="Pesquisar">
+    </div>
+
+    <br><br>
+
+    <div class="links">
+        <a href="forum-limpeza.html">Limpeza</a>
+        <a href="forum-conserto.html">Conserto</a>
+        <a href="forum-receitas.html">Receitas</a>
+        <a href="forum-financas.html">Finanças</a>
+        <a href="forum-outros.html">Outros</a>
+    </div>
+    <hr class="divisor">
+
+    <div class="container-forum">
+        <div class="compartilhar-area">
+            <div class="compartilhar-campo" id="compartilharCampo">
+                <img src="perfil.png" class="avatar-compartilhar">
+                <textarea id="mensagem" placeholder="Compartilhe suas experiências..." rows="1"></textarea>
+            </div>
+            <div class="area-publicar" id="areaPublicar">
+                <button id="btn-publicar">POSTAR</button>
+            </div>
+        </div>
+
+        <div id="lista-posts">
+            <p class="carregando">Carregando publicações...</p>
+        </div>
+
+        <div id="container-notificacao"></div>
+    </div>
+
+<div class="menu-post-overlay" id="menuPostOverlay">
+    <div class="menu-post-box">
+        <div class="menu-post-titulo">Editar publicação</div>
+        <button class="menu-post-btn editar" onclick="menuAcaoEditar()">Editar mensagem</button>
+        <button class="menu-post-btn excluir" onclick="menuAcaoExcluir()">
+            <img src="banner-excluir.png" alt="" style="width:22px;height:22px;object-fit:contain;">
+            Excluir post
+        </button>
+        <button class="menu-post-btn cancelar" onclick="fecharMenuPost()">Cancelar</button>
+    </div>
+</div>
+
+<div class="modal-editar-post" id="modalEditarPost">
+    <div class="modal-editar-box">
+        <div class="modal-editar-titulo">Editar mensagem</div>
+        <textarea class="modal-editar-textarea" id="textareaEditarPost" maxlength="2000"></textarea>
+        <div class="modal-editar-botoes">
+            <button class="menu-post-btn editar" onclick="salvarEdicaoPost()">Salvar alterações</button>
+            <button class="menu-post-btn cancelar" onclick="fecharModalEditar()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<script src="menu.js"></script>
+<script>
+const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_4N34f8bpdw9lZ-YtGJwq-w_8gC49zeW";
+const CATEGORIA_PAGINA = "limpeza";
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let _cacheEhDev = null;
+
+async function checarSeEhDev() {
+    if (_cacheEhDev !== null) return _cacheEhDev;
+    const emails = [
+        sessionStorage.getItem('usuario_email'),
+        sessionStorage.getItem('dev_email')
+    ].filter(Boolean);
+    if (emails.length === 0) { _cacheEhDev = false; return false; }
+    try {
+        const { data, error } = await supabaseClient
+            .from('devs').select('email').in('email', emails);
+        _cacheEhDev = !error && Array.isArray(data) && data.length > 0;
+    } catch (e) { _cacheEhDev = false; }
+    return _cacheEhDev;
+}
+
+async function verificarPost(postId, emailAutor, nomeAutor) {
+    const emails = [
+        sessionStorage.getItem('usuario_email'),
+        sessionStorage.getItem('dev_email')
+    ].filter(Boolean);
+    if (emails.length === 0) { alert('Você precisa estar logado.'); return; }
+
+    const { data: devCheck, error: devError } = await supabaseClient
+        .from('devs').select('email').in('email', emails);
+    if (devError || !devCheck || devCheck.length === 0) {
+        alert('Ação restrita a desenvolvedores.'); return;
+    }
+
+    const emailDevConfirmado = devCheck[0].email;
+    const confirmar = confirm(
+        `Confirmar que esta publicação é verdadeira e útil?\n\n` +
+        `Autor: ${nomeAutor}\nEle receberá +70 XP de bônus.`
+    );
+    if (!confirmar) return;
+
+    const { data: resultado, error: rpcError } = await supabaseClient
+        .rpc('verificar_post_como_dev', { p_post_id: postId, p_dev_email: emailDevConfirmado });
+
+    if (rpcError) { alert('Erro ao verificar: ' + rpcError.message); return; }
+    if (!resultado || !resultado.ok) { alert('Não foi possível verificar: ' + (resultado?.erro || 'erro')); return; }
+
+    if (resultado.ja_verificado) alert('Esta publicação já havia sido verificada.');
+    else exibirNotificacao(`+70 XP para ${resultado.autor_nome || 'autor'}`, 'Publicação verificada!', 'banner-verificado.png');
+
+    await carregarUsuarios();
+    await carregarPosts();
+}
+
+function exibirNotificacao(titulo, subtitulo, caminhoImagem = 'banner-xp.png', ehLevelUp = false) {
+    const container = document.getElementById('container-notificacao');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = `toast-xp ${ehLevelUp ? 'toast-level' : ''}`;
+    toast.innerHTML = `
+        <div class="toast-icone">
+            <img src="${caminhoImagem}" alt="Ícone" style="width:100%;height:100%;object-fit:contain;">
+        </div>
+        <div class="toast-conteudo">
+            <span class="toast-titulo">${titulo}</span>
+            <span class="toast-subtitulo">${subtitulo}</span>
+        </div>
+        <button class="toast-fechar" onclick="fecharToast(this.parentElement)">&times;</button>
+        <div class="toast-barra-progresso"></div>
+    `;
+    container.appendChild(toast);
+    setTimeout(() => fecharToast(toast), 7000);
+}
+
+function fecharToast(toastElement) {
+    if (!toastElement) return;
+    toastElement.style.animation = 'slideOut 0.4s ease forwards';
+    setTimeout(() => toastElement.remove(), 400);
+}
+
+async function adicionarXP(email, quantidade, motivo) {
+    try {
+        const { data: usuario, error } = await supabaseClient
+            .from('usuarios').select('xp, level').eq('email', email).maybeSingle();
+        if (error || !usuario) { console.error("Erro:", error); return; }
+
+        const xpAtual = parseInt(usuario.xp || 0);
+        const levelAtual = Math.floor(xpAtual / 100);
+        const novoXp = xpAtual + quantidade;
+        const novoLevel = Math.floor(novoXp / 100);
+
+        const { error: updateError } = await supabaseClient
+            .from('usuarios').update({ xp: novoXp, level: novoLevel }).eq('email', email);
+        if (updateError) { console.error("Erro:", updateError); return; }
+
+        if (usuarioAtual && usuarioAtual.email === email) usuarioAtual.level = novoLevel;
+
+        exibirNotificacao(`+${quantidade} XP Conquistados!`, motivo, 'banner-xp.png');
+
+        if (novoLevel > levelAtual) {
+            setTimeout(() => {
+                exibirNotificacao(`NÍVEL ALCANÇADO!`, `Você subiu para o Level ${novoLevel}!`, 'banner-level.png', true);
+            }, 600);
+        }
+        localStorage.setItem('usuario_xp_atualizado', Date.now());
+    } catch (err) { console.error("Erro:", err); }
+}
+
+function formatarData(dataIso) {
+    if (!dataIso) return '';
+    const data = new Date(dataIso);
+    return data.toLocaleString('pt-BR', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+    });
+}
+
+function escapeHtml(texto) {
+    const div = document.createElement('div');
+    div.innerText = texto || '';
+    return div.innerHTML;
+}
+
+let usuarioAtual = null;
+let usuariosCache = {};
+let devsCache = {};
+
+let postSelecionadoId = null;
+let postSelecionadoMensagem = '';
+
+async function carregarUsuarioAtual() {
+    let email = sessionStorage.getItem('usuario_email');
+    if (!email) email = sessionStorage.getItem('dev_email');
+    if (!email) {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session && session.user) email = session.user.email;
+    }
+    if (!email) { window.location.href = "login.html"; return false; }
+
+    const ehDev = await checarSeEhDev();
+    if (ehDev) {
+        usuarioAtual = { nome: 'Desenvolvedor', email: email, level: 999 };
+        return true;
+    }
+
+    const { data: usuario } = await supabaseClient
+        .from('usuarios').select('nome, nome_personagem, email, xp, level').eq('email', email).maybeSingle();
+
+    if (usuario) {
+        const xp = Number(usuario.xp) || 0;
+        usuarioAtual = {
+            nome: usuario.nome_personagem || usuario.nome || email.split('@')[0],
+            email: email,
+            level: Math.floor(xp / 100)
+        };
+    } else {
+        usuarioAtual = { nome: email.split('@')[0], email: email, level: 0 };
+    }
+    return true;
+}
+
+async function carregarUsuarios() {
+    const { data, error } = await supabaseClient
+        .from('usuarios').select('nome, nome_personagem, email, xp, level');
+    if (error) { console.error("Erro ao carregar usuários:", error); return; }
+
+    usuariosCache = {};
+    if (data) {
+        data.forEach(usuario => {
+            const xp = Number(usuario.xp) || 0;
+            const levelCalculado = Math.floor(xp / 100);
+            const nomeExibicao = usuario.nome_personagem || usuario.nome || 'Usuário';
+            const objetoUsuario = { nome: nomeExibicao, level: levelCalculado, email: usuario.email };
+            if (usuario.email) usuariosCache[usuario.email] = objetoUsuario;
+            if (nomeExibicao) usuariosCache[nomeExibicao] = objetoUsuario;
+            if (usuario.nome) usuariosCache[usuario.nome] = objetoUsuario;
+        });
+    }
+
+    try {
+        const { data: devs } = await supabaseClient.from('devs').select('email');
+        devsCache = {};
+        if (devs) devs.forEach(d => { if (d.email) devsCache[d.email] = true; });
+    } catch (e) { devsCache = {}; }
+}
+
+async function carregarPosts() {
+    const lista = document.getElementById('lista-posts');
+    const { data: posts, error } = await supabaseClient
+        .from('posts').select('*').eq('categoria', CATEGORIA_PAGINA).order('id', { ascending: false });
+
+    if (error) { console.error(error); lista.innerHTML = '<p>Erro ao carregar as publicações.</p>'; return; }
+    if (!posts || posts.length === 0) { lista.innerHTML = '<p class="carregando">Nenhuma publicação ainda nesta categoria.</p>'; return; }
+
+    lista.innerHTML = '';
+    const ehDevAgora = await checarSeEhDev();
+    for (const post of posts) await criarPost(post, lista, ehDevAgora);
+}
+
+async function criarPost(post, lista, ehDevAgora) {
+    const usuario = usuariosCache[post.usuario_email] || usuariosCache[post.usuario_nome] || {
+        nome: post.usuario_nome || 'Usuário', level: 0
+    };
+
+    const { data: reacoes } = await supabaseClient
+        .from('post_reacoes').select('tipo, usuario_email').eq('post_id', post.id);
+
+    const curtidas = (reacoes || []).filter(r => r.tipo === 'curtida').length;
+    const naoCurtidas = (reacoes || []).filter(r => r.tipo === 'nao_curti').length;
+
+    let minhaReacao = null;
+    if (usuarioAtual && !ehDevAgora) {
+        const r = (reacoes || []).find(r => r.usuario_email === usuarioAtual.email);
+        if (r) minhaReacao = r.tipo;
+    }
+
+    const jaVerificado = post.verificado === true || post.verificado === 1;
+    const emailEscapado = (post.usuario_email || '').replace(/'/g, "\\'");
+    const nomeEscapado = (usuario.nome || '').replace(/'/g, "\\'");
+
+    const ehAutor = usuarioAtual && post.usuario_email === usuarioAtual.email;
+    const podeEditar = ehAutor || ehDevAgora;
+    const mensagemEscapada = (post.mensagem || '').replace(/"/g, '&quot;').replace(/'/g, "\\'").replace(/\n/g, '\\n');
+
+    const postEhDev = !!devsCache[post.usuario_email];
+    const classePostDev = postEhDev ? 'post-dev' : '';
+
+    const card = document.createElement('div');
+    card.className = 'card-post ' + classePostDev;
+    card.dataset.postId = post.id;
+
+    card.innerHTML = `
+        <div class="post-header">
+            <img src="perfil.png" class="post-avatar">
+            <div class="post-dados">
+                <span class="post-nome">${escapeHtml(usuario.nome)}</span>
+                <span class="post-level">Level ${usuario.level}</span>
+                <span class="post-data">${formatarData(post.data_criacao)}</span>
+            </div>
+            ${podeEditar ? `
+                <button class="btn-editar-post" title="Editar publicação"
+                    onclick="abrirMenuPost(${post.id}, \`${mensagemEscapada}\`)">
+                    <img src="gestao-btn.png" alt="Editar">
+                </button>
+            ` : ''}
+            ${ehDevAgora && !jaVerificado ? `
+                <button class="btn-verificar" title="Verificar publicação (+70 XP)"
+                    onclick="verificarPost(${post.id}, '${emailEscapado}', '${nomeEscapado}')">
+                    <img src="forum-correto.png" alt="Verificar" class="img-verificar">
+                </button>
+            ` : ''}
+            ${jaVerificado ? `<span class="selo-verificado" title="Publicação verificada">
+    <img src="forum-correto.png" alt="Verificado" class="img-selo-verificado">
+</span>` : ''}
+        </div>
+        <div class="post-conteudo">${escapeHtml(post.mensagem).replace(/\n/g, '<br>')}</div>
+        <div class="post-acoes">
+            <button class="acao-post curtida ${minhaReacao === 'curtida' ? 'ativo' : ''}" onclick="reagir(${post.id}, 'curtida')">
+                <span class="icone-acao">△</span><span class="quantidade">${curtidas}</span>
+            </button>
+            <button class="acao-post nao-curti ${minhaReacao === 'nao_curti' ? 'ativo' : ''}" onclick="reagir(${post.id}, 'nao_curti')">
+                <span class="icone-acao">▽</span><span class="quantidade">${naoCurtidas}</span>
+            </button>
+            <button class="acao-post" onclick="abrirComentarios(${post.id})">
+                <span class="icone-acao">💬</span><span>Comentários</span>
+            </button>
+        </div>
+        <div class="comentarios-area" id="comentarios-${post.id}">
+            <div id="lista-comentarios-${post.id}">Carregando comentários...</div>
+            <form class="form-comentario" onsubmit="enviarComentario(event, ${post.id})">
+                <input type="text" class="input-comentario" placeholder="Escreva um comentário..." maxlength="500" required>
+                <button type="submit" class="btn-comentar">ENVIAR</button>
+            </form>
+        </div>
+    `;
+    lista.appendChild(card);
+}
+
+function abrirMenuPost(postId, mensagem) {
+    postSelecionadoId = postId;
+    postSelecionadoMensagem = mensagem;
+    document.getElementById('menuPostOverlay').classList.add('ativo');
+}
+
+function fecharMenuPost() {
+    document.getElementById('menuPostOverlay').classList.remove('ativo');
+    postSelecionadoId = null;
+    postSelecionadoMensagem = '';
+}
+
+function menuAcaoEditar() {
+    const id = postSelecionadoId;
+    const msg = postSelecionadoMensagem;
+    fecharMenuPost();
+    abrirModalEditar(id, msg);
+}
+
+async function menuAcaoExcluir() {
+    const id = postSelecionadoId;
+    fecharMenuPost();
+    if (!id) return;
+    if (!confirm('Tem certeza que deseja excluir esta publicação?')) return;
+
+    const { error } = await supabaseClient.from('posts').delete().eq('id', id);
+    if (error) {
+        console.error(error);
+        alert('Erro ao excluir publicação: ' + error.message);
+        return;
+    }
+    exibirNotificacao('Publicação removida!', 'A postagem foi excluída.', 'banner-excluir.png');
+    await carregarPosts();
+}
+
+function abrirModalEditar(postId, mensagem) {
+    document.getElementById('textareaEditarPost').value = mensagem;
+    document.getElementById('modalEditarPost').classList.add('ativo');
+    postSelecionadoId = postId;
+    setTimeout(() => document.getElementById('textareaEditarPost').focus(), 100);
+}
+
+function fecharModalEditar() {
+    document.getElementById('modalEditarPost').classList.remove('ativo');
+    postSelecionadoId = null;
+}
+
+async function salvarEdicaoPost() {
+    const id = postSelecionadoId;
+    const novaMensagem = document.getElementById('textareaEditarPost').value.trim();
+
+    if (!id) { fecharModalEditar(); return; }
+    if (!novaMensagem) {
+        alert('A mensagem não pode ficar vazia.');
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from('posts')
+        .update({ mensagem: novaMensagem })
+        .eq('id', id);
+
+    if (error) {
+        console.error(error);
+        alert('Erro ao editar publicação: ' + error.message);
+        return;
+    }
+
+    fecharModalEditar();
+    exibirNotificacao('Publicação editada!', 'Sua alteração foi salva.', 'banner-salvar.png');
+    await carregarPosts();
+}
+
+async function reagir(postId, tipo) {
+    if (!usuarioAtual) return;
+    if (await checarSeEhDev()) return;
+
+    const { data: existente } = await supabaseClient
+        .from('post_reacoes').select('*').eq('post_id', postId).eq('usuario_email', usuarioAtual.email).maybeSingle();
+
+    if (existente) {
+        if (existente.tipo === tipo) {
+            const { error } = await supabaseClient.from('post_reacoes').delete().eq('id', existente.id);
+            if (error) { console.error(error); alert('Erro ao remover reação.'); return; }
+        } else {
+            const { error } = await supabaseClient.from('post_reacoes').update({ tipo }).eq('id', existente.id);
+            if (error) { console.error(error); alert('Erro ao alterar reação.'); return; }
+        }
+    } else {
+        const { error } = await supabaseClient.from('post_reacoes').insert({
+            post_id: postId, usuario_email: usuarioAtual.email, tipo
+        });
+        if (error) { console.error(error); alert('Erro ao registrar reação.'); return; }
+    }
+    carregarPosts();
+}
+
+async function abrirComentarios(postId) {
+    const area = document.getElementById(`comentarios-${postId}`);
+    if (!area) return;
+    area.classList.toggle('aberto');
+    if (area.classList.contains('aberto')) await carregarComentarios(postId);
+}
+
+async function carregarComentarios(postId) {
+    const lista = document.getElementById(`lista-comentarios-${postId}`);
+    const { data: comentarios, error } = await supabaseClient
+        .from('comentarios').select('*').eq('post_id', postId).order('id', { ascending: true });
+
+    if (error) { console.error(error); lista.innerHTML = 'Erro ao carregar comentários.'; return; }
+    if (!comentarios || comentarios.length === 0) { lista.innerHTML = '<p>Nenhum comentário ainda.</p>'; return; }
+
+    const ehDevAgora = await checarSeEhDev();
+
+    lista.innerHTML = '';
+    comentarios.forEach(comentario => {
+        const usuario = usuariosCache[comentario.usuario_email] || usuariosCache[comentario.usuario_nome] || {
+            nome: comentario.usuario_nome || 'Usuário', level: 0
+        };
+
+        const comentarioEhDev = !!devsCache[comentario.usuario_email];
+        const classeDev = comentarioEhDev ? 'comentario-dev' : '';
+
+        const div = document.createElement('div');
+        div.className = 'comentario ' + classeDev;
+
+        const botaoExcluir = ehDevAgora ? `
+            <button class="btn-excluir-comentario" title="Excluir comentário"
+                onclick="excluirComentario(${comentario.id}, ${postId})">
+                <img src="banner-excluir.png" alt="Excluir">
+            </button>
+        ` : '';
+
+        div.innerHTML = `
+            <img src="perfil.png" class="comentario-avatar">
+            <div class="comentario-conteudo">
+                <div>
+                    <span class="comentario-nome">${escapeHtml(usuario.nome)}</span>
+                    <span class="comentario-level">Level ${usuario.level}</span>
+                </div>
+                <div class="comentario-texto">${escapeHtml(comentario.mensagem)}</div>
+                <div class="comentario-data">${formatarData(comentario.data_criacao)}</div>
+            </div>
+            ${botaoExcluir}
+        `;
+        lista.appendChild(div);
+    });
+}
+
+async function excluirComentario(comentarioId, postId) {
+    if (!confirm('Tem certeza que deseja excluir este comentário?')) return;
+
+    const { error } = await supabaseClient
+        .from('comentarios')
+        .delete()
+        .eq('id', comentarioId);
+
+    if (error) {
+        console.error(error);
+        alert('Erro ao excluir comentário: ' + error.message);
+        return;
+    }
+
+    exibirNotificacao('Comentário removido!', 'O comentário foi excluído.', 'banner-excluir.png');
+    await carregarComentarios(postId);
+}
+
+async function enviarComentario(event, postId) {
+    event.preventDefault();
+    if (!usuarioAtual) return;
+    if (await checarSeEhDev()) return;
+
+    const form = event.target;
+    const input = form.querySelector('.input-comentario');
+    const mensagem = input.value.trim();
+    if (!mensagem) return;
+
+    const { error } = await supabaseClient.from('comentarios').insert({
+        post_id: postId, usuario_nome: usuarioAtual.nome,
+        usuario_email: usuarioAtual.email, mensagem
+    });
+    if (error) { console.error(error); alert('Erro ao enviar comentário.'); return; }
+    input.value = '';
+    await carregarComentarios(postId);
+}
+
+async function apagarPost(id) {
+    if (!confirm('Tem certeza que deseja apagar esta publicação?')) return;
+    const { error } = await supabaseClient.from('posts').delete().eq('id', id);
+    if (error) { console.error(error); alert('Erro ao apagar publicação.'); return; }
+    carregarPosts();
+    exibirNotificacao('Publicação removida!', 'A postagem foi excluída.', 'banner-excluir.png');
+}
+
+async function publicar() {
+    if (!usuarioAtual) return;
+
+    const textarea = document.getElementById('mensagem');
+    const mensagem = textarea.value.trim();
+    if (!mensagem) return;
+
+    const botao = document.getElementById('btn-publicar');
+    botao.disabled = true;
+    botao.textContent = 'POSTANDO...';
+
+    const { error } = await supabaseClient.from('posts').insert({
+        usuario_nome: usuarioAtual.nome, usuario_email: usuarioAtual.email,
+        mensagem, categoria: CATEGORIA_PAGINA, data_criacao: new Date().toISOString()
+    });
+
+    if (error) {
+        console.error(error);
+        alert('Erro ao publicar a mensagem: ' + error.message);
+        botao.disabled = false; botao.textContent = 'POSTAR'; return;
+    }
+
+    textarea.value = '';
+    document.querySelector('.compartilhar-area').classList.remove('aberto');
+    document.getElementById('areaPublicar').classList.remove('ativo');
+    botao.disabled = false; botao.textContent = 'POSTAR';
+
+    if (!(await checarSeEhDev())) {
+        await adicionarXP(usuarioAtual.email, 5, 'Por criar uma nova publicação no fórum!');
+    }
+    await carregarUsuarios();
+    await carregarPosts();
+}
+
+function ativarCompartilhar() {
+    const area = document.querySelector('.compartilhar-area');
+    const publicar = document.getElementById('areaPublicar');
+    area.classList.add('aberto');
+    publicar.classList.add('ativo');
+}
+
+document.getElementById('searchInput').addEventListener('input', function () {
+    const termo = this.value.toLowerCase().trim();
+    document.querySelectorAll('.card-post').forEach(card => {
+        const texto = card.innerText.toLowerCase();
+        card.style.display = texto.includes(termo) ? '' : 'none';
+    });
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const ok = await carregarUsuarioAtual();
+    if (!ok) return;
+    await carregarUsuarios();
+    await carregarPosts();
+
+    const mensagemTextarea = document.getElementById('mensagem');
+    mensagemTextarea.addEventListener('focus', ativarCompartilhar);
+    document.getElementById('compartilharCampo').addEventListener('click', () => mensagemTextarea.focus());
+    document.getElementById('btn-publicar').addEventListener('click', publicar);
+    mensagemTextarea.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); publicar(); }
+    });
+});
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        fecharMenuPost();
+        fecharModalEditar();
+    }
+});
+</script>
+</body>
+</html>

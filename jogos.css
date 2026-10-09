@@ -1,0 +1,556 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    outline: none;
+}
+
+html {
+    min-height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Fredoka', 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+    color: #fff;
+    background-color: #0e1726;
+    background-image:
+        url("jogos-fundo-1.png"),
+        url("jogos-fundo-2.png");
+    background-repeat: no-repeat, no-repeat;
+    background-position: left bottom, right bottom;
+    background-size: 30%, 30%;
+    background-position: fixed, fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 0 0 80px 0;
+    overflow-x: hidden;
+}
+
+a { text-decoration: none; }
+button { font-family: inherit; }
+
+@keyframes shine {
+    0%   { left: -100%; }
+    100% { left: 200%; }
+}
+
+.header-flutuante {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 24px 10px 24px;
+    min-height: 220px;
+    margin-bottom: 0;
+    z-index: 10;
+}
+
+.header-flutuante .botoes-esquerda {
+    position: absolute;
+    left: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.header-flutuante .btn-topo {
+    width: 80px;
+    height: 80px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.header-flutuante .btn-topo:hover {
+    transform: scale(1.15);
+    filter: brightness(1.3);
+}
+
+.header-flutuante .btn-topo:active {
+    transform: scale(0.95);
+}
+
+.header-flutuante .btn-topo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.header-flutuante .logo-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-flutuante .logo-header img {
+    max-height: 180px;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.menu-opcoes {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 260px;
+    color: white;
+    padding: 14px 12px;
+    background: linear-gradient(160deg, rgba(7, 36, 104, 0.98), rgba(9, 31, 67, 0.98));
+    backdrop-filter: blur(12px);
+    border: 2px solid #7ea8ff;
+    border-radius: 16px;
+    box-shadow:
+        0 20px 45px rgba(30, 60, 130, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 1100;
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+    pointer-events: none;
+    transform-origin: top left;
+    transition:
+        opacity 0.28s ease,
+        transform 0.32s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.menu-opcoes.aberto {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.menu-cabecalho {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 6px 12px 12px;
+    border-bottom: 2px solid rgba(126, 168, 255, 0.4);
+    margin-bottom: 8px;
+}
+
+.menu-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 3px 8px rgba(74, 123, 199, 0.4));
+    transition: transform 0.3s ease;
+}
+
+.menu-logo:hover {
+    transform: scale(1.08) rotate(-3deg);
+}
+
+.menu-titulo {
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #1e40af;
+    text-shadow: 0 1px 2px rgba(126, 168, 255, 0.4);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 11px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    transition:
+        background 0.22s ease,
+        transform 0.22s ease,
+        color 0.22s ease,
+        box-shadow 0.22s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #4a7bc7, #7ea8ff);
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+    border-radius: 0 4px 4px 0;
+}
+
+.menu-item:hover {
+    background: rgba(74, 123, 199, 0.15);
+    color: #1e40af;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(74, 123, 199, 0.2);
+}
+
+.menu-item:hover::before {
+    transform: scaleY(1);
+}
+
+.menu-item:active {
+    transform: translateX(5px) scale(0.98);
+}
+
+.menu-texto {
+    flex: 1;
+}
+
+.menu-divisor {
+    height: 2px;
+    background: rgba(126, 168, 255, 0.35);
+    margin: 8px 10px;
+    border-radius: 2px;
+}
+
+.menu-sair {
+    color: #b91c1c;
+}
+
+.menu-sair:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.menu-sair::before {
+    background: linear-gradient(180deg, #ef4444, #f87171);
+}
+
+#btnOpcoes.ativo img {
+    transform: rotate(90deg);
+    filter: brightness(1.2) drop-shadow(0 0 8px rgba(74, 123, 199, 0.8));
+}
+
+#btnOpcoes img {
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.container-banner {
+    width: 100%;
+    margin: 0;
+    z-index: 5;
+    border-top: 3px solid #a7daff;
+    border-bottom: 3px solid #a7daff;
+    position: relative;
+    overflow: hidden;
+}
+
+.container-banner::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.35) 50%,
+        transparent 100%
+    );
+    animation: shine 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.container-banner img {
+    display: block;
+    width: 100%;
+    height: 45vh;
+    max-height: 420px;
+    object-fit: cover;
+}
+
+.container-jogos {
+    width: 100%;
+    max-width: 900px;
+    margin: 60px 0 80px 0;
+    padding: 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    position: relative;
+    z-index: 5;
+}
+
+.card-jogo {
+    background: rgba(60, 70, 110, 0.55);
+    border: 2px solid rgba(160, 180, 220, 0.55);
+    border-radius: 14px;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    min-height: 100px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease,
+                background 0.3s ease, border-color 0.3s ease;
+}
+
+.card-jogo::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.15) 50%,
+        transparent 100%
+    );
+    animation: shine 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.card-jogo:nth-child(2)::before {
+    animation-delay: 3s;
+}
+
+.card-jogo:hover {
+    transform: translateY(-5px);
+    background: rgba(75, 90, 135, 0.75);
+    border-color: rgba(180, 220, 255, 0.95);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.card-jogo .card-texto {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    position: relative;
+    z-index: 2;
+}
+
+.card-jogo h3 {
+    font-size: 50px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    transition: color 0.3s ease;
+}
+
+.card-jogo:hover h3 {
+    color: #84e246;
+}
+
+.card-jogo p {
+    font-size: 20px;
+    line-height: 1.5;
+    color: #d8e0f0;
+    margin: 0;
+}
+
+.btn-jogar {
+    background: #84e246;
+    color: #36720e;
+    border-radius: 10px;
+    padding: 10px 30px;
+    border: 3px solid #36720e;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    align-self: flex-end;
+    z-index: 2;
+    transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-jogar:hover {
+    transform: scale(1.05);
+    filter: brightness(1.15);
+    box-shadow: 0 4px 15px rgba(132, 226, 70, 0.6);
+}
+
+.btn-jogar:active {
+    transform: scale(0.96);
+}
+
+@keyframes cardIn {
+    0% { opacity: 0; transform: translateY(25px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes btnJogarPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(132, 226, 70, 0.4); }
+    50%      { box-shadow: 0 0 12px 3px rgba(132, 226, 70, 0.4); }
+}
+
+@keyframes floatDots {
+    0%   { opacity: 0; transform: translateY(0) scale(0.6); }
+    15%  { opacity: 0.7; }
+    85%  { opacity: 0.7; }
+    100% { opacity: 0; transform: translateY(-100vh) scale(1); }
+}
+
+@keyframes headerEntrada {
+    0% { opacity: 0; transform: translateY(-25px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes botoesEntrada {
+    0% { opacity: 0; transform: translateX(-30px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes logoEntrada {
+    0% { opacity: 0; transform: scale(0.85); }
+    60% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bannerEntrada {
+    0% { opacity: 0; transform: scaleY(0.85); }
+    100% { opacity: 1; transform: scaleY(1); }
+}
+
+@keyframes cardEntrada {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes btnJogarEntrada {
+    0% { opacity: 0; transform: scale(0.7); }
+    70% { opacity: 1; transform: scale(1.08); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.card-jogo {
+    animation: cardEntrada 0.8s ease-out both;
+}
+
+.card-jogo:nth-child(1) { animation-delay: 0.7s; }
+.card-jogo:nth-child(2) { animation-delay: 0.9s; }
+
+.btn-jogar {
+    animation: btnJogarPulse 3s ease-in-out infinite,
+               btnJogarEntrada 0.6s ease-out 1.1s both;
+}
+
+.btn-jogar:hover {
+    animation: none;
+}
+
+.pontos-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.pontos-bg span {
+    position: absolute;
+    bottom: -20px;
+    width: 5px;
+    height: 5px;
+    background: radial-gradient(circle, rgba(167, 218, 255, 0.8), transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(167, 218, 255, 0.5);
+    animation: floatDots 18s linear infinite;
+}
+
+.pontos-bg span:nth-child(1)  { left: 10%; animation-duration: 16s; animation-delay: 0s; }
+.pontos-bg span:nth-child(2)  { left: 25%; animation-duration: 20s; animation-delay: 3s; background: radial-gradient(circle, rgba(132, 226, 70, 0.7), transparent); }
+.pontos-bg span:nth-child(3)  { left: 40%; animation-duration: 18s; animation-delay: 6s; }
+.pontos-bg span:nth-child(4)  { left: 55%; animation-duration: 22s; animation-delay: 2s; background: radial-gradient(circle, rgba(132, 226, 70, 0.7), transparent); }
+.pontos-bg span:nth-child(5)  { left: 70%; animation-duration: 19s; animation-delay: 5s; }
+.pontos-bg span:nth-child(6)  { left: 85%; animation-duration: 21s; animation-delay: 8s; background: radial-gradient(circle, rgba(132, 226, 70, 0.7), transparent); }
+.pontos-bg span:nth-child(7)  { left: 15%; animation-duration: 24s; animation-delay: 4s; }
+.pontos-bg span:nth-child(8)  { left: 60%; animation-duration: 23s; animation-delay: 7s; }
+.pontos-bg span:nth-child(9)  { left: 80%; animation-duration: 17s; animation-delay: 1s; background: radial-gradient(circle, rgba(132, 226, 70, 0.7), transparent); }
+.pontos-bg span:nth-child(10) { left: 35%; animation-duration: 25s; animation-delay: 9s; }
+
+.header-flutuante {
+    animation: headerEntrada 0.7s ease-out both;
+}
+
+.header-flutuante .botoes-esquerda {
+    animation: botoesEntrada 0.6s ease-out 0.15s both;
+}
+
+.header-flutuante .logo-header img {
+    animation: logoEntrada 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+}
+
+.container-banner {
+    animation: bannerEntrada 0.9s ease-out 0.45s both;
+    transform-origin: center top;
+}
+
+@media (max-width: 520px) {
+    body {
+        background-size: 40%, 40%;
+        padding-bottom: 60px;
+    }
+
+    .header-flutuante {
+        min-height: 160px;
+        padding: 20px 16px 28px 16px;
+    }
+
+    .header-flutuante .botoes-esquerda { left: 12px; top: 80px; }
+    .header-flutuante .btn-topo { width: 56px; height: 56px; }
+    .header-flutuante .logo-header img { max-height: 100px; }
+
+    .container-banner img {
+        height: 30vh;
+    }
+
+    .container-jogos {
+        margin: 40px 0 60px 0;
+        padding: 0 16px;
+        gap: 20px;
+    }
+
+    .card-jogo {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        padding: 20px 22px;
+        min-height: auto;
+    }
+
+    .card-jogo h3 { font-size: 24px; }
+    .card-jogo p { font-size: 14px; }
+
+    .btn-jogar { align-self: flex-end; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+

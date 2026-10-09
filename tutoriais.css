@@ -1,0 +1,768 @@
+* {
+    margin: 0;
+    outline: none;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.fundo-tutorial {
+    background-image: 
+        url('logo-tutorial.png'),
+        url('tutoriais-fundo-img.png');
+    background-repeat:
+        no-repeat,
+        no-repeat;
+    background-size: 
+        80% auto,
+        cover;
+    background-position: 
+        left 20rem top,
+        center center;
+    background-attachment: scroll, fixed;
+    min-height: 100vh;
+}
+
+#tres-pontos {
+    position: absolute;
+    top: 5rem;
+    right: 25px;
+    width: 7rem;
+    pointer-events: auto;
+}
+
+#voltar {
+    margin-left: 5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 6rem;
+}
+
+.volta-dois img {
+    margin-top: 3rem;
+    height: auto;
+}
+
+.search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #1622c2;
+    background-color: rgba(230, 225, 225, 0.514);
+    width: 530px;
+    margin-top: 15rem;
+    margin-left: 2rem;
+    border-radius: 30px;    
+    padding: 5px 10px;
+    color: gray;
+}
+
+#searchInput {
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    width: 100%;
+    height: 7vh;
+    outline: none;
+    color: #1622c2;
+}
+
+.search label {
+    height: 20px;
+    color: white;
+}
+
+span {
+    color: #1622c2;
+}
+
+.card-container {
+    background-color: rgba(255, 255, 255, 0.484);
+}
+
+.carousel-container {
+    position: relative;
+    width: 100%;
+    max-width: 80rem; 
+    margin: 50px auto 60px 150px; 
+    overflow: hidden; 
+    border-radius: 10px;
+    padding: 20px 10px;
+}
+
+.carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    width: 100%;
+    gap: 35px; 
+    padding: 10px;
+    scrollbar-width: none;
+}
+
+.carousel-track::-webkit-scrollbar {
+    display: none;
+}
+
+.product-card-link {
+    text-decoration: none;
+    color: inherit;
+    flex: 0 0 calc((100% - 140px) / 5); 
+    display: block;
+}
+
+.product-card {
+    width: 100%;
+    padding: 25px 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
+    min-height: 42vh;
+    justify-content: flex-start;
+    border: 2px solid rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.product-card img {
+    max-width: 85%;
+    height: 14vh;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 4px solid #dd0000;
+}
+
+.product-card h3 {
+    font-size: 1.2rem;
+    color: #333;
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.product-card p {
+    color: white;
+    font-size: 16px;
+    border-radius: 20px;
+    height: auto;
+    padding: 6px 0;
+    margin-top: auto;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-card p.btn-2 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#carouselTrackReceitas .product-card {
+    border: 4px solid #dd0000;
+}
+
+#carouselTrackConsertos .product-card {
+    border: 4px solid #1aa400;
+}
+
+#carouselTrackFinancas .product-card {
+    border: 4px solid #96a3fc;
+}
+
+#searchResultsGrid .product-card {
+    border: 4px solid #8d39bd;
+}
+
+.carousel-prev,
+.carousel-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); 
+    background-color: transparent;
+    border: 3px solid #dd0000;
+    color: #dd0000;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, color 0.3s;
+    z-index: 10; 
+}
+
+.carousel-prev:hover,
+.carousel-next:hover {
+    background-color: #ff9999bf;
+}
+
+.carousel-prev {
+    left: 15px;
+}
+
+.carousel-next {
+    right: 15px;
+}
+
+.card-container h1 {
+    font-size: 6rem;
+    letter-spacing: 2px;
+    margin-left: 10rem;
+    color: transparent; 
+    -webkit-text-stroke: 1.5px #f6c769c8;
+    display: inline-block;
+    position: relative;
+    padding-right: 20px;
+    border-radius: 4px;
+    padding-bottom: 0px; 
+    line-height: 0.7; 
+    border-bottom: 4px solid #dd0000;
+}
+
+.card-container h1::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 4px;
+    height: 40%;
+    border-radius: 2px;
+    background-color: #dd0000;
+}
+
+#cor-conserto {
+    border-bottom: 4px solid #1aa400 !important; 
+}
+#cor-conserto::after {
+    background-color: #1aa400 !important;
+}
+
+#cor-financas {
+    border-bottom: 4px solid #96a3fc !important; 
+}
+#cor-financas::after {
+    background-color: #96a3fc !important;
+}
+
+#cor-pesquisa {
+    border-bottom: 4px solid #6f42c1 !important; 
+}
+#cor-pesquisa::after {
+    background-color: #6f42c1 !important;
+}
+
+.flecha-icone {
+    color: #dd0000;
+}
+
+.btn-1 {
+    background-color: #52c506a0;
+    width: 80%;
+    border: 4px solid #52c506a0;
+}
+
+.btn-2 {
+    background-color: #ef1c1cb7;
+    width: 80%;
+    border: 4px solid #ef1c1c;
+}
+
+.btn-conserto {
+    background-color: #79e862;
+    border: 4px solid #54ca3c;
+}
+
+.btn-financas {
+    background-color: #bcc4f9;
+    border: 4px solid #96a3fc;
+}
+
+.results-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 35px;
+    padding: 20px;
+    max-width: 80rem;
+    margin: 60px auto 20px 150px;
+}
+
+.results-grid .product-card-link {
+    flex: 0 0 calc((100% - 140px) / 5);
+}
+
+#higiene {
+    font-size: 17px;
+}
+
+.toast-icone {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #28a745;
+}
+.toast-level .toast-icone {
+    background: #fb8500;
+}
+.toast-icone img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+/* =========================================================
+   🎬 ANIMAÇÕES — PÁGINA DE TUTORIAIS
+   ========================================================= */
+
+/* 📥 Entrada das seções (slide + fade) */
+@keyframes sectionIn {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 🎴 Cards aparecendo em cascata */
+@keyframes cardIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(-4px) scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ✨ Brilho passando no título */
+@keyframes titleShine {
+    0% {
+        background-position: -200% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+/* ➡️ Pulso nas setas */
+@keyframes arrowPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(221, 0, 0, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(221, 0, 0, 0);
+    }
+}
+
+/* 🔍 Foco do input (brilho suave) */
+@keyframes inputFocus {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(22, 34, 194, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(22, 34, 194, 0.1);
+    }
+}
+
+/* 🎬 Card-container entra deslizando */
+.card-container {
+    animation: sectionIn 0.8s ease-out both;
+}
+
+.card-container:nth-of-type(1) {
+    animation-delay: 0.1s;
+}
+
+.card-container:nth-of-type(2) {
+    animation-delay: 0.25s;
+}
+
+.card-container:nth-of-type(3) {
+    animation-delay: 0.4s;
+}
+
+/* 🎴 Cada card aparece em cascata */
+.product-card {
+    animation: cardIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.product-card-link:nth-child(1) .product-card { animation-delay: 0.05s; }
+.product-card-link:nth-child(2) .product-card { animation-delay: 0.15s; }
+.product-card-link:nth-child(3) .product-card { animation-delay: 0.25s; }
+.product-card-link:nth-child(4) .product-card { animation-delay: 0.35s; }
+.product-card-link:nth-child(5) .product-card { animation-delay: 0.45s; }
+.product-card-link:nth-child(6) .product-card { animation-delay: 0.55s; }
+
+/* ✨ Brilho dourado passando no título */
+.card-container h1 {
+    background-image: linear-gradient(
+        120deg,
+        transparent 0%,
+        transparent 40%,
+        rgba(255, 215, 0, 0.4) 50%,
+        transparent 60%,
+        transparent 100%
+    );
+    background-size: 200% auto;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: titleShine 4s ease-in-out infinite;
+}
+
+/* ➡️ Setas com pulso suave */
+.carousel-prev,
+.carousel-next {
+    animation: arrowPulse 2s ease-in-out infinite;
+}
+
+.carousel-next {
+    animation-delay: 1s;
+}
+
+/* ➡️ Hover nas setas melhora */
+.carousel-prev:hover,
+.carousel-next:hover {
+    background-color: #dd0000;
+    color: #fff;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 15px rgba(221, 0, 0, 0.4);
+}
+
+/* ➡️ Ícone da seta muda de cor no hover */
+.carousel-prev:hover .flecha-icone,
+.carousel-next:hover .flecha-icone {
+    color: #fff;
+}
+
+/* 🔍 Input de busca com brilho ao focar */
+.search {
+    transition: box-shadow 0.3s ease, background-color 0.3s ease,
+                border-color 0.3s ease;
+}
+
+.search:focus-within {
+    border-color: #1622c2;
+    background-color: rgba(255, 255, 255, 0.85);
+    animation: inputFocus 2s ease-in-out infinite;
+    box-shadow: 0 8px 25px rgba(22, 34, 194, 0.2);
+}
+
+/* 🔍 Ícone da lupa com pulso leve */
+.search label .material-symbols-outlined {
+    transition: transform 0.3s ease;
+}
+
+.search:focus-within label .material-symbols-outlined {
+    transform: scale(1.2) rotate(-10deg);
+    color: #1622c2;
+}
+
+/* 🎬 Botões voltar/3 pontos (header) — slide suave na entrada */
+.btn-topo {
+    animation: sectionIn 0.6s ease-out both;
+}
+
+.btn-topo:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.btn-topo:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+/* 🎬 Hover mais suave nos botões do topo */
+.btn-topo {
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.btn-topo:hover {
+    transform: scale(1.12);
+    filter: brightness(1.15) drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
+}
+
+/* 🎴 Hover nos cards com brilho extra */
+.product-card:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2),
+                0 0 0 3px rgba(221, 0, 0, 0.15);
+}
+
+/* 🎴 Hover nas imagens dos cards — zoom leve */
+.product-card img {
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+/* 🎴 Hover nos títulos dos cards — cor muda */
+.product-card h3 {
+    transition: color 0.3s ease;
+}
+
+.product-card:hover h3 {
+    color: #dd0000;
+}
+
+/* 🏷️ Botões das tags (fácil, receitas) — pulsam no hover */
+.product-card p.btn-1,
+.product-card p.btn-2 {
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.product-card:hover p.btn-1,
+.product-card:hover p.btn-2 {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+/* 📱 Desativa animações pesadas no mobile */
+@media (max-width: 600px) {
+    .card-container {
+        animation: none;
+    }
+
+    .product-card {
+        animation: none;
+    }
+
+    .card-container h1 {
+        animation: none;
+    }
+
+    .carousel-prev,
+    .carousel-next {
+        animation: none;
+    }
+}
+
+/* =========================================================
+   🎨 CORES DOS BOTÕES DE DIFICULDADE
+   ========================================================= */
+
+/* 🟢 VERDE — Fácil / Rápido / Dicas */
+.btn-1 {
+    background-color: #52c506a0;
+    border: 4px solid #52c506a0;
+}
+
+/* 🟡 AMARELO — Médio / Poupar */
+.btn-1.btn-medio {
+    background-color: #f5c518c4;
+    border: 4px solid #d4a306;
+}
+
+/* 🔴 VERMELHO — Difícil / Renda */
+.btn-1.btn-dificil {
+    background-color: #ef1c1cb7;
+    border: 4px solid #c91515;
+}
+
+/* Garantir que as cores apareçam (sobrescrever regra antiga) */
+.product-card p.btn-1 {
+    color: #fff;
+    font-weight: bold;
+}
+
+/* 🟢 Verde brilha no hover */
+.product-card:hover p.btn-1:not(.btn-medio):not(.btn-dificil) {
+    background-color: #4ab505;
+    box-shadow: 0 0 12px rgba(82, 197, 6, 0.6);
+}
+
+/* 🟡 Amarelo brilha no hover */
+.product-card:hover p.btn-1.btn-medio {
+    background-color: #e5b600;
+    box-shadow: 0 0 12px rgba(245, 197, 24, 0.7);
+}
+
+/* 🔴 Vermelho brilha no hover */
+.product-card:hover p.btn-1.btn-dificil {
+    background-color: #d81010;
+    box-shadow: 0 0 12px rgba(239, 28, 28, 0.7);
+}
+
+
+.menu-opcoes {
+    position: absolute;
+    top: 3.5rem;
+    left: 0;
+    width: 260px;
+    padding: 14px 12px;
+    background: linear-gradient(160deg, rgba(245, 248, 255, 0.98), rgba(226, 236, 252, 0.98));
+    backdrop-filter: blur(12px);
+    border: 2px solid #7ea8ff;
+    border-radius: 16px;
+    box-shadow:
+        0 20px 45px rgba(30, 60, 130, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 1100;
+
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+    pointer-events: none;
+    transform-origin: top left;
+    transition:
+        opacity 0.28s ease,
+        transform 0.32s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.menu-opcoes.aberto {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* Cabeçalho com logo + título */
+.menu-cabecalho {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 6px 12px 12px;
+    border-bottom: 2px solid rgba(126, 168, 255, 0.4);
+    margin-bottom: 8px;
+}
+
+.menu-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 3px 8px rgba(74, 123, 199, 0.4));
+    transition: transform 0.3s ease;
+}
+
+.menu-logo:hover {
+    transform: scale(1.08) rotate(-3deg);
+}
+
+.menu-titulo {
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #1e40af;
+    text-shadow: 0 1px 2px rgba(126, 168, 255, 0.4);
+}
+
+/* Item do menu */
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 11px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #1e293b;
+    font-size: 15px;
+    font-weight: 700;
+    transition:
+        background 0.22s ease,
+        transform 0.22s ease,
+        color 0.22s ease,
+        box-shadow 0.22s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #4a7bc7, #7ea8ff);
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+    border-radius: 0 4px 4px 0;
+}
+
+.menu-item:hover {
+    background: rgba(74, 123, 199, 0.15);
+    color: #1e40af;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(74, 123, 199, 0.2);
+}
+
+.menu-item:hover::before {
+    transform: scaleY(1);
+}
+
+.menu-item:active {
+    transform: translateX(5px) scale(0.98);
+}
+
+.menu-texto {
+    flex: 1;
+}
+
+.menu-divisor {
+    height: 2px;
+    background: rgba(126, 168, 255, 0.35);
+    margin: 8px 10px;
+    border-radius: 2px;
+}
+
+/* Item "Sair" com destaque vermelho */
+.menu-sair {
+    color: #b91c1c;
+}
+
+.menu-sair:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.menu-sair::before {
+    background: linear-gradient(180deg, #ef4444, #f87171);
+}
+
+/* Botão dos três pontos — gira quando aberto */
+#btnOpcoes.ativo img {
+    transform: rotate(90deg);
+    filter: brightness(1.2) drop-shadow(0 0 8px rgba(74, 123, 199, 0.8));
+}
+
+#btnOpcoes img {
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .menu-opcoes,
+    .menu-item,
+    .menu-item::before,
+    .menu-logo,
+    #btnOpcoes img {
+        transition: none !important;
+    }
+}

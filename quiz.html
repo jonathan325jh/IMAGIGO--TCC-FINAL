@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz do Dinheiro</title>
+<link rel="stylesheet" href="quiz.css">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="topo">
+    <div class="botoes-topo">
+        <a href="jogos.html" class="btn-topo" onclick="event.preventDefault(); window.location.href='jogos.html';">
+            <img src="voltar-azul-btn.png" alt="Voltar">
+        </a>
+        <button type="button" class="btn-topo" id="btnOpcoes" aria-label="Abrir menu" aria-expanded="false">
+            <img src="tres-pontos-azul-btn.png" alt="Opções">
+        </button>
+
+        <nav class="menu-opcoes" id="menuOpcoes" aria-hidden="true">
+            <div class="menu-cabecalho">
+                <img src="logo-suporte.png" alt="Logo" class="menu-logo">
+                <span class="menu-titulo">MENU</span>
+            </div>
+
+            <a href="pagina-entrada.html" class="menu-item"><span class="menu-texto">Início</span></a>
+            <a href="tutoriais.html" class="menu-item"><span class="menu-texto">Tutoriais</span></a>
+            <a href="forum.html" class="menu-item"><span class="menu-texto">Fórum</span></a>
+            <a href="gestao.html" class="menu-item"><span class="menu-texto">Gestão</span></a>
+            <a href="Jogos.html" class="menu-item"><span class="menu-texto">Jogos</span></a>
+            <a href="perfil.html" class="menu-item"><span class="menu-texto">Perfil</span></a>
+            <a href="config-conta.html" class="menu-item"><span class="menu-texto">Configurações</span></a>
+            <a href="sobre-nos.html" class="menu-item"><span class="menu-texto">Sobre Nós</span></a>
+            <a href="suporte.html" class="menu-item"><span class="menu-texto">Suporte</span></a>
+
+            <div class="menu-divisor"></div>
+
+            <a href="login.html" class="menu-item menu-sair" id="menuSair">
+                <span class="menu-texto">Sair da conta</span>
+            </a>
+        </nav>
+    </div>
+
+    <h1 class="titulo">QUIZ DO DINHEIRO</h1>
+
+    <div class="status">
+        <div class="status-item">
+            <img src="banner-dinheiro.png" alt="$" class="status-icon">
+            <span>$:</span> <span id="valDinheiro">0</span>
+        </div>
+        <div class="status-item">
+            <img src="banner-xp.png" alt="XP" class="status-icon">
+            <span>XP:</span> <span id="valXp">0</span>
+        </div>
+    </div>
+</div>
+
+<div class="quiz-container">
+
+    <div class="tela" id="telaInicio">
+        <div class="icone-grande">
+            <img src="banner-xp.png" alt="Quiz" class="icone-img">
+        </div>
+        <h2>Quiz do Dinheiro</h2>
+        <p>Responda perguntas sobre finanças e ganhe dinheiro + XP!</p>
+        <ul class="regras">
+            <li>Cada acerto vale <b>$100</b> e <b>+5 XP</b></li>
+            <li>Cada erro não dá dinheiro</li>
+            <li>Bônus de <b>$50</b> se acertar 5 seguidas</li>
+            <li><b>5 perguntas</b> por rodada</li>
+        </ul>
+        <button class="btn-principal" onclick="iniciarQuiz()">Começar</button>
+    </div>
+
+    <div class="tela" id="telaJogo" style="display:none;">
+        <div class="progresso">
+            <div class="barra-progresso">
+                <div class="barra-fill" id="barraProgresso"></div>
+            </div>
+            <div class="contador">
+                Pergunta <span id="numPergunta">1</span> de <span id="totalPerguntas">5</span>
+            </div>
+        </div>
+
+        <div class="streak" id="streakBox" style="display:none;">
+            <span id="streakNum">0</span> seguidas!
+        </div>
+
+        <h2 class="pergunta" id="textoPergunta">Carregando...</h2>
+
+        <div class="alternativas" id="alternativas"></div>
+    </div>
+
+    <div class="tela" id="telaFim" style="display:none;">
+        <div class="icone-grande">
+            <img src="banner-level.png" alt="Fim" class="icone-img">
+        </div>
+        <h2>Rodada Completa!</h2>
+        <div class="resultado">
+            <div class="resultado-item">
+                <span class="resultado-num" id="fimAcertos">0</span>
+                <span class="resultado-label">Acertos</span>
+            </div>
+            <div class="resultado-item">
+                <span class="resultado-num" id="fimErros">0</span>
+                <span class="resultado-label">Erros</span>
+            </div>
+        </div>
+        <div class="recompensa">
+            Você ganhou <b id="fimDinheiro">$0</b><br>
+            E <b id="fimXp">+0 XP</b>
+        </div>
+        <button class="btn-principal" onclick="iniciarQuiz()">Jogar de Novo</button>
+        <a href="casa.html" class="btn-secundario">Usar o dinheiro na casa</a>
+    </div>
+</div>
+
+<button id="btnResgatar" class="btn-resgatar" style="display:none;" onclick="resgatarXp()">
+    RESGATAR
+</button>
+
+<div class="notificacao" id="notificacao">
+    <div class="notificacao-icone" id="notificacaoIcone"></div>
+    <div class="notificacao-texto" id="notificacaoTexto"></div>
+</div>
+
+<script src="quiz.js"></script>
+<script src="menu.js" defer></script>
+</body>
+</html>

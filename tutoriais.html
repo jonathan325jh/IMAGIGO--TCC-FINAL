@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="tutoriais.css"> 
+    <script src="script-tutorial.js" defer></script>
+    <title>Tutoriais</title>
+    
+    <style>
+        .product-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        header {
+           position: absolute;
+           top: 3rem;
+           left: 40px;
+           z-index: 1000;
+           display: flex;
+           flex-direction: column;
+           gap: 12px;
+        }
+
+        .btn-topo {
+            background: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-topo:hover {
+            transform: scale(1.1);
+        }
+
+        .btn-topo img {
+            width: 90px;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body class="fundo-tutorial">
+ <header class="header-flutuante">
+    <a href="javascript:history.back()" class="btn-topo">
+        <img src="voltar-bt.png" alt="Voltar">
+    </a>
+    <button type="button" class="btn-topo" id="btnOpcoes" aria-label="Abrir menu" aria-expanded="false">
+        <img src="tres-pontos-azul-btn.png" alt="Opções">
+    </button>
+
+    <nav class="menu-opcoes" id="menuOpcoes" aria-hidden="true">
+        <div class="menu-cabecalho">
+            <img src="logo-suporte.png" alt="Logo" class="menu-logo">
+            <span class="menu-titulo">MENU</span>
+        </div>
+
+        <a href="pagina-entrada.html" class="menu-item">
+            <span class="menu-texto">Início</span>
+        </a>
+
+        <a href="tutoriais.html" class="menu-item">
+            <span class="menu-texto">Tutoriais</span>
+        </a>
+
+        <a href="forum.html" class="menu-item">
+            <span class="menu-texto">Fórum</span>
+        </a>
+
+        <a href="gestao.html" class="menu-item">
+            <span class="menu-texto">Gestão</span>
+        </a>
+
+        <a href="Jogos.html" class="menu-item">
+            <span class="menu-texto">Jogos</span>
+        </a>
+
+        <a href="perfil.html" class="menu-item">
+            <span class="menu-texto">Perfil</span>
+        </a>
+
+        <a href="config-conta.html" class="menu-item">
+            <span class="menu-texto">Configurações</span>
+        </a>
+
+        <a href="sobre-nos.html" class="menu-item">
+            <span class="menu-texto">Sobre Nós</span>
+        </a>
+
+        <a href="suporte.html" class="menu-item">
+            <span class="menu-texto">Suporte</span>
+        </a>
+
+        <div class="menu-divisor"></div>
+
+        <a href="login.html" class="menu-item menu-sair" id="menuSair">
+           <span class="menu-texto">Sair da conta</span>
+        </a>
+    </nav>
+</header>
+
+    <div class="search">
+        <label for="searchInput">
+            <span class="material-symbols-outlined">search</span>
+        </label>
+        <input type="text" id="searchInput" placeholder="Pesquisar">
+    </div>
+
+    <div id="searchResultsSection" class="card-container" style="display: none;">
+        <h1 id="cor-pesquisa">Resultados</h1>
+        <div class="results-grid" id="searchResultsGrid"></div>
+    </div>
+
+    <br><br><br>
+
+    <div class="fundo-principal" id="conteudoPrincipal">
+
+        <!-- ===== SEÇÃO: RECEITAS ===== -->
+        <div class="card-container">
+            <h1>Receitas</h1>
+            <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrackReceitas">
+                    
+                    <a href="receita.html" class="product-card-link">
+                        <div class="product-card">
+                            <img src="arroz e feijão.jpg" alt="Arroz e feijão" width="200" height="100">
+                            <h3>Arroz soltinho com feijão</h3>
+                            <p class="btn-1">Fácil</p>
+                            <p class="btn-2">Receitas</p>
+                        </div>
+                    </a>
+
+                    <a href="receita2.html" class="product-card-link">
+                        <div class="product-card">
+                            <img src="ovo soltinho.png" alt="Ovo frito" width="200" height="100">
+                            <h3>Ovo frito, cozido e mexido</h3>
+                            <p class="btn-1">Fácil</p>
+                            <p class="btn-2">Receitas</p>
+                        </div>
+                    </a>
+
+                    <a href="RECEITA3.html" class="product-card-link">
+                        <div class="product-card">
+                            <img src="macarrao soltinho.jpg" alt="Macarrão" width="300" height="100">
+                            <h3>Macarrão com molho de tomate caseiro</h3>
+                            <p class="btn-1">Fácil</p>
+                            <p class="btn-2">Receitas</p>
+                        </div>
+                    </a>
+
+                    <a href="receita4.html" class="product-card-link">
+                        <div class="product-card">
+                            <img src="frango soltinho.png" alt="Frango grelhado" width="300" height="100">
+                            <h3>Frango grelhado e desfiado</h3>
+                            <p class="btn-1">Fácil</p>
+                            <p class="btn-2">Receitas</p>
+                        </div>
+                    </a>
+
+                    <a href="receita5.html" class="product-card-link">
+                        <div class="product-card">
+                            <img src="marmita soltinhe.png" alt="Marmitas" width="200" height="100">
+                            <h3>Marmitas da semana (Planejamento)</h3>
+                            <p class="btn-1">Fácil</p>
+                            <p class="btn-2">Receitas</p>
+                        </div>
+                    </a>
+
+                    <a href="receita6.html" class="product-card-link">
+                        <div class="product-card">
+                            <img src="salada soltinhe.png" alt="Saladas" width="200" height="100">
+                            <h3>Higienização e conservação</h3>
+                            <p class="btn-1">Fácil</p>
+                            <p class="btn-2">Receitas</p>
+                        </div>
+                    </a>
+
+                </div>
+                <button class="carousel-prev" id="prevBtnReceitas" aria-label="Anterior">
+                    <span class="material-symbols-outlined flecha-icone">arrow_back_ios</span>
+                </button>
+                <button class="carousel-next" id="nextBtnReceitas" aria-label="Próximo">
+                    <span class="material-symbols-outlined flecha-icone">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <br><br><br>
+
+        <!-- ===== SEÇÃO: CONSERTOS ===== -->
+        <div class="card-container">
+            <h1 id="cor-conserto">Consertos</h1>
+            <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrackConsertos">
+                    
+                    <a href="conserto.html" class="product-card-link">
+                        <div class="product-card">
+                            <img src="lampada soltinha.png" alt="Lâmpada" width="200" height="100">
+                            <h3>Como trocar uma lâmpada</h3>
+                            <p class="btn-1">Rápido</p>
+                            <p class="btn-2 btn-conserto">Consertos</p>
+                        </div>
+                    </a>
+
+                    <a href="conserto2.html" class="product-card-link">
+                        <div class="product-card">
+                            <img src="chuveiro soltinha.png" alt="Chuveiro" width="200" height="100">
+                            <h3>Trocar a resistência do chuveiro</h3>
+                            <p class="btn-1 btn-medio">Médio</p>
+                            <p class="btn-2 btn-conserto">Consertos</p>
+                        </div>
+                    </a>
+
+                    <a href="conserto3.html" class="product-card-link">
+                        <div class="product-card">
+                            <img src="torneira soltinha.png" alt="Torneira" width="200" height="100">
+                            <h3>Consertar torneira pingando</h3>
+                            <p class="btn-1 btn-dificil">Difícil</p>
+                            <p class="btn-2 btn-conserto">Consertos</p>
+                        </div>
+                    </a>
+
+                    <a href="conserto4.html" class="product-card-link">
+                        <div class="product-card">
+                            <img src="caixa-ferramentas soltinha.png" alt="Ferramentas" width="200" height="100">
+                            <h3>Uso básico de ferramentas</h3>
+                            <p class="btn-1 btn-dificil">Difícil</p>
+                            <p class="btn-2 btn-conserto">Consertos</p>
+                        </div>
+                    </a>
+
+                    <a href="conserto5.html" class="product-card-link">
+                        <div class="product-card">
+                            <img src="desintupir soltinha.png" alt="Desentupir" width="200" height="100">
+                            <h3>Desentupir pia e vaso sanitário</h3>
+                            <p class="btn-1 btn-dificil">Difícil</p>
+                            <p class="btn-2 btn-conserto">Consertos</p>
+                        </div>
+                    </a>
+
+                    <a href="conserto6.html" class="product-card-link">
+                        <div class="product-card">
+                            <img src="filtro soltinha.png" alt="Ar condicionado" width="200" height="100">
+                            <h3>Limpeza do filtro do ar condicionado</h3>
+                            <p class="btn-1 btn-dificil">Difícil</p>
+                            <p class="btn-2 btn-conserto">Consertos</p>
+                        </div>
+                    </a>
+
+                </div>
+                <button class="carousel-prev" id="prevBtnConsertos" aria-label="Anterior">
+                    <span class="material-symbols-outlined flecha-icone">arrow_back_ios</span>
+                </button>
+                <button class="carousel-next" id="nextBtnConsertos" aria-label="Próximo">
+                    <span class="material-symbols-outlined flecha-icone">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <br><br><br>
+
+       <!-- ===== SEÇÃO: FINANÇAS ===== -->
+<div class="card-container">
+    <h1 id="cor-financas">Finanças</h1>
+    <div class="carousel-container">
+        <div class="carousel-track" id="carouselTrackFinancas">
+            
+            <a href="finanças.html" class="product-card-link">
+                <div class="product-card">
+                    <img src="orçamento mensal.png" alt="Orçamento" width="200" height="100">
+                    <h3>Montando o primeiro orçamento mensal</h3>
+                    <p class="btn-1 btn-medio">Médio</p>
+                    <p class="btn-2 btn-financas">Finanças</p>
+                </div>
+            </a>
+
+            <a href="finanças2.html" class="product-card-link">
+                <div class="product-card">
+                    <img src="cartao de credito.png" alt="Cartão de crédito" width="200" height="100">
+                    <h3>Entendendo o cartão de crédito</h3>
+                    <p class="btn-1 btn-medio">Médio</p>
+                    <p class="btn-2 btn-financas">Finanças</p>
+                </div>
+            </a>
+
+            <a href="finanças3.html" class="product-card-link">
+                <div class="product-card">
+                    <img src="conta de luz.png" alt="Conta de luz" width="200" height="100">
+                    <h3>Como ler uma conta de luz e água</h3>
+                    <p class="btn-1">Fácil</p>
+                    <p class="btn-2 btn-financas">Finanças</p>
+                </div>
+            </a>
+
+            <a href="finanças4.html" class="product-card-link">
+                <div class="product-card">
+                    <img src="reserva de ermegência.png" alt="Reserva" width="200" height="100">
+                    <h3>Criando a reserva de emergência</h3>
+                    <p class="btn-1 btn-dificil">Difícil</p>
+                    <p class="btn-2 btn-financas">Finanças</p>
+                </div>
+            </a>
+
+            <a href="finanças5.html" class="product-card-link">
+                <div class="product-card">
+                    <img src="lista de supermercado.png" alt="Supermercado" width="200" height="100">
+                    <h3>Como fazer compras de supermercado</h3>
+                    <p class="btn-1">Fácil</p>
+                    <p class="btn-2 btn-financas">Finanças</p>
+                </div>
+            </a>
+
+            <a href="finanças6.html" class="product-card-link">
+                <div class="product-card">
+                    <img src="morar sozinho.png" alt="Morar sozinho" width="200" height="100">
+                    <h3>Planejamento para morar sozinho</h3>
+                    <p class="btn-1 btn-dificil">Difícil</p>
+                    <p class="btn-2 btn-financas">Finanças</p>
+                </div>
+            </a>
+
+        </div>
+        <button class="carousel-prev" id="prevBtnFinancas" aria-label="Anterior">
+            <span class="material-symbols-outlined flecha-icone">arrow_back_ios</span>
+        </button>
+        <button class="carousel-next" id="nextBtnFinancas" aria-label="Próximo">
+            <span class="material-symbols-outlined flecha-icone">arrow_forward_ios</span>
+        </button>
+    </div>
+</div>
+<script src="menu.js"></script>
+
+</body>
+</html>

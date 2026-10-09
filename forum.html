@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórum</title>
+    <link rel="stylesheet" href="forum.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="fundo-forum">
+
+    <header class="header-flutuante">
+        <div class="lado-esquerdo">
+            <a href="javascript:history.back()" class="btn-topo">
+                <img src="voltar-bt.png" alt="Voltar">
+            </a>
+            <button type="button" class="btn-topo" id="btnOpcoes" aria-label="Abrir menu" aria-expanded="false">
+                <img src="tres-pontos-azul-btn.png" alt="Opções">
+            </button>
+
+            <nav class="menu-opcoes" id="menuOpcoes" aria-hidden="true">
+                <div class="menu-cabecalho">
+                    <img src="logo-suporte.png" alt="Logo" class="menu-logo">
+                    <span class="menu-titulo">MENU</span>
+                </div>
+
+                <a href="pagina-entrada.html" class="menu-item"><span class="menu-texto">Início</span></a>
+                <a href="tutoriais.html" class="menu-item"><span class="menu-texto">Tutoriais</span></a>
+                <a href="forum.html" class="menu-item"><span class="menu-texto">Fórum</span></a>
+                <a href="gestao.html" class="menu-item"><span class="menu-texto">Gestão</span></a>
+                <a href="Jogos.html" class="menu-item"><span class="menu-texto">Jogos</span></a>
+                <a href="perfil.html" class="menu-item"><span class="menu-texto">Perfil</span></a>
+                <a href="config-conta.html" class="menu-item"><span class="menu-texto">Configurações</span></a>
+                <a href="sobre-nos.html" class="menu-item"><span class="menu-texto">Sobre Nós</span></a>
+                <a href="suporte.html" class="menu-item"><span class="menu-texto">Suporte</span></a>
+
+                <div class="menu-divisor"></div>
+
+                <a href="login.html" class="menu-item menu-sair" id="menuSair">
+                    <span class="menu-texto">Sair da conta</span>
+                </a>
+            </nav>
+        </div>
+
+        <img src="sobre-nos.png" class="logo-img" alt="Logo">
+    </header>
+
+    <div class="search">
+        <label for="searchInput">
+            <span class="material-symbols-outlined">search</span>
+        </label>
+        <input type="text" id="searchInput" placeholder="Pesquisar">
+    </div>
+
+    <br>
+    <br>
+
+    <div class="links">
+        <a href="forum-limpeza.html">Limpeza</a>
+        <a href="forum-conserto.html">Conserto</a>
+        <a href="forum-receitas.html">Receitas</a>
+        <a href="forum-financas.html">Finanças</a>
+        <a href="forum-outros.html">Outros</a>
+    </div>
+    <hr class="divisor">
+
+    <div class="conteudo">
+       <p>O fórum foi criado para ser um espaço de troca de conhecimento, colaboração e ajuda mútua entre os membros da comunidade. O objetivo principal é compartilhar informações úteis e aprender em conjunto sobre temas do dia a dia, como receitas, finanças, consertos e outros assuntos gerais.</p>
+       <br>
+       <br>
+
+    <h3>Como funciona o sistema de pontuação (XP)?</h3>
+     <br>
+    <p>Para incentivar a participação ativa e a qualidade do conteúdo compartilhado, o fórum conta com um sistema de experiência (XP):</p>
+     <br>
+
+   <ul>
+    <li><strong>Publicou, ganhou (5 XP):</strong> Toda vez que você criar uma nova publicação no fórum compartilhando <br>
+                uma dica, dúvida ou tutorial, você recebe 5 XP instantaneamente pela contribuição.</li>
+    <br>
+    <li><strong>Bônus de verificação (70 XP):</strong> Para manter a comunidade segura e com informações confiáveis, <br>
+         os desenvolvedores do site analisam as publicações. Quando o seu post for verificado e confirmado como <br>
+          verdadeiro e útil, você recebe um bônus extra de 70 XP.</li>
+   </ul>
+   <br>
+
+    <p>Participe, compartilhe o que você sabe, tire suas dúvidas e acumule XP para subir de nível enquanto ajuda a construir uma comunidade cada vez melhor!</p>
+ </div>
+
+    <script src="menu.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="login.css">
+<title>Login — GIGO</title>
+</head>
+<body class="fundo">
+
+<a href="index-pag1.html" class="btn-voltar-topo">
+    <img src="voltar-bt.png" alt="Voltar">
+</a>
+
+<div class="container">
+    <img src="foto-login.png" id="foto-perfil" alt="Perfil">
+    <h1>LOGIN</h1>
+    <form id="login-form" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <div class="campo"><input type="email" id="email" placeholder="E-MAIL" required></div>
+        <div class="campo"><input type="password" id="senha" placeholder="SENHA" required></div>
+    </form>
+    <div class="container-link-login">
+        <button type="submit" id="entrar" form="login-form">Entrar</button>
+        <a href="login-dev.html" id="link-a" class="link-dev">Entrar como desenvolvedor</a>
+    </div>
+</div>
+
+<img src="foto-logo.png" class="logo-animada" alt="Logo">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    document.getElementById('login-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const emailDigitado = document.getElementById('email').value;
+        const senhaDigitada = document.getElementById('senha').value;
+
+        try {
+            const { data: usuarios, error } = await supabaseClient
+                .from('usuarios')
+                .select('*')
+                .eq('email', emailDigitado)
+                .eq('senha', senhaDigitada);
+
+            if (error) throw new Error(error.message);
+
+            if (usuarios && usuarios.length > 0) {
+                const usuario = usuarios[0];
+
+                localStorage.clear();
+                sessionStorage.clear();
+
+                sessionStorage.setItem('usuario_nome', usuario.nome || '');
+                sessionStorage.setItem('usuario_email', usuario.email);
+                sessionStorage.setItem('tipo_usuario', 'usuario');
+
+                localStorage.setItem('ultimo_email_usuario', usuario.email);
+
+                window.location.href = 'pagina-entrada.html';
+            } else {
+                alert('E-mail ou senha incorretos!');
+            }
+        } catch (erro) {
+            console.error("Erro na autenticação:", erro);
+            alert('Erro: ' + erro.message);
+        }
+    });
+</script>
+
+</body>
+</html>

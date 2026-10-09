@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="perfil.css">
+    <title>Perfil do Desenvolvedor</title>
+    <style>
+        .badge-dev {
+            display: inline-block;
+            color: #d32f2f;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 2px;
+            margin: 10px 0;
+            background: transparent;
+        }
+        #btn-sair {
+            background-color: rgba(211, 47, 47, 0.85) !important;
+            border-color: #b71c1c !important;
+        }
+        #btn-sair:hover {
+            background-color: #d32f2f !important;
+            color: #fff !important;
+        }
+        .pri-parte {
+            display: flex;
+            flex-direction: column;
+            min-height: 70vh;
+            align-items: center;
+        }
+        .botoes-rodape {
+            margin-top: auto;
+            padding-top: 40px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn-voltar-dev {
+            position: fixed;
+            top: 30px;
+            left: 40px;
+            z-index: 1000;
+            width: 90px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .btn-voltar-dev img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .btn-voltar-dev:hover {
+            transform: scale(1.08);
+        }
+
+        @media (max-width: 600px) {
+            .btn-voltar-dev {
+                top: 15px;
+                left: 15px;
+                width: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="pagina-entrada-dev.html" class="btn-voltar-dev">
+        <img src="voltar-bt.png" id="voltar" alt="Voltar">
+    </a>
+
+    <main class="container">
+        <div class="pri-parte">
+            <img src="foto-login.png" id="login" alt="Foto de Perfil">
+
+            <h3 id="usuario-nome">Carregando...</h3>
+            <p class="email-texto" id="usuario-email">...</p>
+
+            <div class="badge-dev">DESENVOLVEDOR</div>
+
+            <div class="botoes-rodape">
+                <button type="button" id="btn-sair">Sair da conta</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const tipoUsuario = sessionStorage.getItem('tipo_usuario');
+        const emailDev = sessionStorage.getItem('dev_email');
+        const nomeDev = sessionStorage.getItem('dev_nome');
+
+        if (tipoUsuario !== 'desenvolvedor' || !emailDev) {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('usuario-nome').innerText = nomeDev || 'Desenvolvedor';
+        document.getElementById('usuario-email').innerText = emailDev || '—';
+
+        document.getElementById('btn-sair').addEventListener('click', () => {
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.href = 'login.html';
+        });
+    </script>
+
+</body>
+</html>
