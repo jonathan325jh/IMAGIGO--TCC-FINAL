@@ -1,0 +1,67 @@
+#tecno:visited { color: #0097b2; }
+
+.texto-para, .texto-para-dois, .texto-para-tres {
+    text-align: center;
+    color: #0097b2;
+    font-size: 18px;
+    font-family: "Charis SIL", serif;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 20px;
+    line-height: 1.6;
+}
+
+#banner-tecno {
+    display: block;
+    margin: 2rem auto;
+    width: 90%;
+    max-width: 700px;
+    height: auto;
+    border-radius: 2em;
+    border: solid 5px #0097b2;
+}
+
+.lista-receitas-foto {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem; 
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.item-receita-foto {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;
+    gap: 20px;
+    background: rgba(0, 151, 178, 0.1);
+    padding: 20px;
+    border-radius: 2em;
+}
+
+.img-receita-foto {
+    width: 100%;
+    max-width: 300px; 
+    height: auto;
+    border-radius: 1.5em;
+    border: solid 4px #0097b2;
+}
+
+.info-receita-foto p {
+    font-size: 18px;
+    color: #0097b2;
+    font-family: "Charis SIL", serif;
+}
+
+@media (min-width: 768px) {
+    .item-receita-foto {
+        flex-direction: row;
+        text-align: left;
+    }
+
+    .item-receita-foto:nth-child(even) {
+        flex-direction: row-reverse;
+    }
+}
