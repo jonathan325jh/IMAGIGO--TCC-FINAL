@@ -122,66 +122,70 @@
 
     <!-- Biblioteca Oficial do EmailJS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    
-    <script type="text/javascript">
-        // 1. Configuração do Supabase
-        const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  <script type="text/javascript">
+    // 1. Configuração do Supabase
+    const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // 2. Configuração do EmailJS
-        emailjs.init("63uV71CQvOzLY4tM9");
+    // 2. Configuração do EmailJS com a Public Key nova
+    const PUBLIC_KEY = "WeGNxYOuEi0wq3h6t";
+    emailjs.init(PUBLIC_KEY);
 
-        document.getElementById('formSuporte').addEventListener('submit', async function(event) {
-            event.preventDefault();
+    document.getElementById('formSuporte').addEventListener('submit', async function(event) {
+        event.preventDefault();
 
-            const btn = document.getElementById('botao');
-            const mensagemTexto = document.getElementById('dois').value.trim();
-            const emailUsuario = localStorage.getItem('usuario_email') || sessionStorage.getItem('usuario_email') || 'Não informado (outro PC)';
+        const btn = document.getElementById('botao');
+        const mensagemTexto = document.getElementById('dois').value.trim();
+        
+        let emailUsuario = localStorage.getItem('usuario_email') || sessionStorage.getItem('usuario_email') || localStorage.getItem('ultimo_email_usuario');
+        
+        if (!emailUsuario || emailUsuario === 'null') {
+            emailUsuario = 'usuario_anonimo@suporte.com';
+        }
 
-            if (!mensagemTexto) {
-                alert('Por favor, digite uma mensagem antes de enviar.');
-                return;
+        if (!mensagemTexto) {
+            alert('Por favor, digite uma mensagem antes de enviar.');
+            return;
+        }
+
+        btn.innerText = 'Enviando...';
+        btn.disabled = true;
+
+        try {
+            // Grava no Supabase
+            const { error: supabaseError } = await supabaseClient
+                .from('feedbacks')
+                .insert([
+                    { 
+                        usuario_email: emailUsuario, 
+                        mensagem: mensagemTexto 
+                    }
+                ]);
+
+            if (supabaseError) {
+                console.warn("Aviso ao salvar no Supabase:", supabaseError.message);
             }
 
-            btn.innerText = 'Enviando...';
-            btn.disabled = true;
+            // Envia e-mail via EmailJS
+            const templateParams = {
+                usuario_email: emailUsuario,
+                mensagem: mensagemTexto
+            };
 
-            try {
-                const { error: supabaseError } = await supabaseClient
-                    .from('feedbacks')
-                    .insert([
-                        { 
-                            usuario_email: emailUsuario, 
-                            mensagem: mensagemTexto 
-                        }
-                    ]);
+            await emailjs.send('service_3s0grc5', 'template_0h1bh6e', templateParams, PUBLIC_KEY);
 
-                if (supabaseError) {
-                    console.warn("Aviso ao salvar no Supabase:", supabaseError.message);
-                }
+            alert('Mensagem enviada com sucesso!');
+            document.getElementById('dois').value = '';
 
-                const templateParams = {
-                    usuario_email: emailUsuario,
-                    email: emailUsuario,
-                    from_name: emailUsuario,
-                    message: mensagemTexto,
-                    mensagem: mensagemTexto
-                };
-
-                await emailjs.send('service_fmvpcip', 'template_kllil48', templateParams);
-
-                alert('Mensagem enviada com sucesso!');
-                document.getElementById('dois').value = '';
-
-            } catch (error) {
-                console.error('Erro na gravação ou envio:', error);
-                alert('Sua mensagem foi gravada no banco de dados, mas houve uma oscilação no envio do e-mail.');
-            } finally {
-                btn.innerText = 'Enviar';
-                btn.disabled = false;
-            }
-        });
-    </script>
+        } catch (error) {
+            console.error('Erro detalhado no envio:', error);
+            alert('Ocorreu um erro ao enviar o e-mail. Verifique o console para mais detalhes.');
+        } finally {
+            btn.innerText = 'Enviar';
+            btn.disabled = false;
+        }
+    });
+</script>
 </body>
 </html>
