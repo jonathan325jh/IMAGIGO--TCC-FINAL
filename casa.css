@@ -228,9 +228,12 @@ button { font-family: inherit; }
     border: 2px dashed transparent;
     box-sizing: border-box;
     z-index: 2;
-    background-repeat: repeat;
-    background-position: top left;
+    /* REMOVA background-size e background-repeat daqui */
 }
+.papel-parede:hover, .piso-chao:hover {
+    border-color: rgba(250, 204, 21, 0.7);
+}
+
 .papel-parede {
     background-size: 352px auto;
     background-repeat: round;
@@ -475,80 +478,70 @@ button { font-family: inherit; }
 .painel-flutuante {
     position: fixed;
     background: #ffffff;
-    border-radius: 24px;
-    padding: 14px;
+    border-radius: 14px;
+    padding: 12px; 
     display: none;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px; 
     z-index: 9999;
-    box-shadow: 0 20px 45px rgba(0,0,0,0.45);
-    min-width: 250px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    min-width: 260px;
+    max-width: 300px; 
+    max-height: 80vh;
+    overflow-y: auto;
     font-size: 13px;
     color: #111827;
 }
+
 .painel-flutuante.ativo {
     display: flex;
     animation: popIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 .painel-flutuante .titulo-flutuante {
     font-weight: 700;
+    font-size: 12px;
     text-align: center;
-    padding-bottom: 8px;
+    padding-bottom: 3px;
     border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 2px;
 }
 .painel-flutuante .linha {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 5px;
     background: #f8fafc;
-    padding: 8px 12px;
-    border-radius: 14px;
+    padding: 4px 6px;
+    border-radius: 8px;
+    font-size: 11px;
+    line-height: 1.2;
 }
-
+.painel-flutuante .linha input[type="range"] { width: 80px; height: 14px; }
+.painel-flutuante .linha input[type="color"] {
+    width: 22px; height: 22px;
+    border: none; background: transparent; cursor: pointer; padding: 0;
+}
 .painel-flutuante .botoes {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    margin-top: 4px;
+    display: flex; flex-direction: row; justify-content: center;
+    align-items: center; gap: 6px; width: 100%; margin-top: 2px;
 }
-
 .painel-flutuante .btn-flutuante {
-    background: #f1f5f9;
-    border: 2px solid #e2e8f0;
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    cursor: pointer;
-    padding: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.15s ease, filter 0.15s ease, border-color 0.15s ease;
+    background: #f1f5f9; border: 2px solid #e2e8f0;
+    width: 34px; height: 34px; border-radius: 50%;
+    cursor: pointer; padding: 4px;
+    display: flex; align-items: center; justify-content: center;
 }
-.painel-flutuante .btn-flutuante img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
+.painel-flutuante .btn-flutuante img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.painel-flutuante .btn-flutuante:hover { transform: scale(1.1); border-color: #38bdf8; }
+.painel-flutuante .btn-flutuante.remover { background: #fee2e2; border-color: #fecaca; }
+.painel-flutuante .btn-flutuante.remover:hover { border-color: #ef4444; }
+.painel-flutuante .titulo-secao {
+    font-size: 10px; font-weight: bold; color: #475569; margin-top: 4px;
 }
-.painel-flutuante .btn-flutuante:hover {
-    transform: scale(1.1);
-    border-color: #38bdf8;
-    filter: brightness(1.05);
-}
-.painel-flutuante .btn-flutuante:active {
-    transform: scale(0.95);
-}
-.painel-flutuante .btn-flutuante.remover {
-    background: #fee2e2;
-    border-color: #fecaca;
-}
-.painel-flutuante .btn-flutuante.remover:hover {
-    border-color: #ef4444;
+.painel-drag-handle {
+    font-size: 10px; color: #94a3b8; padding: 2px 4px 4px;
+    margin-bottom: 2px; border-bottom: 1px dashed #e2e8f0;
+    cursor: move; user-select: none; text-align: center; touch-action: none;
 }
 
 .notificacao {
@@ -874,6 +867,9 @@ button { font-family: inherit; }
     }
 }
 
+/* ============================================================
+   BOTÃO DE FECHAR O PAINEL
+   ============================================================ */
 .btn-fechar-painel {
     position: absolute;
     top: 8px;
@@ -895,12 +891,154 @@ button { font-family: inherit; }
     box-shadow: 0 2px 0 #b91c1c;
     transition: transform 0.15s ease;
 }
+.btn-fechar-painel:hover { transform: scale(1.15); filter: brightness(1.1); }
+.btn-fechar-painel:active { transform: scale(0.95); }
 
-.btn-fechar-painel:hover {
-    transform: scale(1.15);
-    filter: brightness(1.1);
+/* ============================================================
+   BARRA DE ARRASTAR O PAINEL
+   ============================================================ */
+.painel-drag-handle {
+    font-size: 12px;
+    color: #94a3b8;
+    padding: 4px 6px 6px;
+    margin-bottom: 4px;
+    border-bottom: 1px dashed #e2e8f0;
+    cursor: move;
+    user-select: none;
+    -webkit-user-select: none;
+    text-align: center;
+    touch-action: none;
 }
 
-.btn-fechar-painel:active {
-    transform: scale(0.95);
+/* ============================================================
+   TOGGLE DE MODO DE COR (Tingir / Cor exata)
+   ============================================================ */
+.toggle-modo-cor {
+    display: flex;
+    gap: 4px;
+    background: #e2e8f0;
+    padding: 3px;
+    border-radius: 10px;
+    width: 100%;
+}
+.toggle-modo-cor .btn-modo {
+    flex: 1;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: bold;
+    background: transparent;
+    color: #475569;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.toggle-modo-cor .btn-modo.ativo {
+    background: #38bdf8;
+    color: #0f172a;
+    box-shadow: 0 2px 0 #0284c7;
+}
+
+/* ============================================================
+   BOTÃO RESETAR COR
+   ============================================================ */
+.btn-resetar-cor {
+    padding: 4px 10px;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+    background: #f1f5f9;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: bold;
+    color: #475569;
+    cursor: pointer;
+}
+.btn-resetar-cor:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+/* ============================================================
+   CAMADA DE COR DO MÓVEL (modo "Cor exata")
+   - A <img> base fica visível o tempo todo
+   - A camada .movel-tint só aparece quando tem background pronto
+   ============================================================ */
+.movel-cor-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+.movel-cor-wrap .movel-img-base {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+    image-rendering: -webkit-optimize-contrast;
+}
+.movel-cor-wrap .movel-tint {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    opacity: 0;
+    transition: opacity 0.18s ease, filter 0.18s ease;
+    will-change: filter, opacity;
+    border-radius: 4px;
+    /* mix-blend-mode é aplicado inline pelo JS */
+}
+
+/* ============================================================
+   PAREDE / PISO — fundo aceita a cor do estado
+   ============================================================ */
+.papel-parede, .piso-chao {
+    background-clip: padding-box;
+}
+
+/* ============================================================
+   #chao — cobre com o piso quando há imagem
+   ============================================================ */
+.chao-casa {
+    background: #78350f; /* fallback */
+}
+
+.chao-casa {
+    background: #78350f;
+    border-top: 5px solid #451a03;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+/* Corrige o fundo da parede/piso via <div> filha */
+#papelParede, #pisoChao {
+    overflow: hidden;
+}
+#papelParede > div, #pisoChao > div {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.movel {
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+.movel {
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    background: transparent !important; /* FORÇA A TRANSPARÊNCIA */
+    border: none !important;            /* TIRA BORDAS */
+    box-shadow: none !important;        /* TIRA SOMBRAS */
 }

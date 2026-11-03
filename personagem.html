@@ -133,7 +133,45 @@
         .aviso-level:empty { display: none; }
         .aviso-level.bloqueado { color: #b91c1c; }
 
-        /* ===== MENU TRÊS PONTOS — IGUAL À GESTÃO ===== */
+        /* ===== NOTIFICAÇÃO SIMPLES ===== */
+        .notificacao-simples {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-200%);
+            background: #ffffff;
+            border: 3px solid #f2a93b;
+            border-radius: 16px;
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 15px 40px rgba(242, 169, 59, 0.35);
+            z-index: 99999;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 420px;
+        }
+
+        .notificacao-simples.ativa {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .notificacao-simples img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            image-rendering: pixelated;
+            flex-shrink: 0;
+        }
+
+        .notificacao-simples span {
+            font-size: 15px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.35;
+        }
+
+        /* ===== MENU TRÊS PONTOS ===== */
         .voltar-dois {
             position: absolute;
             top: 30px;
@@ -474,22 +512,19 @@
                     <span class="aviso-level" id="aviso-chapeu"></span>
                 </div>
 
-                <div class="linha">
-                    <span class="label-visual">Partículas:</span>
-                    <select id="sel-animacao">
-                        <option value="nenhuma" selected>Nenhuma</option>
-                        <option value="fogo">Aura de Fogo (MP4)</option>
-                        <option value="brilho">Brilho / Estrelas (GIF)</option>
-                    </select>
-                </div>
-
                 <button type="button" id="btnSalvar" class="btn-salvar">Salvar Personagem</button>
             </div>
         </div>
     </div>
 </div>
 
+<div class="notificacao-simples" id="notificacaoSimples">
+    <img src="banner-caviso.png" alt="Aviso">
+    <span id="notificacaoTexto">—</span>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="musica.js"></script>
 
 <script>
 const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
@@ -497,13 +532,22 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ===== SESSION STORAGE ===== */
 const emailSalvo = sessionStorage.getItem('usuario_email');
 if (!emailSalvo) {
     window.location.href = 'login.html';
 }
+let notificacaoTimer = null;
+function notificar(texto) {
+    const el = document.getElementById('notificacaoSimples');
+    document.getElementById('notificacaoTexto').textContent = texto;
+    el.classList.add('ativa');
 
-/* ===== MENU TRÊS PONTOS ===== */
+    clearTimeout(notificacaoTimer);
+    notificacaoTimer = setTimeout(() => {
+        el.classList.remove('ativa');
+    }, 3000);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('btnOpcoes');
     const menu = document.getElementById('menuOpcoes');
@@ -533,7 +577,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-/* ===== MAPAS ===== */
 const NOMES_ROUPAS = {
     'nenhuma': 'Nenhuma',
     'beca': 'Beca',
@@ -558,12 +601,6 @@ const CAMINHO_CHAPEUS = {
     'roupa-touca': 'roupa-touca.png',
     'roupa-touca-2': 'roupa-touca-2.png',
     'chapeu-formando': 'chapeu.png'
-};
-
-const CAMINHO_AURAS = {
-    'nenhuma': '',
-    'fogo': '',
-    'brilho': ''
 };
 
 const AJUSTE_ROUPAS = {
@@ -600,7 +637,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const selEstampa = document.getElementById('sel-estampa');
     const selRoupa = document.getElementById('sel-roupa');
     const selChapeu = document.getElementById('sel-chapeu');
-    const selAnimacao = document.getElementById('sel-animacao');
     const inputNome = document.getElementById('input-nome');
     const tituloNome = document.getElementById('titulo-nome');
     const nivelTag = document.getElementById('nivel-tag');
@@ -612,8 +648,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const imgRoupa = document.getElementById('img-roupa');
     const imgCachecol = document.getElementById('img-cachecol');
     const imgChapeu = document.getElementById('img-chapeu');
-    const imgAnimacao = document.getElementById('img-animacao');
-    const videoFundo = document.getElementById('video-fundo');
 
     const cadeadoRoupa = document.getElementById('cadeado-roupa');
     const cadeadoChapeu = document.getElementById('cadeado-chapeu');
@@ -781,19 +815,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             imgChapeu.setAttribute('href', '');
         }
-
-        const anim = CAMINHO_AURAS[selAnimacao.value] || '';
-        if (anim.endsWith('.mp4')) {
-            imgAnimacao.setAttribute('href', '');
-            videoFundo.src = anim;
-            videoFundo.style.display = 'block';
-            videoFundo.play();
-        } else {
-            videoFundo.pause();
-            videoFundo.src = '';
-            videoFundo.style.display = 'none';
-            imgAnimacao.setAttribute('href', anim);
-        }
     }
 
     function aoMudarSelect(selectEl, tabela, aplicarFn, valorInicial) {
@@ -802,7 +823,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             selectEl.value = valorInicial;
             aplicarFn();
             atualizarMidias();
-            alert(`Este item precisa de LV${req}. Você ainda está no LV${levelAtual}.`);
+            notificar(`Este item precisa de LV${req}. Você ainda está no LV${levelAtual}.`);
             return;
         }
         aplicarFn();
@@ -817,7 +838,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     picker2.addEventListener('input', atualizarEstampa);
     picker2.addEventListener('change', atualizarEstampa);
     selEstampa.addEventListener('change', atualizarEstampa);
-    selAnimacao.addEventListener('change', atualizarMidias);
 
     btnSalvar.addEventListener('click', salvarPersonagem);
 
@@ -843,7 +863,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 picker1.value = c1;
                 picker2.value = c2;
                 selEstampa.value = u.estampa || 'nenhuma';
-                selAnimacao.value = u.animacao_fundo || 'nenhuma';
 
                 selRoupa.value = u.roupa || 'nenhuma';
                 selChapeu.value = u.chapeu || 'nenhum';
@@ -872,7 +891,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 estampa: selEstampa.value,
                 roupa: selRoupa.value || 'nenhuma',
                 chapeu: selChapeu.value || 'nenhum',
-                animacao_fundo: selAnimacao.value,
                 personagem_criado: 1
             };
 
@@ -885,7 +903,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (error) throw error;
 
             if (!data || data.length === 0) {
-                alert('Atenção: Nenhum registro foi atualizado. Verifique se o e-mail cadastrado é idêntico ao do banco.');
+                notificar('Atenção: Nenhum registro foi atualizado.');
                 btnSalvar.disabled = false;
                 return;
             }
@@ -893,7 +911,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             sessionStorage.setItem('usuario_xp_atualizado', Date.now());
             window.location.href = 'pagina-entrada.html';
         } catch (err) {
-            alert('Erro ao salvar no banco de dados: ' + err.message);
+            notificar('Erro ao salvar: ' + err.message);
             console.error(err);
             btnSalvar.disabled = false;
         }

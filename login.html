@@ -5,6 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="login.css">
 <title>Login — GIGO</title>
+<style>
+    .mensagem-erro-login {
+        color: #ff4d4d;
+        font-weight: bold;
+        font-size: 14px;
+        text-align: center;
+        min-height: 20px;
+        margin-top: 10px;
+        line-height: 1.4;
+        transition: opacity 0.2s ease;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .mensagem-erro-login.visivel {
+        opacity: 1;
+    }
+
+    #entrar:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+</style>
+
+<!-- Supabase com defer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 </head>
 <body class="fundo">
 
@@ -16,61 +42,120 @@
     <img src="foto-login.png" id="foto-perfil" alt="Perfil">
     <h1>LOGIN</h1>
     <form id="login-form" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-        <div class="campo"><input type="email" id="email" placeholder="E-MAIL" required></div>
-        <div class="campo"><input type="password" id="senha" placeholder="SENHA" required></div>
+        <div class="campo"><input type="email" id="email" placeholder="E-MAIL" required autocomplete="email"></div>
+        <div class="campo"><input type="password" id="senha" placeholder="SENHA" required autocomplete="current-password"></div>
     </form>
     <div class="container-link-login">
         <button type="submit" id="entrar" form="login-form">Entrar</button>
         <a href="login-dev.html" id="link-a" class="link-dev">Entrar como desenvolvedor</a>
     </div>
+
+    <div class="mensagem-erro-login" id="mensagemErroLogin"></div>
 </div>
 
 <img src="foto-logo.png" class="logo-animada" alt="Logo">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- musica.js por último e com defer -->
+<script src="musica.js" defer></script>
+
 <script>
-    const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+    window.addEventListener('DOMContentLoaded', () => {
 
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
 
-    document.getElementById('login-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
+        if (typeof supabase === 'undefined') {
+            document.getElementById('mensagemErroLogin').textContent = 'Falha ao carregar o sistema. Verifique sua conexão.';
+            document.getElementById('mensagemErroLogin').classList.add('visivel');
+            return;
+        }
 
-        const emailDigitado = document.getElementById('email').value;
-        const senhaDigitada = document.getElementById('senha').value;
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        try {
-            const { data: usuarios, error } = await supabaseClient
-                .from('usuarios')
-                .select('*')
-                .eq('email', emailDigitado)
-                .eq('senha', senhaDigitada);
+        const form = document.getElementById('login-form');
+        const mensagemErro = document.getElementById('mensagemErroLogin');
+        const btnEntrar = document.getElementById('entrar');
 
-            if (error) throw new Error(error.message);
+        function mostrarErro(texto) {
+            mensagemErro.textContent = texto;
+            mensagemErro.classList.add('visivel');
+        }
+        function limparErro() {
+            mensagemErro.textContent = '';
+            mensagemErro.classList.remove('visivel');
+        }
 
-            if (usuarios && usuarios.length > 0) {
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            limparErro();
+
+            const emailDigitado = document.getElementById('email').value.trim();
+            const senhaDigitada = document.getElementById('senha').value;
+
+            if (!emailDigitado || !senhaDigitada) {
+                mostrarErro('Preencha e-mail e senha.');
+                return;
+            }
+
+            btnEntrar.disabled = true;
+            btnEntrar.textContent = "Entrando...";
+
+            try {
+                const { data: usuarios, error } = await supabaseClient
+                    .from('usuarios')
+                    .select('email, nome, senha')
+                    .eq('email', emailDigitado)
+                    .eq('senha', senhaDigitada)
+                    .limit(1);
+
+                if (error) {
+                    console.error('Erro Supabase:', error);
+                    mostrarErro('Erro ao conectar. Tente novamente.');
+                    btnEntrar.disabled = false;
+                    btnEntrar.textContent = "Entrar";
+                    return;
+                }
+
+                if (!usuarios || usuarios.length === 0) {
+                    mostrarErro('E-mail ou senha incorretos!');
+                    btnEntrar.disabled = false;
+                    btnEntrar.textContent = "Entrar";
+                    return;
+                }
+
                 const usuario = usuarios[0];
+                const emailLimpo = String(usuario.email || '').trim();
 
-                localStorage.clear();
-                sessionStorage.clear();
+                // Limpa apenas as chaves relevantes (não destrói tudo)
+                const chaves = ['usuario_email', 'usuario_nome', 'tipo_usuario', 'ultimo_email_usuario', 'dev_nome', 'dev_email'];
+                chaves.forEach(k => {
+                    try { sessionStorage.removeItem(k); } catch(e) {}
+                    try { localStorage.removeItem(k); } catch(e) {}
+                });
 
+                sessionStorage.setItem('usuario_email', emailLimpo);
                 sessionStorage.setItem('usuario_nome', usuario.nome || '');
-                sessionStorage.setItem('usuario_email', usuario.email);
                 sessionStorage.setItem('tipo_usuario', 'usuario');
 
-                localStorage.setItem('ultimo_email_usuario', usuario.email);
+                localStorage.setItem('usuario_email', emailLimpo);
+                localStorage.setItem('usuario_nome', usuario.nome || '');
+                localStorage.setItem('tipo_usuario', 'usuario');
+                localStorage.setItem('ultimo_email_usuario', emailLimpo);
 
+                console.log('✅ Login OK:', emailLimpo);
                 window.location.href = 'pagina-entrada.html';
-            } else {
-                alert('E-mail ou senha incorretos!');
+
+            } catch (erro) {
+                console.error('Erro na autenticação:', erro);
+                mostrarErro('Erro ao fazer login. Tente novamente.');
+                btnEntrar.disabled = false;
+                btnEntrar.textContent = "Entrar";
             }
-        } catch (erro) {
-            console.error("Erro na autenticação:", erro);
-            alert('Erro: ' + erro.message);
-        }
+        });
+
+        document.getElementById('email').addEventListener('input', limparErro);
+        document.getElementById('senha').addEventListener('input', limparErro);
     });
 </script>
-
 </body>
 </html>

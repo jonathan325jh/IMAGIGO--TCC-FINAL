@@ -13,16 +13,20 @@
             font-family: Arial, sans-serif;
         }
         .erro { color: #ff4d4d; }
+        .sucesso { color: #4dff88; }
     </style>
+
+    <!-- Supabase com defer para não bloquear o HTML -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 </head>
 <body class="fundo">
 
-    <!-- BOTÃO VOLTAR (fixo no canto) -->
+    <!-- BOTÃO VOLTAR -->
     <a href="index-pag1.html" class="btn-voltar-topo">
         <img src="voltar-bt.png" alt="Voltar">
     </a>
 
-    <!-- CONTAINER (vem primeiro → ESQUERDA) -->
+    <!-- CONTAINER -->
     <div class="container">
         <h1 id="titulo">Cadastro</h1>
 
@@ -34,9 +38,9 @@
                 
                 <input id="email" type="email" placeholder="E-MAIL" required>
                
-                <input type="password" id="senha" placeholder="SENHA" required>
+                <input type="password" id="senha" placeholder="SENHA" required minlength="6">
                 
-                <input type="password" id="confirmar_senha" placeholder="CONFIRMAR SENHA" required>
+                <input type="password" id="confirmar_senha" placeholder="CONFIRMAR SENHA" required minlength="6">
                
                 <h2>Como devemos te chamar?</h2>
                 
@@ -56,7 +60,7 @@
                 </div> 
 
                 <div class="container-link">
-                    <button class="botao-link" type="submit">Enviar</button>
+                    <button class="botao-link" type="submit" id="btn-enviar">Enviar</button>
                 </div>
                 
                 <div id="status-mensagem"></div>
@@ -68,63 +72,111 @@
         </form>
     </div> 
 
-    <!-- LOGO (vem depois → DIREITA) -->
     <img src="foto-logo.png" class="logo-animada" alt="Logo">
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- musica.js por último e com defer -->
+    <script src="musica.js" defer></script>
 
     <script>
-        const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
+        // Espera o DOM e os scripts com defer carregarem
+        window.addEventListener('DOMContentLoaded', () => {
 
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const SUPABASE_URL = "https://yxsfpmqwhpvajzyrapyi.supabase.co";
+            const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2ZwbXF3aHB2YWp6eXJhcHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4OTU0MDAsImV4cCI6MjEwMzQ3MTQwMH0.qNgFa9lbwdqEjVFM2Su4yHchR_vtl7w9QOOrPYe1wsA";
 
-        const form = document.getElementById('entrar-form');
-        const statusMensagem = document.getElementById('status-mensagem');
-
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault(); 
-            
-            statusMensagem.innerText = "";
-
-            const nomeDigitado = document.getElementById('nome').value;
-            const emailDigitado = document.getElementById('email').value;
-            const senhaDigitada = document.getElementById('senha').value;
-            const confirmarSenhaDigitada = document.getElementById('confirmar_senha').value;
-            const generoSelecionado = document.querySelector('input[name="genero"]:checked').value;
-
-            if (senhaDigitada !== confirmarSenhaDigitada) {
-                statusMensagem.className = 'erro';
-                statusMensagem.innerText = "As senhas não coincidem!";
+            // Verifica se o Supabase carregou
+            if (typeof supabase === 'undefined') {
+                document.getElementById('status-mensagem').className = 'erro';
+                document.getElementById('status-mensagem').innerText = 'Falha ao carregar o sistema. Verifique sua conexão.';
                 return;
             }
 
-            try {
-                const { data, error } = await supabaseClient
-                    .from('usuarios')
-                    .insert([
-                        { 
-                            nome: nomeDigitado, 
-                            email: emailDigitado, 
-                            senha: senhaDigitada, 
-                            sexo: generoSelecionado 
-                        }
-                    ]);
+            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-                if (error) {
-                    throw new Error(error.message);
+            const form = document.getElementById('entrar-form');
+            const statusMensagem = document.getElementById('status-mensagem');
+            const btnEnviar = document.getElementById('btn-enviar');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault(); 
+                
+                statusMensagem.innerText = "";
+                statusMensagem.className = "";
+
+                const nomeDigitado = document.getElementById('nome').value.trim();
+                const emailDigitado = document.getElementById('email').value.trim();
+                const senhaDigitada = document.getElementById('senha').value;
+                const confirmarSenhaDigitada = document.getElementById('confirmar_senha').value;
+
+                const radioSelecionado = document.querySelector('input[name="genero"]:checked');
+                if (!radioSelecionado) {
+                    statusMensagem.className = 'erro';
+                    statusMensagem.innerText = "Escolha como devemos te chamar!";
+                    return;
+                }
+                const generoSelecionado = radioSelecionado.value;
+
+                if (senhaDigitada !== confirmarSenhaDigitada) {
+                    statusMensagem.className = 'erro';
+                    statusMensagem.innerText = "As senhas não coincidem!";
+                    return;
                 }
 
-                localStorage.setItem('usuario_email', emailDigitado);
+                if (senhaDigitada.length < 6) {
+                    statusMensagem.className = 'erro';
+                    statusMensagem.innerText = "A senha precisa ter pelo menos 6 caracteres.";
+                    return;
+                }
 
-                // Redireciona imediatamente sem exibir mensagem
-                window.location.href = "pagina-entrada.html";
+                btnEnviar.disabled = true;
+                btnEnviar.textContent = "Enviando...";
 
-            } catch (erro) {
-                console.error("Erro interno do Supabase:", erro);
-                statusMensagem.className = 'erro';
-                statusMensagem.innerText = `Erro no Banco: ${erro.message}`;
-            }
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('usuarios')
+                        .insert([
+                            { 
+                                nome: nomeDigitado, 
+                                email: emailDigitado, 
+                                senha: senhaDigitada, 
+                                sexo: generoSelecionado 
+                            }
+                        ]);
+
+                    if (error) {
+                        throw new Error(error.message);
+                    }
+
+                    localStorage.setItem('usuario_email', emailDigitado);
+                    localStorage.setItem('usuario_nome', nomeDigitado);
+                    localStorage.setItem('tipo_usuario', 'usuario');
+                    localStorage.setItem('ultimo_email_usuario', emailDigitado);
+
+                    sessionStorage.setItem('usuario_email', emailDigitado);
+                    sessionStorage.setItem('usuario_nome', nomeDigitado);
+                    sessionStorage.setItem('tipo_usuario', 'usuario');
+
+                    statusMensagem.className = 'sucesso';
+                    statusMensagem.innerText = "Cadastro realizado! Redirecionando...";
+
+                    setTimeout(() => {
+                        window.location.href = "pagina-entrada.html";
+                    }, 800);
+
+                } catch (erro) {
+                    console.error("Erro interno do Supabase:", erro);
+                    statusMensagem.className = 'erro';
+
+                    if (String(erro.message).includes('duplicate') || String(erro.message).includes('unique')) {
+                        statusMensagem.innerText = "Este e-mail já está cadastrado!";
+                    } else {
+                        statusMensagem.innerText = `Erro no Banco: ${erro.message}`;
+                    }
+
+                    btnEnviar.disabled = false;
+                    btnEnviar.textContent = "Enviar";
+                }
+            });
         });
     </script>
 

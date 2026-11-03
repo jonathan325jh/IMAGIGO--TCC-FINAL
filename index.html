@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GIGO — Carregando...</title>
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
 
     html, body {
         width: 100%;
@@ -15,7 +18,6 @@
         user-select: none;
     }
 
-    /* ===== FUNDO ===== */
     body {
         background-image: url('Login.png');
         background-repeat: no-repeat;
@@ -47,11 +49,10 @@
         to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ===== LOGO (na frente) ===== */
     .logo-wrapper {
         position: relative;
         margin-bottom: 10px;
-        z-index: 4;   /* ← logo NA FRENTE do card */
+        z-index: 4;
     }
 
     .logo {
@@ -63,11 +64,9 @@
         filter: drop-shadow(0 8px 24px rgba(0,0,0,0.2));
     }
 
-    /* ===== CARD DE TEXTO (atrás da logo) ===== */
     .texto-card {
         background: rgba(255, 255, 255, 0.45);
         backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
         border: 3px solid #f5b942;
         border-radius: 20px;
         padding: 24px 32px;
@@ -79,10 +78,8 @@
         text-align: center;
         margin-top: -130px;
         position: relative;
-        z-index: 3;   /* ← card ATRÁS da logo */
-        box-shadow:
-            0 10px 30px rgba(0, 0, 0, 0.12),
-            inset 0 0 40px rgba(255, 255, 255, 0.3);
+        z-index: 3;
+        box-shadow:0 10px 30px rgba(0, 0, 0, 0.12), inset 0 0 40px rgba(255, 255, 255, 0.3);
     }
 
     .texto-card p {
@@ -92,7 +89,6 @@
         margin-bottom: 0;
     }
 
-    /* ===== BARRA DE CARREGAMENTO ===== */
     .barra-wrapper {
         width: 100%;
         max-width: 950px;
@@ -149,7 +145,6 @@
         font-family: 'Segoe UI', sans-serif;
     }
 
-    /* ===== BOTÃO SKIP ===== */
     .btn-skip {
         position: fixed;
         bottom: 24px;
@@ -255,7 +250,7 @@
 </div>
 
 <button class="btn-skip" id="btnSkip" onclick="pularCarregamento()">PULAR →</button>
-
+<script src="musica.js"></script>
 <script>
     let progresso = 0;
     let jaPulou = false;

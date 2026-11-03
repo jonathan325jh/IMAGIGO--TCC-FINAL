@@ -10,6 +10,11 @@
 </head>
 <body>
 
+    <script>
+  window.SUPABASE_URL = "{{ SUPABASE_URL }}";
+  window.SUPABASE_ANON_KEY = "{{ SUPABASE_ANON_KEY }}";
+</script>
+
 <div class="topo">
     <div class="botoes-topo">
         <a href="jogos.html" class="btn-topo" onclick="event.preventDefault(); tentarSair();">
@@ -74,7 +79,7 @@
 
 <div class="cenario-casa" id="cenario" onclick="deselecionarComCliqueFora(event)">
 
-    <div class="chao-casa" id="chao"></div>
+    <div class="chao-casa arrastavel" id="chao" data-tipo="chao"></div>
 
     <div class="papel-parede arrastavel" id="papelParede" data-tipo="papel" style="display:none;"></div>
 
@@ -156,6 +161,7 @@
 
 <script src="jogos.js"></script>
 <script src="menu.js" defer></script>
+<script src="musica.js"></script>
 
 </body>
 </html>
